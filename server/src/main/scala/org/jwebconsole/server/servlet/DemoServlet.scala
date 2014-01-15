@@ -1,34 +1,24 @@
 package org.jwebconsole.server.servlet
 
-import org.scalatra.ScalatraServlet
-import org.scalatra.scalate.ScalateSupport
-import org.json4s.{DefaultFormats, Formats}
-import org.scalatra.json._
-import akka.actor.{Props, ActorRef, ActorSystem}
+import akka.actor.{Props, ActorRef}
 import org.jwebconsole.server.actor.{Check, SampleActor}
 import akka.pattern.ask
-import scala.concurrent.Await
-import scala.concurrent.duration._
-import akka.util.Timeout
+import org.scalatra.AsyncResult
+import org.jwebconsole.server.actor.memory.{GetMemory, MemoryUsageHolderActor}
 
-class DemoServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport {
+class DemoServlet extends DefaultServlet {
 
-
-  implicit val timeout = Timeout(5 seconds)
-  protected implicit val jsonFormats: Formats = DefaultFormats
-  var sample:ActorRef = null
+  var memoryActor: ActorRef = null
 
   before() {
     contentType = formats("json")
-    val actorSystem = getServletContext.getAttribute("actorSystem").asInstanceOf[ActorSystem]
-    sample = actorSystem.actorOf(Props[SampleActor])
+    if (memoryActor == null) {
+      memoryActor = system.actorOf(Props[MemoryUsageHolderActor])
+    }
   }
 
   get("/") {
-    val responseFuture = sample ? Check
-    Await.result(responseFuture, 5 seconds)
+    executeAsync(memoryActor ? GetMemory)
   }
-
-
 
 }
