@@ -25,4 +25,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-experimental" % "2.3-M2"
 )
 
+libraryDependencies ++= Seq(
+  "org.specs2" % "specs2_2.10" % "2.3.7" % "test",
+  "org.mockito" % "mockito-all" % "1.9.5" % "test",
+  "junit" % "junit" % "4.11" % "test"
+)
+
 
