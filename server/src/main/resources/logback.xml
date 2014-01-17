@@ -6,10 +6,8 @@
         </encoder>
     </appender>
 
-    <logger name='org.smartjava.scalatra' level='DEBUG'/>
-
     <root level='info'>
-        <appender-ref ref='STDOUT' />
+        <appender-ref ref='STDOUT'/>
     </root>
 
 </configuration>

@@ -2,6 +2,7 @@ package org.jwebconsole.server.jmx
 
 import javax.management.remote.{JMXConnectorFactory, JMXConnector, JMXServiceURL}
 import scala.collection.JavaConversions._
+import org.jwebconsole.server.model.HostInfo
 
 class JMXConnectionReceiver {
 

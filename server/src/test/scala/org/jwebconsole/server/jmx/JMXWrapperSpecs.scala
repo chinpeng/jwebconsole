@@ -6,6 +6,8 @@ import javax.management.remote.JMXConnector
 import scala.util.{Success, Failure}
 import javax.management.{ObjectName, MBeanServerConnection}
 import javax.management.openmbean.CompositeData
+import java.io.IOException
+import org.jwebconsole.server.model.HostInfo
 
 class JMXWrapperSpecs extends Specification with Mockito {
 
@@ -25,6 +27,7 @@ class JMXWrapperSpecs extends Specification with Mockito {
 
   "JMX Wrapper" should {
     "return fail monad when connection is unsuccessful" in new mocks {
+      connector.getConnectionId throws new IOException()
       connector.connect() throws new RuntimeException
       val wrapper = JMXWrapper(info, receiver)
       wrapper.heapUsage match {
@@ -57,6 +60,15 @@ class JMXWrapperSpecs extends Specification with Mockito {
           usage.used mustEqual 10L
         case _ => failure
       }
+    }
+  }
+
+  "JMX Wrapper" should {
+    "return not available status when connection is unavailable" in new mocks {
+      connector.getConnectionId throws new IOException()
+      connector.connect() throws new RuntimeException
+      val wrapper = JMXWrapper(info, receiver)
+      wrapper.status.available must beFalse
     }
   }
 

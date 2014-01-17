@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatra" % "scalatra_2.10" % "2.3.0.M1",
+  "org.scalatra" % "scalatra_2.10" % "2.3.0.M1" excludeAll(ExclusionRule(organization = "org.slf4j")),
   "org.scalatra" % "scalatra-json_2.10" % "2.3.0.M1",
   "org.scalatra" % "scalatra-scalate_2.10" % "2.3.0.M1",
   "org.json4s"   %% "json4s-jackson" % "3.2.6"
@@ -22,7 +22,8 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.13"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.3-M2",
-  "com.typesafe.akka" %% "akka-persistence-experimental" % "2.3-M2"
+  "com.typesafe.akka" %% "akka-persistence-experimental" % "2.3-M2",
+  "com.typesafe.akka" % "akka-slf4j_2.10" % "2.3-M2"
 )
 
 libraryDependencies ++= Seq(
