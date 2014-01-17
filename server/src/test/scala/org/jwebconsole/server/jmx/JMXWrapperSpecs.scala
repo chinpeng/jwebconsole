@@ -9,6 +9,7 @@ import javax.management.openmbean.CompositeData
 import java.io.IOException
 import org.jwebconsole.server.model.HostInfo
 
+
 class JMXWrapperSpecs extends Specification with Mockito {
 
   trait mocks extends Before {

@@ -11,7 +11,8 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
 
   override def preStart() = {
     super.preStart()
-    context.system.eventStream.subscribe(self, classOf[MsgWithResponder[GetServerStatus]])
+    context.system.eventStream.subscribe(self, classOf[GetServerStatusResp])
+    context.system.eventStream.subscribe(self, classOf[ConnectHostResp])
   }
 
   var hostActors = Map.empty[HostInfo, ActorRef]
@@ -19,7 +20,9 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
   def receiveReplay: Receive = {
     case ConnectHost(info) => {
       connect(info)
-      if (recoveryFinished) startListeners()
+      if (recoveryFinished) {
+        startListeners()
+      }
     }
   }
 
@@ -33,14 +36,14 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
   }
 
   def receiveCommand: Receive = {
-    case MsgWithResponder(ConnectHost(info), ref: ActorRef) =>
+    case ConnectHostResp(ConnectHost(info), ref: ActorRef) =>
       persist(info) {
         host =>
           connect(host)
           hostActors(host) ! StartListen
-          ref ! HostConnected
+          ref ! HostConnected(info)
       }
-    case MsgWithResponder(GetServerStatus(host: HostInfo), ref) =>
+    case GetServerStatusResp(GetServerStatus(host: HostInfo), ref) =>
       checkServerStatus(host, ref)
   }
 
@@ -50,4 +53,7 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
       case Some(v) => Unit
     }
   }
+
+  case object RecoveryFinished
+
 }

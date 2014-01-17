@@ -23,7 +23,8 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.13"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.3-M2",
   "com.typesafe.akka" %% "akka-persistence-experimental" % "2.3-M2",
-  "com.typesafe.akka" % "akka-slf4j_2.10" % "2.3-M2"
+  "com.typesafe.akka" %% "akka-slf4j" % "2.3-M2",
+  "com.typesafe.akka" %% "akka-testkit" % "2.3-M2" % "test"
 )
 
 libraryDependencies ++= Seq(

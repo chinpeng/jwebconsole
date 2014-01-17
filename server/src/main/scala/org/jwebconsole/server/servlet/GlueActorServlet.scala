@@ -4,12 +4,12 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.{AsyncResult, FutureSupport, ScalatraServlet}
 import org.scalatra.scalate.ScalateSupport
 import org.scalatra.json.JacksonJsonSupport
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import akka.util.Timeout
 import akka.actor.ActorSystem
 
-trait DefaultServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport {
+trait GlueActorServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport {
 
   def system: ActorSystem
 
@@ -23,6 +23,5 @@ trait DefaultServlet extends ScalatraServlet with ScalateSupport with JacksonJso
       val is = future
     }
   }
-
 
 }
