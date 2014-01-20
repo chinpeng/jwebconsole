@@ -1,0 +1,31 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:container='urn:import:com.sencha.gxt.widget.core.client.container'
+             xmlns:gxt='urn:import:com.sencha.gxt.widget.core.client'>
+
+    <!-- http://docs.sencha.com/gxt-guides/3 - GXT guides -->
+    <!-- http://docs.sencha.com/gxt-guides/3/ui/layout/LayoutContainers.html - About layout containers -->
+
+    <ui:with field="res" type="org.jwebconsole.client.client.bundle.AppResources"/>
+
+    <container:Viewport>
+        <g:DockLayoutPanel unit='PCT' styleName="{res.sampleResource.sampleClass}">
+            <g:north size='15'>
+                <gxt:ContentPanel ui:field="north"/>
+            </g:north>
+
+            <g:center>
+                <gxt:ContentPanel ui:field="center"/>
+            </g:center>
+
+            <g:east size='15'>
+                <gxt:ContentPanel ui:field="east"/>
+            </g:east>
+
+            <g:west size='15'>
+                <gxt:ContentPanel ui:field="west"/>
+            </g:west>
+        </g:DockLayoutPanel>
+    </container:Viewport>
+
+</ui:UiBinder>

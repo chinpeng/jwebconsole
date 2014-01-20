@@ -18,6 +18,7 @@ object WithResponder {
     request match {
       case msg: GetServerStatus => GetServerStatusResp(msg, actor)
       case msg: ConnectHost => ConnectHostResp(msg, actor)
+      case msg: GetConnectedHost => GetConnectedHostsResp(GetConnectedHost(), actor)
     }
   }
 }
@@ -25,6 +26,8 @@ object WithResponder {
 case class HostInfo(name: String, port: Int) extends HostModel
 
 case class ConnectHost(info: HostInfo) extends HostModel
+
+case class GetConnectedHost() extends HostModel
 
 case class DisconnectHost(info: HostInfo) extends HostModel
 
@@ -34,8 +37,17 @@ case class GetServerStatus(info: HostInfo) extends HostModel
 
 case class JMXHostStatus(available: Boolean, connected: Boolean) extends ResponseMessage
 
+case class HostWithStatus(host: HostInfo, status: JMXHostStatus) extends ResponseMessage
+
 case class HostConnected(info: HostInfo) extends ResponseMessage
+
+case class ConnectedHostsResponse(hosts: List[HostWithStatus]) extends ResponseMessage
 
 case class GetServerStatusResp(body: GetServerStatus, responder: ActorRef) extends WithResponder[GetServerStatus]
 
 case class ConnectHostResp(body: ConnectHost, responder: ActorRef) extends WithResponder[ConnectHost]
+
+case class GetConnectedHostsResp(body: GetConnectedHost, responder: ActorRef) extends WithResponder[GetConnectedHost]
+
+
+

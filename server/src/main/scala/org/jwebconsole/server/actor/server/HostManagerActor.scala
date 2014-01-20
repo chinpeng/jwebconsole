@@ -4,25 +4,30 @@ import akka.persistence.EventsourcedProcessor
 import org.jwebconsole.server.model._
 import akka.actor.{ActorLogging, Props, ActorRef}
 import org.jwebconsole.server.model.ConnectHost
-import org.jwebconsole.server.model.HostConnected
 import org.jwebconsole.server.model.HostInfo
+import org.jwebconsole.server.actor.provider.ActorProvider
+import scala.concurrent.duration._
+import org.jwebconsole.server.actor.model.CheckRecoveryStatus
+import akka.pattern.ask
+import scala.concurrent.Future
+import akka.util.Timeout
 
-class HostManagerActor extends EventsourcedProcessor with ActorLogging {
+class HostManagerActor(provider: ActorProvider) extends EventsourcedProcessor with ActorLogging {
 
-  override def preStart() = {
-    super.preStart()
-    context.system.eventStream.subscribe(self, classOf[GetServerStatusResp])
-    context.system.eventStream.subscribe(self, classOf[ConnectHostResp])
-  }
+  context.system.eventStream.subscribe(self, classOf[GetServerStatusResp])
+  context.system.eventStream.subscribe(self, classOf[ConnectHostResp])
+  context.system.eventStream.subscribe(self, classOf[GetConnectedHostsResp])
+
+  implicit val timeout = Timeout(5 seconds)
+  implicit val execution = context.system.dispatcher
 
   var hostActors = Map.empty[HostInfo, ActorRef]
 
+  lazy val timer = context.system.scheduler.schedule(1 seconds, 1 second)(self ! CheckRecoveryStatus)
+
   def receiveReplay: Receive = {
-    case ConnectHost(info) => {
-      connect(info)
-      if (recoveryFinished) {
-        startListeners()
-      }
+    case msg: HostInfo => {
+      connect(msg)
     }
   }
 
@@ -35,16 +40,32 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
     hostActors += (info -> listener)
   }
 
+  def checkRecoveryStatus(): Unit = {
+    if (recoveryFinished && !timer.isCancelled) {
+      timer.cancel()
+      startListeners()
+    }
+  }
+
   def receiveCommand: Receive = {
     case ConnectHostResp(ConnectHost(info), ref: ActorRef) =>
       persist(info) {
         host =>
           connect(host)
           hostActors(host) ! StartListen
-          ref ! HostConnected(info)
       }
     case GetServerStatusResp(GetServerStatus(host: HostInfo), ref) =>
       checkServerStatus(host, ref)
+    case CheckRecoveryStatus =>
+      checkRecoveryStatus()
+    case GetConnectedHostsResp(_, ref) =>
+      getConnectedHosts(ref)
+  }
+
+  def getConnectedHosts(sender: ActorRef): Unit = {
+    val futures:List[Future[HostWithStatus]] = hostActors.map(item => (item._2 ? GetHostWithStatus()).asInstanceOf[Future[HostWithStatus]]).toList
+    val result: Future[List[HostWithStatus]] = Future.sequence(futures.toList)
+    result.map(sender ! ConnectedHostsResponse(_))
   }
 
   def checkServerStatus(host: HostInfo, ref: ActorRef) {
@@ -54,6 +75,13 @@ class HostManagerActor extends EventsourcedProcessor with ActorLogging {
     }
   }
 
-  case object RecoveryFinished
+
+}
+
+object HostManagerActor {
+
+  def apply(): Props = {
+    Props(new HostManagerActor(new ActorProvider))
+  }
 
 }

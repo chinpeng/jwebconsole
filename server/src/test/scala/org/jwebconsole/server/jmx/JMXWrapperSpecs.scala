@@ -32,7 +32,7 @@ class JMXWrapperSpecs extends Specification with Mockito {
       connector.connect() throws new RuntimeException
       val wrapper = JMXWrapper(info, receiver)
       wrapper.heapUsage match {
-        case Failure(e: RuntimeException) => success
+        case Failure(e) => success
         case Success(v) => failure
       }
     }

@@ -19,6 +19,14 @@ class HostListenerActor(val host: HostInfo) extends Actor {
   def receive: Receive = {
     case GetServerStatusResp(GetServerStatus(host), ref) =>
       sendFutureResponse(ref)
+    case GetHostWithStatus() =>
+      responseWithHost()
+  }
+
+  def responseWithHost() {
+    val cur = sender
+    val f: Future[JMXHostStatus] = Future(jmx.status)
+    f.map(cur ! HostWithStatus(host, _))
   }
 
   def sendFutureResponse(ref: ActorRef): Unit = {
@@ -27,3 +35,5 @@ class HostListenerActor(val host: HostInfo) extends Actor {
   }
 
 }
+
+case class GetHostWithStatus()

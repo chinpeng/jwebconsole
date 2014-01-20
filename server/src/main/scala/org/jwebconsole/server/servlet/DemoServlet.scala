@@ -9,11 +9,11 @@ import org.jwebconsole.server.model.JMXHostStatus
 import org.jwebconsole.server.model.HostInfo
 import org.jwebconsole.server.model.GetServerStatus
 import org.jwebconsole.server.actor.helper.GlueActor
+import org.scalatra.CorsSupport
 
 class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
 
-  val hostActor = system.actorOf(Props[HostManagerActor])
-
+  val hostActor = system.actorOf(HostManagerActor())
 
   before() {
     contentType = formats("json")
@@ -22,8 +22,8 @@ class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
   post("/listen") {
     val host = parsedBody.extract[HostInfo]
     val front = system.actorOf(GlueActor())
-    val status: Future[HostConnected] = (front ? ConnectHost(host)).asInstanceOf[Future[HostConnected]]
-    executeAsync(status)
+    front ! ConnectHost(host)
+    HostConnected(host)
   }
 
   get("/status/:host/:port") {
@@ -33,6 +33,11 @@ class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
     executeAsync(status)
   }
 
+  get("/status/all") {
+    val front = system.actorOf(GlueActor())
+    val hosts: Future[ConnectedHostsResponse] = (front ? GetConnectedHost()).asInstanceOf[Future[ConnectedHostsResponse]]
+    executeAsync(hosts)
+  }
 
 
 }
