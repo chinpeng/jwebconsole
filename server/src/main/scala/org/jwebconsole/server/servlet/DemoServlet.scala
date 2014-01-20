@@ -9,7 +9,6 @@ import org.jwebconsole.server.model.JMXHostStatus
 import org.jwebconsole.server.model.HostInfo
 import org.jwebconsole.server.model.GetServerStatus
 import org.jwebconsole.server.actor.helper.GlueActor
-import org.scalatra.CorsSupport
 
 class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
 

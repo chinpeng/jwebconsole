@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<module rename-to='jwebconsole'>
+    <!-- Inherit the core Web Toolkit stuff. -->
+    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.inject.Inject' />
+    <inherits name="com.google.gwt.resources.Resources" />
+
+    <!-- GXT -->
+    <stylesheet src="reset.css" />
+    <inherits name='com.sencha.gxt.ui.GXT' />
+
+    <!-- GXT Theme -->
+    <!-- <inherits name='com.sencha.gxt.theme.blue.Blue'/> -->
+    <inherits name='com.sencha.gxt.theme.gray.Gray' />
+
+    <!-- GWTP -->
+    <inherits name='com.gwtplatform.dispatch.Dispatch' />
+    <inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
+
+    <source path='client' />
+    <source path='shared' />
+
+    <!-- Default GIN Module -->
+    <set-configuration-property name="gin.ginjector.modules" value="org.jwebconsole.client.gin.ClientModule" />
+
+
+    <!-- Super Dev Mode On -->
+    <add-linker name="xsiframe"/>
+    <set-configuration-property name="devModeRedirectEnabled" value="true"/>
+    <set-property name="compiler.useSourceMaps" value="true" />
+
+
+</module>

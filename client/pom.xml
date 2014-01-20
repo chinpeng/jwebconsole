@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 
+	<parent>
+        <groupId>org.jwebconsole</groupId>
+        <artifactId>jwebconsole-parent</artifactId>
+        <version>0.0.1</version>
+    </parent>
+		 
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.jwebconsole.client</groupId>
-    <artifactId>jwebconsole-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>jwebconsole-client</artifactId>    
     <packaging>war</packaging>
-    <name>GWTP Basic with GXT</name>
-    <description>Basic GWTP application with the GXT library</description>
+    <name>JWebConsole Client</name>
 
     <properties>
-        <!-- client -->
-        <!-- Get the latest GXT release through support 3.0.6... -->
+
+        <webapp.name>jwebconsole</webapp.name>
+
         <gxt.version>3.0.1</gxt.version>
         <gwt.version>2.5.1</gwt.version>
         <gwtp.version>1.0</gwtp.version>
         <gin.version>2.0.0</gin.version>
         <cxf-version>2.2.6</cxf-version>
-
-        <!-- server -->
-        <guice.version>3.0</guice.version>
 
         <!-- testing -->
         <junit.version>4.11</junit.version>
@@ -38,6 +39,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <jetty.version>8.1.8.v20121106</jetty.version>
+
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 
@@ -45,6 +48,30 @@
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
         <plugins>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                    <webAppConfig>
+                        <contextPath>/${webapp.name}</contextPath>
+                        <descriptor>src\main\webapp\WEB-INF\web.xml</descriptor>
+                    </webAppConfig>
+                    <systemProperties>
+                        <!-- enable easy JMX connection to JConsole -->
+                        <systemProperty>
+                            <name>com.sun.management.jmxremote</name>
+                            <value/>
+                            <name>user.timezone</name>
+                            <value>UTC</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <!-- scanIntervalSeconds>5</scanIntervalSeconds -->
+                    <reload>manual</reload>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -100,7 +127,7 @@
 
                     <runTarget>jwebconsole.html</runTarget>
                     <modules>
-                        <module>org.jwebconsole.client.jwebconsole</module>
+                        <module>org.jwebconsole.jwebconsole</module>
                     </modules>
                 </configuration>
                 <executions>
@@ -112,6 +139,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+
         </plugins>
     </build>
 
@@ -174,21 +203,6 @@
 
         <!-- DI -->
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-servlet</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-assistedinject</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
@@ -219,6 +233,14 @@
             <version>2.33.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Dependencies for server-side-->
+        <dependency>
+            <groupId>org.jwebconsole</groupId>
+            <artifactId>jwebconsole-server</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
 
         <!--other dependencies-->
         <dependency>
