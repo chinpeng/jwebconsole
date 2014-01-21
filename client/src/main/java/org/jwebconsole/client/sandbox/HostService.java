@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("http://localhost:8080/hosts")
+@Path("/hosts")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface HostService extends RestService {
 

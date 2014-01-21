@@ -1,0 +1,13 @@
+package org.jwebconsole.client.bundle;
+
+import com.google.gwt.resources.client.CssResource;
+
+public interface Application extends CssResource {
+
+    @ClassName("app-main-window")
+    String appMainWindow();
+
+    @ClassName("app-content-body")
+    String appContentBody();
+
+}

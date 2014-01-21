@@ -10,4 +10,7 @@ public interface AppResources extends ClientBundle {
     @Source("sampleresource.css")
     SampleResource sampleResource();
 
+    @Source("application.css")
+    Application app();
+
 }
