@@ -6,3 +6,7 @@
 .app-content-body {
     height: 800px;
 }
+
+.app-container {
+    background-color: white;
+}

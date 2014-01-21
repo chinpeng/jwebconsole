@@ -10,4 +10,7 @@ public interface Application extends CssResource {
     @ClassName("app-content-body")
     String appContentBody();
 
+    @ClassName("app-container")
+    String appContainer();
+
 }

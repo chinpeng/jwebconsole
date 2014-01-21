@@ -19,29 +19,27 @@
         <ui:attributes width="1" height="-1"/>
     </ui:with>
 
-    <ui:style>
-        .background {
-            background-color: white;
-        }
-    </ui:style>
-
     <g:HTMLPanel styleName="{res.app.appMainWindow}">
         <gxt:FramedPanel headingText="Main Window" addStyleNames="{res.app.appMainWindow}">
-            <row:VerticalLayoutContainer borders="true" addStyleNames="{style.background}">
+            <row:VerticalLayoutContainer borders="true" addStyleNames="{res.app.appContainer}">
                 <row:child layoutData="{toolBarRowData}">
-                    <toolbar:ToolBar>
-                        <button:ToggleButton text="Sample toolbar item"/>
-                    </toolbar:ToolBar>
+                    <g:HTMLPanel ui:field="toolbar">
+
+                    </g:HTMLPanel>
                 </row:child>
                 <row:child>
                     <g:HTMLPanel addStyleNames="{res.app.appContentBody}">
-                        <g:Label></g:Label>
+                        <g:Label>Test</g:Label>
                     </g:HTMLPanel>
                 </row:child>
             </row:VerticalLayoutContainer>
 
         </gxt:FramedPanel>
+        <g:HTMLPanel ui:field="popupSlot">
+
+        </g:HTMLPanel>
     </g:HTMLPanel>
+
 
 
 </ui:UiBinder>
