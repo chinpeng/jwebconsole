@@ -18,7 +18,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     @Inject
     public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy) {
-        super(eventBus, view, proxy, ApplicationPresenter.SLOT_POPUP);
+        super(eventBus, view, proxy, RevealType.RootPopup);
         view.setUiHandlers(this);
     }
 
@@ -31,13 +31,21 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     @ProxyEvent
     @Override
     public void onRevealEvent(RevealConnectionPopupEvent event) {
-        forceReveal();
+        if (!isBound()) {
+            forceReveal();
+        } else {
+            getView().showDialog();
+        }
     }
 
     @Override
     public void hideDialog() {
         getView().hideDialog();
-        unbind();
+    }
+
+    @Override
+    public void connectHost() {
+
     }
 
     @ProxyCodeSplit

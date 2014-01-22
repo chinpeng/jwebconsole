@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class RevealConnectionPopupEvent extends GwtEvent<RevealConnectionPopupEventHandler> {
 
-    public static final Type<RevealConnectionPopupEventHandler> TYPE = new Type<RevealConnectionPopupEventHandler>();
+    public static Type<RevealConnectionPopupEventHandler> TYPE = new Type<RevealConnectionPopupEventHandler>();
 
     @Override
     public Type<RevealConnectionPopupEventHandler> getAssociatedType() {

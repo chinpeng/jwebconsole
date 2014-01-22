@@ -22,9 +22,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
     @ContentSlot
     public static final Type<RevealContentHandler<?>> SLOT_TOOLBAR = new Type<RevealContentHandler<?>>();
 
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> SLOT_POPUP = new Type<RevealContentHandler<?>>();
-
     @ProxyStandard
     @NameToken(NameTokens.home)
     public interface MyProxy extends ProxyPlace<ApplicationPresenter> {

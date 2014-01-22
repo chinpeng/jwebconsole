@@ -6,4 +6,6 @@ public interface ConnectionWindowUiHandlers extends UiHandlers {
 
     void hideDialog();
 
+    void connectHost();
+
 }

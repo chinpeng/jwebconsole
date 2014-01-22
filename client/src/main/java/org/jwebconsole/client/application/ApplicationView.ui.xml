@@ -35,9 +35,6 @@
             </row:VerticalLayoutContainer>
 
         </gxt:FramedPanel>
-        <g:HTMLPanel ui:field="popupSlot">
-
-        </g:HTMLPanel>
     </g:HTMLPanel>
 
 

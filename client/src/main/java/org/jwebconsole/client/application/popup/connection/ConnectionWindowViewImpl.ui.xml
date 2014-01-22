@@ -3,15 +3,57 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
-    <g:HTMLPanel>
-        <gxt:Window ui:field="window" pixelSize="500, 300" modal="true" blinkModal="true" headingText="Hello Window" resizable="false">
-            <g:HTMLPanel>
-                <g:Label>Testing</g:Label>
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
+
+    <ui:with field="res" type="org.jwebconsole.client.bundle.AppResources"/>
+
+
+    <gxt:Window ui:field="window" pixelSize="300, 240" modal="true" blinkModal="true" headingText="Add new Host"
+                resizable="false">
+        <g:HTMLPanel addStyleNames="{res.connectionWindow.contentMargin}">
+            <form:FieldSet headingText="Host Information" collapsible="false">
+                <container:VerticalLayoutContainer>
+
+                    <container:child>
+                        <form:FieldLabel text="Host name">
+                            <form:widget>
+                                <form:TextField/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child>
+                        <form:FieldLabel text="Host port">
+                            <form:widget>
+                                <form:TextField/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child>
+                        <form:FieldLabel text="Login">
+                            <form:widget>
+                                <form:TextField/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child>
+                        <form:FieldLabel text="Password">
+                            <form:widget>
+                                <form:TextField/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+                </container:VerticalLayoutContainer>
+            </form:FieldSet>
+            <g:HTMLPanel addStyleNames="{res.connectionWindow.buttonsAlign}">
+                <button:TextButton text="Cancel" ui:field="cancelButton"/>
+                <button:TextButton text="Connect" ui:field="connectButton"/>
             </g:HTMLPanel>
-            <gxt:button>
-                <button:TextButton ui:field="closeButton" text="Close"/>
-            </gxt:button>
-        </gxt:Window>
-    </g:HTMLPanel>
+        </g:HTMLPanel>
+    </gxt:Window>
+
 </ui:UiBinder>

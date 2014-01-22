@@ -18,8 +18,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 
     @UiField
     HTMLPanel toolbar;
-    @UiField
-    HTMLPanel popupSlot;
 
     public interface Binder extends UiBinder<Widget, ApplicationView> {
     }
@@ -35,9 +33,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
         if (slot == ApplicationPresenter.SLOT_TOOLBAR) {
             toolbar.clear();
             toolbar.add(content);
-        }
-        if (slot == ApplicationPresenter.SLOT_POPUP) {
-            popupSlot.add(content);
         }
     }
 }

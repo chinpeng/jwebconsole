@@ -75,7 +75,6 @@ class HostManagerActor(provider: ActorProvider) extends EventsourcedProcessor wi
     }
   }
 
-
 }
 
 object HostManagerActor {
