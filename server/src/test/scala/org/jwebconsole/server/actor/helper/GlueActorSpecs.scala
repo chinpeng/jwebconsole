@@ -1,6 +1,6 @@
 package org.jwebconsole.server.actor.helper
 
-import org.specs2.mutable.{Before, Specification}
+import org.specs2.mutable.{BeforeAfter, Specification}
 import org.specs2.mock.Mockito
 import akka.testkit.{TestProbe, TestActorRef}
 import org.jwebconsole.server.actor.provider.ActorProvider
@@ -11,7 +11,7 @@ import org.jwebconsole.server.actor.model.StopActor
 
 class GlueActorSpecs extends Specification with Mockito {
 
-  trait mocks extends Before {
+  trait mocks extends BeforeAfter {
     implicit val system = ActorSystem("spec")
     val provider = mock[ActorProvider]
     val actorRef: TestActorRef[GlueActor] = TestActorRef(new GlueActor(provider))
@@ -23,6 +23,9 @@ class GlueActorSpecs extends Specification with Mockito {
     def before: Unit = {
       provider.senderRef returns mockRef
       provider.selfRef returns actorRef
+    }
+    def after(): Unit = {
+      system.shutdown()
     }
   }
 
