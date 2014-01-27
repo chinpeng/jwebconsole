@@ -4,6 +4,6 @@ import scala.concurrent.duration._
 
 object AppConstants {
 
-  lazy val GlueActorTimeOut = 4 seconds
+  lazy val DefaultTimeout = 4 seconds
 
 }

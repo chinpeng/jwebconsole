@@ -10,7 +10,7 @@ import org.jwebconsole.server.model.HostInfo
 import org.jwebconsole.server.model.GetServerStatus
 import org.jwebconsole.server.actor.helper.GlueActor
 
-class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
+class DemoServlet(override val system: ActorSystem) extends BaseServlet {
 
   val hostActor = system.actorOf(HostManagerActor())
 
@@ -19,23 +19,15 @@ class DemoServlet(override val system: ActorSystem) extends GlueActorServlet {
   }
 
   post("/listen") {
-    val host = parsedBody.extract[HostInfo]
-    val front = system.actorOf(GlueActor())
-    front ! ConnectHost(host)
-    HostConnected(host)
+
   }
 
   get("/status/:host/:port") {
-    val host = HostInfo(params("host"), params("port").toInt)
-    val front = system.actorOf(GlueActor())
-    val status: Future[JMXHostStatus] = (front ? GetServerStatus(host)).asInstanceOf[Future[JMXHostStatus]]
-    executeAsync(status)
+
   }
 
   get("/status/all") {
-    val front = system.actorOf(GlueActor())
-    val hosts: Future[ConnectedHostsResponse] = (front ? GetConnectedHost()).asInstanceOf[Future[ConnectedHostsResponse]]
-    executeAsync(hosts)
+
   }
 
 

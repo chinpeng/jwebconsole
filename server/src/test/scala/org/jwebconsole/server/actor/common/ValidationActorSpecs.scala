@@ -5,9 +5,9 @@ import org.specs2.mock.Mockito
 import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{TestProbe, TestActorRef}
 import org.jwebconsole.server.util._
-import org.jwebconsole.server.util.ValidationWithSender
 import org.jwebconsole.server.util.Valid
 import org.jwebconsole.server.util.Invalid
+import org.jwebconsole.server.context.util.{ValidationFailed, ValidationAck, ValidationWithSender, ValidationActor}
 
 
 class ValidationActorSpecs extends Specification with Mockito {
@@ -17,7 +17,7 @@ class ValidationActorSpecs extends Specification with Mockito {
     val ref: TestActorRef[ValidationActor] = TestActorRef(new ValidationActor())
     val actor = ref.underlyingActor
     val senderRef: ActorRef = spy(TestProbe().ref)
-    val msg = "Validation failed"
+    val msg = (1, "Validation failed")
 
     def before: Unit = {}
 

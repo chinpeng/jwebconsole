@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import akka.util.Timeout
 import akka.actor.ActorSystem
 
-trait GlueActorServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport with CorsSupport {
+trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport with CorsSupport {
 
   options("/*") {
     response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))

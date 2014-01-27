@@ -5,6 +5,10 @@ import org.scalatra.LifeCycle
 
 class ScalatraBootstrap extends LifeCycle {
 
+  val db = {
+
+  }
+
   override def init(context: ServletContext) {
     val system = ActorSystem("app-system")
     context.mount(new DemoServlet(system), "/hosts/*")

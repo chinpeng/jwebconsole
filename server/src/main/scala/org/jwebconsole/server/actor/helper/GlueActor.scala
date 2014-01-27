@@ -22,7 +22,7 @@ class GlueActor(val provider: ActorProvider) extends Actor with ActorLogging {
       pending ! response
       stopSelf()
     case message => {
-      scheduleMessageOnce(AppConstants.GlueActorTimeOut, selfRef, StopActor)
+      scheduleMessageOnce(AppConstants.DefaultTimeout, selfRef, StopActor)
       pending = senderRef
       publishEvent(WithResponder(message, selfRef))
     }

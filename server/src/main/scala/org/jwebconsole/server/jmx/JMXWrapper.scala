@@ -1,3 +1,4 @@
+/*
 package org.jwebconsole.server.jmx
 
 import javax.management.remote.JMXConnector
@@ -23,13 +24,6 @@ class JMXWrapper(private var connector: JMXConnector) {
   def heapUsage: Try[HeapMemoryUsage] = {
     for (conn <- connection;
          heapUsage <- getHeapUsage(conn)) yield heapUsage
-  }
-
-  def status: JMXHostStatus = {
-    connection match {
-      case Failure(e) => JMXHostStatus(available = false, connected = true)
-      case Success(v) => JMXHostStatus(available = true, connected = true)
-    }
   }
 
   private def getHeapUsage(connector: JMXConnector): Try[HeapMemoryUsage] = Try {
@@ -62,3 +56,4 @@ object JMXWrapper {
 
 case class HeapMemoryUsage(committed: Long = 0, init: Long = 0, max: Long = 0, used: Long = 0)
 
+*/
