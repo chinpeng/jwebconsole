@@ -17,7 +17,7 @@ class ValidationActorSpecs extends Specification with Mockito {
     val ref: TestActorRef[ValidationActor] = TestActorRef(new ValidationActor())
     val actor = ref.underlyingActor
     val senderRef: ActorRef = spy(TestProbe().ref)
-    val msg = (1, "Validation failed")
+    val msg = InvalidMessage(1, "Validation failed")
 
     def before: Unit = {}
 

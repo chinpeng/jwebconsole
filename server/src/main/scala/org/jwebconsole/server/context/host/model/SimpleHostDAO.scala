@@ -18,7 +18,11 @@ class SimpleHostDAO(db: Database) {
     def * = (id, name, port)
   }
 
-  def exists: Boolean = MTable.getTables(TableName).list().isEmpty
+  def exists: Boolean =
+    db withSession {
+      implicit session =>
+        MTable.getTables(TableName).list().isEmpty
+    }
 
   def putAll(hosts: List[SimpleHostView]): Unit = {
     db withSession {

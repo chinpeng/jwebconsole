@@ -25,12 +25,12 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
 
   def validate(newModel: HostStateModel, ev: HostChangedEvent, source: ActorRef) {
     validate(newModel) match {
-      case valid: Valid => persist(ev) {
+      case valid @ Valid(_) => persist(ev) {
         ev =>
           model = newModel
           context.system.eventStream.publish(ValidationWithSender(source, valid))
       }
-      case invalid: Invalid =>
+      case invalid @ Invalid(_,_) =>
         context.system.eventStream.publish(ValidationWithSender(source, invalid))
     }
   }

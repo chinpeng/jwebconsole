@@ -12,6 +12,7 @@ import scala.util.{Try, Failure, Success}
 class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
+  implicit val exec = context.system.dispatcher
 
   override def preStart() = {
     Try {

@@ -1,8 +1,6 @@
 package org.jwebconsole.server.context.util
 
 import akka.actor.{ActorLogging, Actor}
-import org.jwebconsole.server.util._
-import ValidationWithSender
 import org.jwebconsole.server.util.Valid
 import org.jwebconsole.server.util.Invalid
 

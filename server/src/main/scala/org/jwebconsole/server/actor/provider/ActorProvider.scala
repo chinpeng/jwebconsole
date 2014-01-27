@@ -4,7 +4,6 @@ import akka.actor.{ActorRef, Actor}
 import scala.concurrent.duration._
 import java.util.concurrent.Executor
 import scala.concurrent.ExecutionContext
-import org.jwebconsole.server.actor.model.StopActor
 
 class ActorProvider {
 
@@ -26,7 +25,7 @@ class ActorProvider {
 
   def scheduleOnce(time: FiniteDuration, action: () => Unit) = {
     implicit val exec = actor.context.dispatcher.asInstanceOf[Executor with ExecutionContext]
-    actor.context.system.scheduler.scheduleOnce(time)(action)
+    actor.context.system.scheduler.scheduleOnce(time){action()}
   }
 
   def scheduleMessageOnce(time: FiniteDuration, ref: ActorRef, msg: Any) {

@@ -1,7 +1,5 @@
 package org.jwebconsole.server.util
 
-import org.jwebconsole.server.util.InvalidMessage
-
 
 object ValidationConstants {
 
