@@ -12,6 +12,7 @@ with After
 with ImplicitSender {
   def after = system.shutdown()
 }
+
 class ExampleSpec extends Specification with NoTimeConversions {
   sequential
 
@@ -19,7 +20,9 @@ class ExampleSpec extends Specification with NoTimeConversions {
     "work properly with Specs2 unit tests" in new AkkaTestkitSpecs2Support {
       within(1 second) {
         system.actorOf(Props(new Actor {
-          def receive = { case x ⇒ sender ! x }
+          def receive = {
+            case x ⇒ sender ! x
+          }
         })) ! "hallo"
         expectMsgType[String] must be equalTo "hallo"
       }

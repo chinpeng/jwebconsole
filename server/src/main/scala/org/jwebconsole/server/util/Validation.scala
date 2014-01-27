@@ -14,7 +14,11 @@ trait Validation[T] {
   def flatMap[E](f: T => Validation[E]): Validation[E] = {
     val res = f(v)
     res match {
-      case Valid(item) => Valid(item)
+      case Valid(item) =>
+        this match {
+          case Valid(_) => Valid(item)
+          case Invalid(_, msgs) => Invalid(item, msgs)
+        }
       case Invalid(item, messages) => {
         this match {
           case Valid(_) => Invalid(item, messages)

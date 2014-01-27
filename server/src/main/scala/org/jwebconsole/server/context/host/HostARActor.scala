@@ -67,15 +67,12 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
   }
 
   def validatePort(item: HostStateModel): Validation[HostStateModel] = {
-    Option(item.port) match {
-      case None =>
-        Invalid(item, List(PortEmptyMessage))
-      case Some(port) => port match {
-        case num if num < 0 => Invalid(item, List(PortMustBePositive))
+      item.port match {
+        case num if num <= 0 => Invalid(item, List(PortMustBePositive))
         case num if num > 100000 => Invalid(item, List(BigNumberForPort))
         case _ => Valid(item)
       }
-    }
+
   }
 
 }
