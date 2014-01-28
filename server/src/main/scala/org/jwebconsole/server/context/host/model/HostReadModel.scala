@@ -3,7 +3,7 @@ package org.jwebconsole.server.context.host.model
 import akka.actor.{Stash, Props, ActorLogging, Actor}
 import org.jwebconsole.server.util.AppConstants
 import akka.util.Timeout
-import org.jwebconsole.server.context.util.{ReplayFinished, AppEvent, GlobalEventStore}
+import org.jwebconsole.server.context.util.{ResponseMessage, ReplayFinished, AppEvent, GlobalEventStore}
 import org.jwebconsole.server.context.host.{HostDeletedEvent, HostParametersChangedEvent, HostCreatedEvent, HostChangedEvent}
 import scala.concurrent.Future
 import scala.util.{Success, Failure}
@@ -16,6 +16,7 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
   override def preStart() = {
     if (!dao.exists) {
       context.become(replayingState)
+      dao.createTable()
       makeReplay()
     }
   }
@@ -30,6 +31,16 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
   def receive: Receive = {
     case ev: HostChangedEvent =>
       persistAsync(ev)
+    case SimpleHostViewRequest =>
+      makeResponse()
+  }
+
+  def makeResponse(): Unit = {
+    val current = sender
+    Future(dao.getAll) onComplete {
+      case Failure(e) => current ! ResponseMessage(error = "Unable to connect to Database")
+      case Success(v) => current ! ResponseMessage(payload = v)
+    }
   }
 
   def updateDB(event: HostChangedEvent): Unit = event match {
@@ -61,5 +72,7 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
   }
 
 }
+
+case object SimpleHostViewRequest
 
 case class SimpleHostView(id: String, host: String, port: Int)

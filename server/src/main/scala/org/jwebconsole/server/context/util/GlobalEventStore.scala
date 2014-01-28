@@ -39,7 +39,8 @@ class GlobalEventStore(filter: PartialFunction[AppEvent, Boolean], receiver: Opt
   def receiveCommand: Receive = {
     case event: AppEvent =>
       persist(event) {
-        ev => Unit
+        ev =>
+          log.debug("persisted event" + ev)
       }
     case CheckReplayStatus if cancel.get.isCancelled =>
       Unit

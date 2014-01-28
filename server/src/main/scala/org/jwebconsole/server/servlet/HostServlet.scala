@@ -3,10 +3,12 @@ package org.jwebconsole.server.servlet
 import akka.actor._
 import org.jwebconsole.server.context.host.{CreateHostCommand, HostCommandHandler}
 import akka.pattern.ask
+import org.jwebconsole.server.context.host.model.SimpleHostViewRequest
 
-class DemoServlet(override val system: ActorSystem) extends BaseServlet {
+class HostServlet(override val system: ActorSystem, readModelActor: ActorRef) extends BaseServlet {
 
   val hostCommandHandler = system.actorOf(Props[HostCommandHandler])
+
 
   before() {
     contentType = formats("json")
@@ -23,8 +25,9 @@ class DemoServlet(override val system: ActorSystem) extends BaseServlet {
   }
 
   get("/status/all") {
-
+    executeAsync(readModelActor ? SimpleHostViewRequest)
   }
 
+  case class SampleCmd(name: String, port: Int)
 
 }

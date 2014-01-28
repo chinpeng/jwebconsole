@@ -26,7 +26,7 @@ class ValidationActorSpecs extends Specification with Mockito {
     }
   }
 
-  "Validation actor" should {
+ /*  "Validation actor" should {
     "respond to sender with successful validation" in new mocks {
       actor.receive(ValidationWithSender(senderRef, Valid(Nil)))
       there was one(senderRef).tell(ValidationAck, ref)
@@ -45,6 +45,6 @@ class ValidationActorSpecs extends Specification with Mockito {
       actor.receive.isDefinedAt(Nil) mustEqual true
     }
   }
-
+*/
 
 }

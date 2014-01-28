@@ -21,14 +21,13 @@ class SimpleHostDAO(db: Database) {
   def exists: Boolean =
     db withSession {
       implicit session =>
-        MTable.getTables(TableName).list().isEmpty
+        !MTable.getTables(TableName).list().isEmpty
     }
 
   def putAll(hosts: List[SimpleHostView]): Unit = {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hostQuery.ddl.create
         hosts foreach (host => hostQuery +=(host.id, host.host, host.port))
     }
   }
@@ -56,6 +55,22 @@ class SimpleHostDAO(db: Database) {
         val hostQuery = TableQuery[HostTable]
         val toDelete = for (item: HostTable <- hostQuery if item.id === id) yield item
         toDelete.delete
+    }
+  }
+
+  def getAll: List[SimpleHostView] = {
+    db withSession {
+      implicit session =>
+        val hostQuery = TableQuery[HostTable]
+        hostQuery.list().map(record => SimpleHostView(record._1, record._2, record._3))
+    }
+  }
+
+  def createTable(): Unit = {
+    db withSession {
+      implicit session =>
+        val hostQuery = TableQuery[HostTable]
+        hostQuery.ddl.create
     }
   }
 
