@@ -7,9 +7,9 @@ class SimpleHostDAO(db: Database) {
 
   val TableName = "all_hosts"
 
-  class HostTable(tag: Tag) extends Table[(Long, String, Int)](tag, TableName) {
+  class HostTable(tag: Tag) extends Table[(String, String, Int)](tag, TableName) {
 
-    def id = column[Long]("id", O.PrimaryKey)
+    def id = column[String]("id", O.PrimaryKey)
 
     def name = column[String]("host")
 
@@ -50,7 +50,7 @@ class SimpleHostDAO(db: Database) {
     }
   }
 
-  def delete(id: Long): Unit = {
+  def delete(id: String): Unit = {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]

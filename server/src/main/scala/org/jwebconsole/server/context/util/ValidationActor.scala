@@ -11,7 +11,7 @@ class ValidationActor extends Actor with ActorLogging {
       validation match {
         case Valid(v) =>
           log.debug("Validation success for " + v)
-          source ! ValidationAck
+          source ! ValidationAck(v)
         case Invalid(v, messages) =>
           log.debug("Validation failed for " + v + ". Messages: " + messages.mkString(" | "))
           source ! ValidationFailed(messages)

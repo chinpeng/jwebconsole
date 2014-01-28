@@ -7,7 +7,7 @@ import org.specs2.specification.Before
 class HostStateModelSpecs extends Specification with Mockito {
 
   trait HostData extends Before {
-    val testId = 100
+    val testId = "100"
     val name = "localhost"
     val port = 8080
     val login = "login"
@@ -35,9 +35,9 @@ class HostStateModelSpecs extends Specification with Mockito {
   }
 
   "Host state model" should {
-    "not be deleted at creation" in new HostData {
+    "be deleted at creation" in new HostData {
       val model = HostStateModel()
-      model.deleted mustEqual false
+      model.deleted mustEqual true
     }
   }
 
@@ -53,7 +53,7 @@ class HostStateModelSpecs extends Specification with Mockito {
     "be unchanged if event is undefined" in new HostData {
       val model = HostStateModel()
       val changed = model.on(new HostChangedEvent {
-        def id: Long = testId
+        def id: String = testId
       })
       model mustEqual changed
     }

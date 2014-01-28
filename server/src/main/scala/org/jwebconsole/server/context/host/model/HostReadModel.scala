@@ -1,62 +1,65 @@
 package org.jwebconsole.server.context.host.model
 
-import akka.actor.{ActorLogging, Props, Actor}
-import org.jwebconsole.server.context.host.{HostDeletedEvent, HostCreatedEvent, HostParametersChangedEvent, HostChangedEvent}
-import org.jwebconsole.server.context.util.{GrabbedEvents, GrabEvents, AppEvent, AppEventHandler}
-import akka.pattern.ask
+import akka.actor.{Stash, Props, ActorLogging, Actor}
 import org.jwebconsole.server.util.AppConstants
-import scala.concurrent.{Await, Future}
 import akka.util.Timeout
-import scala.util.{Try, Failure, Success}
+import org.jwebconsole.server.context.util.{ReplayFinished, AppEvent, GlobalEventStore}
+import org.jwebconsole.server.context.host.{HostDeletedEvent, HostParametersChangedEvent, HostCreatedEvent, HostChangedEvent}
+import scala.concurrent.Future
+import scala.util.{Success, Failure}
 
-class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging {
+class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Stash {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
   implicit val exec = context.system.dispatcher
 
   override def preStart() = {
-    Try {
-      if (!dao.exists) {
-        val events = replayEvents()
-        events.foreach(updateDB)
-      }
-    } match {
-      case Success(v) => log.info("Read model recovery finished")
-      case Failure(e) => log.error("Read model recovery failed", e)
+    if (!dao.exists) {
+      context.become(replayingState)
+      makeReplay()
     }
   }
 
-  def replayEvents(): List[AppEvent] = {
-    val handler = context.actorOf(Props(new AppEventHandler(eventFilterFunc)))
-    val eventsFuture = (handler ? GrabEvents).asInstanceOf[Future[GrabbedEvents]]
-    Await.result(eventsFuture, timeout.duration).events
-  }
-
-  def eventFilterFunc: PartialFunction[AppEvent, Boolean] = {
-    case ev: HostChangedEvent => true
-    case _ => false
-  }
-
-  def updateDB(event: AppEvent): Unit = {
-    event match {
-      case updated: HostParametersChangedEvent =>
-        dao.update(SimpleHostView(updated.id, updated.name, updated.port))
-      case created: HostCreatedEvent =>
-        dao.create(SimpleHostView(created.id, created.name, created.port))
-      case deleted: HostDeletedEvent =>
-        dao.delete(deleted.id)
+  def persistAsync(event: HostChangedEvent): Unit = {
+    Future(updateDB(event)).onComplete {
+      case Failure(e) => log.warning("Unable to persist event" + event, e)
+      case Success(v) => log.info("Successfully persisted event to read DB")
     }
   }
 
   def receive: Receive = {
     case ev: HostChangedEvent =>
-      Future(updateDB(ev)) onComplete {
-        case Success(v) =>
-          log.info("successful event persist")
-        case Failure(e) =>
-          log.error("Failed to persist host changed event", e)
-      }
+      persistAsync(ev)
   }
+
+  def updateDB(event: HostChangedEvent): Unit = event match {
+    case ev: HostCreatedEvent =>
+      dao.create(SimpleHostView(ev.id, ev.name, ev.port))
+    case ev: HostParametersChangedEvent =>
+      dao.update(SimpleHostView(ev.id, ev.name, ev.port))
+    case ev: HostDeletedEvent =>
+      dao.delete(ev.id)
+  }
+
+  val replayingState: Receive = {
+    case ev: HostChangedEvent =>
+      updateDB(ev)
+    case ReplayFinished =>
+      context.become(receive)
+      unstashAll()
+    case _ => stash()
+
+  }
+
+  def makeReplay(): Unit = {
+    context.actorOf(Props(new GlobalEventStore(filterFunc, Some(self))))
+  }
+
+  def filterFunc: PartialFunction[AppEvent, Boolean] = {
+    case ev: HostChangedEvent => true
+    case _ => false
+  }
+
 }
 
-case class SimpleHostView(id: Long, host: String, port: Int)
+case class SimpleHostView(id: String, host: String, port: Int)

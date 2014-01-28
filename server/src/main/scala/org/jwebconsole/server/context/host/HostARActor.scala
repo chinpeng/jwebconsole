@@ -24,15 +24,29 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
 
 
   def validate(newModel: HostStateModel, ev: HostChangedEvent, source: ActorRef) {
-    validate(newModel) match {
-      case valid @ Valid(_) => persist(ev) {
+    val isValid = for (validChanges <- validate(newModel);
+                       validEvent <- validateEvent(validChanges, ev)) yield validEvent
+    isValid match {
+      case valid@Valid(_) => persist(ev) {
         ev =>
           model = newModel
           context.system.eventStream.publish(ValidationWithSender(source, valid))
+          context.system.eventStream.publish(ev)
       }
-      case invalid @ Invalid(_,_) =>
+      case invalid@Invalid(_, _) =>
         context.system.eventStream.publish(ValidationWithSender(source, invalid))
     }
+  }
+
+  def validateEvent(newModel: HostStateModel, event: HostChangedEvent): Validation[HostStateModel] = event match {
+    case ev: HostCreatedEvent if !model.deleted =>
+      Invalid(newModel, List(HostAlreadyCreated))
+    case ev: HostParametersChangedEvent if model.deleted =>
+      Invalid(newModel, List(HostDeletedMessage))
+    case ev: HostDeletedEvent if model.deleted =>
+      Invalid(newModel, List(HostDeletedMessage))
+    case _ =>
+      Valid(newModel)
   }
 
   def createValidationModel(cmd: HostCommand): (HostStateModel, HostChangedEvent) = {
@@ -67,11 +81,11 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
   }
 
   def validatePort(item: HostStateModel): Validation[HostStateModel] = {
-      item.port match {
-        case num if num <= 0 => Invalid(item, List(PortMustBePositive))
-        case num if num > 100000 => Invalid(item, List(BigNumberForPort))
-        case _ => Valid(item)
-      }
+    item.port match {
+      case num if num <= 0 => Invalid(item, List(PortMustBePositive))
+      case num if num > 100000 => Invalid(item, List(BigNumberForPort))
+      case _ => Valid(item)
+    }
 
   }
 
