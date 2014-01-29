@@ -3,13 +3,13 @@ package org.jwebconsole.server.context.host.model
 import akka.actor.{Stash, Props, ActorLogging, Actor}
 import org.jwebconsole.server.util.AppConstants
 import akka.util.Timeout
-import org.jwebconsole.server.context.util._
+import org.jwebconsole.server.context.common._
 import org.jwebconsole.server.context.host.HostChangedEvent
 import scala.concurrent.Future
 import org.jwebconsole.server.context.host.HostCreatedEvent
 import scala.util.Success
 import org.jwebconsole.server.context.host.HostParametersChangedEvent
-import org.jwebconsole.server.context.util.ResponseMessage
+import org.jwebconsole.server.context.common.ResponseMessage
 import scala.util.Failure
 import org.jwebconsole.server.context.host.HostDeletedEvent
 

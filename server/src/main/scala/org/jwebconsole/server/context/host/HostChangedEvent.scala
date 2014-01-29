@@ -1,6 +1,6 @@
 package org.jwebconsole.server.context.host
 
-import org.jwebconsole.server.context.util.AppEvent
+import org.jwebconsole.server.context.common.AppEvent
 
 trait HostChangedEvent extends AppEvent {
   def id: String

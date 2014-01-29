@@ -6,14 +6,14 @@ import org.jwebconsole.server.util.Valid
 import org.jwebconsole.server.util.Invalid
 import org.jwebconsole.server.util.ValidationConstants._
 import akka.actor.ActorRef
-import org.jwebconsole.server.context.util.ResponseMessage
+import org.jwebconsole.server.context.common.ResponseMessage
 import org.jwebconsole.server.context.host.model.SimpleHostView
 
 class HostARActor(override val processorId: String) extends EventsourcedProcessor {
 
   var model = HostStateModel()
 
-  def receiveReplay: Receive = {
+  def receiveRecover: Receive = {
     case ev => model = model.on(ev)
   }
 
@@ -88,5 +88,6 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
       case _ => Valid(item)
     }
   }
+
 
 }

@@ -3,7 +3,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource
 import javax.servlet.ServletContext
 import org.jwebconsole.server.context.host.HostChangedEvent
 import org.jwebconsole.server.context.host.model.{HostListViewActor, SimpleHostDAO}
-import org.jwebconsole.server.context.util.{ValidationWithSender, AppEvent, GlobalEventStore, ValidationActor}
+import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.servlet.HostServlet
 import org.scalatra.LifeCycle
 import scala.slick.driver.H2Driver.simple._
@@ -19,13 +19,11 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     val system = ActorSystem("app-system")
-    val validationActor = system.actorOf(Props[ValidationActor])
     val eventStore = system.actorOf(Props(new GlobalEventStore))
     val dao = new SimpleHostDAO(db)
     val readModel = system.actorOf(Props(new HostListViewActor(dao)))
     system.eventStream.subscribe(eventStore, classOf[AppEvent])
     system.eventStream.subscribe(readModel, classOf[HostChangedEvent])
-    system.eventStream.subscribe(validationActor, classOf[ValidationWithSender[Any]])
     context.mount(new HostServlet(system, readModel), "/hosts/*")
   }
 

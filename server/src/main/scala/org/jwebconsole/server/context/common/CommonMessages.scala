@@ -1,4 +1,4 @@
-package org.jwebconsole.server.context.util
+package org.jwebconsole.server.context.common
 
 import akka.actor.ActorRef
 import org.jwebconsole.server.util.{InvalidMessage, Validation}

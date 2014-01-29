@@ -5,7 +5,7 @@ import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.{Valid, Invalid, AkkaTestkitSupport}
 import akka.actor.Props
 import akka.testkit.TestProbe
-import org.jwebconsole.server.context.util.ValidationWithSender
+import org.jwebconsole.server.context.common.{ResponseMessage, ValidationWithSender}
 
 class HostARActorSpecs extends Specification with NoTimeConversions {
   sequential
@@ -14,19 +14,21 @@ class HostARActorSpecs extends Specification with NoTimeConversions {
     val processor = system.actorOf(Props(new HostARActor("1")))
     val probe = TestProbe()
     val probeRef = probe.ref
+    val eventProbe = TestProbe()
+    val eventProbeRef = eventProbe.ref
     val id = "test-id"
     val port = 8080
     val name = "localhost"
 
     def expectValidationFailed() {
       probe.expectMsgPF() {
-        case ValidationWithSender(_, Invalid(_, _)) => true
+        case ResponseMessage(_, msgs, _) if !msgs.isEmpty => true
       }
     }
 
     def expectValidationSuccess() {
       probe.expectMsgPF() {
-        case ValidationWithSender(_, Valid(_)) => true
+        case ResponseMessage(_, msgs, _) if msgs.isEmpty => true
       }
     }
 
@@ -95,27 +97,27 @@ class HostARActorSpecs extends Specification with NoTimeConversions {
 
   "host AR actor" should {
     "publish created event" in new mocks {
-      system.eventStream.subscribe(probeRef, classOf[HostCreatedEvent])
+      system.eventStream.subscribe(eventProbeRef, classOf[HostCreatedEvent])
       processor ! WithSender(probeRef, new CreateHostCommand(id, name, port))
-      probe.expectMsg(HostCreatedEvent(id, name, port))
+      eventProbe.expectMsg(HostCreatedEvent(id, name, port))
     }
   }
 
   "host AR actor" should {
     "publish changed event" in new mocks {
-      system.eventStream.subscribe(probeRef, classOf[HostParametersChangedEvent])
+      system.eventStream.subscribe(eventProbeRef, classOf[HostParametersChangedEvent])
       processor ! WithSender(probeRef, new CreateHostCommand(id, name, port))
       processor ! WithSender(probeRef, new ChangeHostCommand(id, name, port))
-      probe.expectMsg(HostParametersChangedEvent(id, name, port))
+      eventProbe.expectMsg(HostParametersChangedEvent(id, name, port))
     }
   }
 
   "host AR actor" should {
     "publish deleted event" in new mocks {
-      system.eventStream.subscribe(probeRef, classOf[HostDeletedEvent])
+      system.eventStream.subscribe(eventProbeRef, classOf[HostDeletedEvent])
       processor ! WithSender(probeRef, new CreateHostCommand(id, name, port))
       processor ! WithSender(probeRef, new DeleteHostCommand(id))
-      probe.expectMsg(HostDeletedEvent(id))
+      eventProbe.expectMsg(HostDeletedEvent(id))
     }
   }
 

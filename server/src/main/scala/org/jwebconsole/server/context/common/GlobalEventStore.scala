@@ -1,4 +1,4 @@
-package org.jwebconsole.server.context.util
+package org.jwebconsole.server.context.common
 
 import akka.persistence.{Recover, EventsourcedProcessor}
 import akka.actor.ActorLogging
@@ -12,7 +12,7 @@ class GlobalEventStore extends EventsourcedProcessor with ActorLogging {
     self ! Recover(toSequenceNr = 0)
   }
 
-  def receiveReplay: Receive = {
+  def receiveRecover: Receive ={
     case ev => log.warning("Received unknown message during replay of global event store")
   }
 
@@ -22,6 +22,9 @@ class GlobalEventStore extends EventsourcedProcessor with ActorLogging {
         ev =>
           log.debug("persisted event" + ev)
       }
+    case other =>
+      log.warning("Unknown message was delivered to global event store: " + other)
   }
+
 
 }

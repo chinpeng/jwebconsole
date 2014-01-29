@@ -1,16 +1,15 @@
-package org.jwebconsole.server.context.util
+package org.jwebconsole.server.context.common
 
-import akka.persistence.{Recover, EventsourcedProcessor}
-import akka.actor.{Cancellable, ActorLogging, ActorRef}
+import akka.persistence.EventsourcedProcessor
+import akka.actor.{ActorLogging, ActorRef}
 import scala.concurrent.duration._
 import akka.util.Timeout
 import org.jwebconsole.server.util.AppConstants
 
-class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], receiver: ActorRef) extends EventsourcedProcessor with ActorLogging {
+class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], receiver: ActorRef, interval: FiniteDuration = 5.second) extends EventsourcedProcessor with ActorLogging {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
   implicit val exec = context.system.dispatcher
-  val interval = 5.seconds
 
   override val processorId = AppConstants.GlobalEventStoreProcessorId
 
@@ -18,8 +17,8 @@ class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], recei
     self ! CheckReplayStatus
   }
 
-  def receiveReplay: Receive = {
-    case event: AppEvent =>
+  def receiveRecover: Receive = {
+    case event: AppEvent if filter(event) =>
       receiver ! event
   }
 
@@ -36,5 +35,6 @@ class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], recei
   }
 
   case object CheckReplayStatus
+
 
 }
