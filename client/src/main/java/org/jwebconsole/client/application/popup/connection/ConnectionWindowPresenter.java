@@ -7,14 +7,13 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import org.jwebconsole.client.application.ApplicationPresenter;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEventHandler;
 import org.jwebconsole.client.place.NameTokens;
 
 public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, ConnectionWindowPresenter.ConnectionWindowProxy> implements
         ConnectionWindowUiHandlers,
-        RevealConnectionPopupEventHandler{
+        RevealConnectionPopupEventHandler {
 
     @Inject
     public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy) {
@@ -25,6 +24,14 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     @Override
     protected void onBind() {
         super.onBind();
+        init();
+    }
+
+    private void init() {
+        getView().getHostName().clear();
+        getView().getPort().clear();
+        getView().getLogin().clear();
+        getView().getPassword().clear();
         getView().showDialog();
     }
 
@@ -34,7 +41,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
         if (!isBound()) {
             forceReveal();
         } else {
-            getView().showDialog();
+            init();
         }
     }
 
@@ -45,7 +52,10 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     @Override
     public void connectHost() {
+        boolean valid = getView().getHostName().validate() && getView().getPort().validate();
+        if (valid) {
 
+        }
     }
 
     @ProxyCodeSplit

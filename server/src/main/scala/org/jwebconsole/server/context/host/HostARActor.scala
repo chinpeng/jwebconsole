@@ -6,7 +6,8 @@ import org.jwebconsole.server.util.Valid
 import org.jwebconsole.server.util.Invalid
 import org.jwebconsole.server.util.ValidationConstants._
 import akka.actor.ActorRef
-import org.jwebconsole.server.context.util.ValidationWithSender
+import org.jwebconsole.server.context.util.ResponseMessage
+import org.jwebconsole.server.context.host.model.SimpleHostView
 
 class HostARActor(override val processorId: String) extends EventsourcedProcessor {
 
@@ -30,11 +31,11 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
       case valid@Valid(_) => persist(ev) {
         ev =>
           model = newModel
-          context.system.eventStream.publish(ValidationWithSender(source, valid))
+          source ! ResponseMessage(body = Some(SimpleHostView(model.id, model.name, model.port)))
           context.system.eventStream.publish(ev)
       }
       case invalid@Invalid(_, _) =>
-        context.system.eventStream.publish(ValidationWithSender(source, invalid))
+        source ! ResponseMessage(messages = Some(invalid.messages))
     }
   }
 
@@ -86,7 +87,6 @@ class HostARActor(override val processorId: String) extends EventsourcedProcesso
       case num if num > 100000 => Invalid(item, List(BigNumberForPort))
       case _ => Valid(item)
     }
-
   }
 
 }

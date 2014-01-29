@@ -11,10 +11,10 @@ class ValidationActor extends Actor with ActorLogging {
       validation match {
         case Valid(v) =>
           log.debug("Validation success for " + v)
-          source ! ResponseMessage(payload = v)
+          source ! ResponseMessage(body = Some(v))
         case Invalid(v, messages) =>
           log.debug("Validation failed for " + v + ". Messages: " + messages.mkString(" | "))
-          source ! ResponseMessage(messages = messages)
+          source ! ResponseMessage(messages = Some(messages))
       }
     case other =>
       log.warning("Unknown message " + other + " was received by Validation actor")

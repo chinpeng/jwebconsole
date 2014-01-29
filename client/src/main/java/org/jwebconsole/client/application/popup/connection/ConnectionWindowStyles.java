@@ -10,5 +10,5 @@ public interface ConnectionWindowStyles extends CssResource {
     @ClassName("content-margin")
     String contentMargin();
 
-    String clearfix();
+    int popupHeight();
 }

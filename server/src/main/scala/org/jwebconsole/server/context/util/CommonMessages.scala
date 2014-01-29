@@ -2,17 +2,12 @@ package org.jwebconsole.server.context.util
 
 import akka.actor.ActorRef
 import org.jwebconsole.server.util.{InvalidMessage, Validation}
-import scala.util.Try
-
-trait CommonMessages
 
 trait AppEvent
 
-case class ResponseMessage(payload: Any  = null, messages: List[InvalidMessage] = List.empty[InvalidMessage], error: String = "")
+trait CommonMessages
 
-case class ValidationAck(payload: Any = null) extends CommonMessages
-
-case class ValidationFailed(messages: List[InvalidMessage] = List.empty[InvalidMessage]) extends CommonMessages
+case class ResponseMessage(body: Option[Any] = None, messages: Option[List[InvalidMessage]] = None, error: Option[String] = None)
 
 case class ValidationWithSender[T](source: ActorRef, validation: Validation[T]) extends CommonMessages
 

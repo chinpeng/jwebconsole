@@ -3,6 +3,7 @@ package org.jwebconsole.client.bundle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import org.jwebconsole.client.application.popup.connection.ConnectionWindowStyles;
+import org.jwebconsole.client.widget.LoadingIndicatorStyles;
 
 public interface AppResources extends ClientBundle {
 
@@ -13,5 +14,10 @@ public interface AppResources extends ClientBundle {
 
     @Source("popup/connection/connection-window.css")
     ConnectionWindowStyles connectionWindow();
+
+    @Source("widget/indicator.css")
+    LoadingIndicatorStyles indicatorStyles();
+
+    AppImages appImages();
 
 }

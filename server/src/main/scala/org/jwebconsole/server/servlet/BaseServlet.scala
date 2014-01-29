@@ -20,6 +20,7 @@ trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSu
   implicit val executor = system.dispatcher
 
   implicit val timeout = Timeout(5 seconds)
+
   protected implicit val jsonFormats: Formats = DefaultFormats
 
   def executeAsync[T](future: Future[T]): AsyncResult = {

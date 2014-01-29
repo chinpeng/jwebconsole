@@ -5,9 +5,7 @@ import org.specs2.mock.Mockito
 import akka.actor.{ActorRef, ActorSystem}
 import akka.testkit.{TestProbe, TestActorRef}
 import org.jwebconsole.server.util._
-import org.jwebconsole.server.util.Valid
-import org.jwebconsole.server.util.Invalid
-import org.jwebconsole.server.context.util.{ValidationFailed, ValidationAck, ValidationWithSender, ValidationActor}
+import org.jwebconsole.server.context.util.ValidationActor
 
 
 class ValidationActorSpecs extends Specification with Mockito {

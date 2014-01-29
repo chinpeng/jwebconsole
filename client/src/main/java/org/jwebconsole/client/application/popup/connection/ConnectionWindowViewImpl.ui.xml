@@ -19,7 +19,7 @@
                     <container:child>
                         <form:FieldLabel text="Host name">
                             <form:widget>
-                                <form:TextField/>
+                                <form:TextField ui:field="hostName" allowBlank="false"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -27,7 +27,7 @@
                     <container:child>
                         <form:FieldLabel text="Host port">
                             <form:widget>
-                                <form:TextField/>
+                                <form:NumberField ui:field="port" allowBlank="false" />
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -35,7 +35,7 @@
                     <container:child>
                         <form:FieldLabel text="Login">
                             <form:widget>
-                                <form:TextField/>
+                                <form:TextField ui:field="login"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -43,7 +43,7 @@
                     <container:child>
                         <form:FieldLabel text="Password">
                             <form:widget>
-                                <form:TextField/>
+                                <form:PasswordField ui:field="password"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>

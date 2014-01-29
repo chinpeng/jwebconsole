@@ -3,12 +3,17 @@ package org.jwebconsole.server.context.host.model
 import akka.actor.{Stash, Props, ActorLogging, Actor}
 import org.jwebconsole.server.util.AppConstants
 import akka.util.Timeout
-import org.jwebconsole.server.context.util.{ResponseMessage, ReplayFinished, AppEvent, GlobalEventStore}
-import org.jwebconsole.server.context.host.{HostDeletedEvent, HostParametersChangedEvent, HostCreatedEvent, HostChangedEvent}
+import org.jwebconsole.server.context.util._
+import org.jwebconsole.server.context.host.HostChangedEvent
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
+import org.jwebconsole.server.context.host.HostCreatedEvent
+import scala.util.Success
+import org.jwebconsole.server.context.host.HostParametersChangedEvent
+import org.jwebconsole.server.context.util.ResponseMessage
+import scala.util.Failure
+import org.jwebconsole.server.context.host.HostDeletedEvent
 
-class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Stash {
+class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with Stash {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
   implicit val exec = context.system.dispatcher
@@ -23,7 +28,7 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
 
   def persistAsync(event: HostChangedEvent): Unit = {
     Future(updateDB(event)).onComplete {
-      case Failure(e) => log.warning("Unable to persist event" + event, e)
+      case Failure(e) => log.error(e, "Unable to persist event")
       case Success(v) => log.info("Successfully persisted event to read DB")
     }
   }
@@ -38,8 +43,10 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
   def makeResponse(): Unit = {
     val current = sender
     Future(dao.getAll) onComplete {
-      case Failure(e) => current ! ResponseMessage(error = "Unable to connect to Database")
-      case Success(v) => current ! ResponseMessage(payload = v)
+      case Failure(e) =>
+        log.error(e, "Unable to connect to Database")
+        current ! ResponseMessage(error = Some("Unable to connect to Database"))
+      case Success(v) => current ! ResponseMessage(body = Some(v))
     }
   }
 
@@ -63,7 +70,7 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
   }
 
   def makeReplay(): Unit = {
-    context.actorOf(Props(new GlobalEventStore(filterFunc, Some(self))))
+    context.actorOf(Props(new EventStoreReplayingActor(filterFunc, self)))
   }
 
   def filterFunc: PartialFunction[AppEvent, Boolean] = {
@@ -74,5 +81,3 @@ class HostReadModel(dao: SimpleHostDAO) extends Actor with ActorLogging with Sta
 }
 
 case object SimpleHostViewRequest
-
-case class SimpleHostView(id: String, host: String, port: Int)
