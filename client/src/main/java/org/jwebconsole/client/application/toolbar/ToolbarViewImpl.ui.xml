@@ -3,8 +3,11 @@
              xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
+    <ui:with field="res" type="org.jwebconsole.client.bundle.AppResources"/>
+    <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
+
     <toolbar:ToolBar ui:field="toolbar">
-        <button:TextButton text="Create Connection" ui:field="createConnectionButton"/>
+        <button:TextButton text="{messages.createConnectionToolbarButtonText}" ui:field="createConnectionButton"/>
     </toolbar:ToolBar>
 
 </ui:UiBinder>

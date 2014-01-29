@@ -54,7 +54,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     public void connectHost() {
         boolean valid = getView().getHostName().validate() && getView().getPort().validate();
         if (valid) {
-
+            getView().getWindow().mask("Loading");
         }
     }
 

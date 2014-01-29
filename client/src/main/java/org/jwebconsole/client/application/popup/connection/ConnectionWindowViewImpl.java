@@ -1,16 +1,11 @@
 package org.jwebconsole.client.application.popup.connection;
 
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.BeforeHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberField;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
@@ -113,4 +108,8 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
         return port;
     }
 
+    @Override
+    public Window getWindow() {
+        return window;
+    }
 }

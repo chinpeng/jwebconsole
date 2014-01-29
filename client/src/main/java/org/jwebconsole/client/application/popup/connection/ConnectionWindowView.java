@@ -2,6 +2,7 @@ package org.jwebconsole.client.application.popup.connection;
 
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
+import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.form.NumberField;
 import com.sencha.gxt.widget.core.client.form.PasswordField;
@@ -24,4 +25,6 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
     TextField getLogin();
 
     NumberField<Integer> getPort();
+
+    Window getWindow();
 }
