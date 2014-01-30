@@ -28,7 +28,7 @@ class SimpleHostDAO(db: Database) {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hosts foreach (host => hostQuery +=(host.id, host.host, host.port))
+        hosts foreach (host => hostQuery +=(host.id, host.name, host.port))
     }
   }
 
@@ -37,7 +37,7 @@ class SimpleHostDAO(db: Database) {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         val toUpdate = for (item: HostTable <- hostQuery if item.id === host.id) yield item
-        toUpdate.update((host.id, host.host, host.port))
+        toUpdate.update((host.id, host.name, host.port))
     }
   }
 
@@ -45,7 +45,7 @@ class SimpleHostDAO(db: Database) {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hostQuery +=(host.id, host.host, host.port)
+        hostQuery +=(host.id, host.name, host.port)
     }
   }
 

@@ -2,17 +2,17 @@ package org.jwebconsole.client.model.host;
 
 public class HostConnection {
 
-    private Integer id;
+    private String id;
     private String name;
-    private String port;
+    private Integer port;
     private String user;
     private String password;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -24,11 +24,11 @@ public class HostConnection {
         this.name = name;
     }
 
-    public String getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

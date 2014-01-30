@@ -34,4 +34,4 @@ case class Valid[T](v: T) extends Validation[T]
 
 case class Invalid[T](v: T, messages: List[InvalidMessage]) extends Validation[T]
 
-case class InvalidMessage(id: Int, msg: String)
+case class InvalidMessage(id: Int, message: String)
