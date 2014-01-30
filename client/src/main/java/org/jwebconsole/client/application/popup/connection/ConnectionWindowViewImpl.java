@@ -79,16 +79,6 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     }
 
     @Override
-    public TextButton getConnectButton() {
-        return connectButton;
-    }
-
-    @Override
-    public TextButton getCancelButton() {
-        return cancelButton;
-    }
-
-    @Override
     public TextField getHostName() {
         return hostName;
     }

@@ -1,6 +1,5 @@
 package org.jwebconsole.client.application.popup.connection;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -9,9 +8,10 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.sencha.gxt.widget.core.client.form.Field;
+import com.sencha.gxt.widget.core.client.form.TextField;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.jwebconsole.client.bundle.ValidationMessages;
+import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEventHandler;
 import org.jwebconsole.client.model.base.ValidationMessage;
@@ -76,7 +76,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 getView().getWindow().unmask();
-                Window.alert("" + throwable);
+                facade.displayError(throwable.getMessage());
             }
 
             @Override
@@ -99,20 +99,21 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void printValidationMessages(HostConnectionResponse response) {
         for (ValidationMessage validationMessage : response.getMessages()) {
-            markInvalid(ValidationMessages.HOST_CREATED_ID, validationMessage, getView().getHostName());
-            markInvalid(ValidationMessages.HOST_DELETED_ID, validationMessage, getView().getHostName());
-            markInvalid(ValidationMessages.PORT_EMPTY_ID, validationMessage, getView().getPort());
-            markInvalid(ValidationMessages.BIG_PORT_NUMBER_ID, validationMessage, getView().getPort());
-            markInvalid(ValidationMessages.HOST_NAME_EMPTY_ID, validationMessage, getView().getHostName());
-            markInvalid(ValidationMessages.PORT_MUST_BE_POSITIVE_ID, validationMessage, getView().getPort());
+            markInvalid(validationMessage.getId(), AppValidationId.PORT_NEGATIVE, getView().getPort());
+            markInvalid(validationMessage.getId(), AppValidationId.BIG_PORT_NUMBER, getView().getPort());
+            markInvalid(validationMessage.getId(), AppValidationId.HOST_ALREADY_CREATED, getView().getHostName());
+            markInvalid(validationMessage.getId(), AppValidationId.HOST_ALREADY_DELETED, getView().getHostName());
+            markInvalid(validationMessage.getId(), AppValidationId.PORT_EMPTY_MESSAGE, getView().getPort());
+            markInvalid(validationMessage.getId(), AppValidationId.HOST_NAME_EMPTY, getView().getHostName());
         }
     }
 
-    private void markInvalid(Integer id, ValidationMessage message, Field field) {
-        if (message.getId().equals(id)) {
-            field.markInvalid(facade.getValidationMessage(id));
+    private void markInvalid(Integer id, AppValidationId validation, Field field) {
+        if (validation.getId().equals(id)) {
+            field.markInvalid(facade.getMessage(validation));
         }
     }
+
 
     private HostConnection createConnection() {
         HostConnection result = new HostConnection();

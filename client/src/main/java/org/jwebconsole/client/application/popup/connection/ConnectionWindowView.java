@@ -14,9 +14,6 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
 
     void hideDialog();
 
-    TextButton getConnectButton();
-
-    TextButton getCancelButton();
 
     TextField getHostName();
 

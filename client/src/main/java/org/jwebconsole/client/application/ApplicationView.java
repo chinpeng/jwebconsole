@@ -12,10 +12,6 @@ import javax.inject.Inject;
 
 public class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 
-    static {
-        AppResources.INSTANCE.app().ensureInjected();
-    }
-
     @UiField
     HTMLPanel toolbar;
 
@@ -23,7 +19,8 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     }
 
     @Inject
-    public ApplicationView(Binder uiBinder) {
+    public ApplicationView(Binder uiBinder, AppResources resources) {
+        resources.app().ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
     }
 

@@ -10,6 +10,6 @@ public class ApplicationModule extends AbstractPresenterModule {
         install(new ToolbarModule());
         install(new ConnectionWindowModule());
         bindPresenter(ApplicationPresenter.class, ApplicationPresenter.MyView.class, ApplicationView.class,
-                ApplicationPresenter.MyProxy.class);
+                ApplicationPresenter.ApplicationProxy.class);
     }
 }

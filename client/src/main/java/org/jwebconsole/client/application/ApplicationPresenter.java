@@ -1,7 +1,6 @@
 package org.jwebconsole.client.application;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -9,13 +8,12 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.place.NameTokens;
 
-public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
+public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.ApplicationProxy> {
     public interface MyView extends View {
     }
 
@@ -24,11 +22,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 
     @ProxyStandard
     @NameToken(NameTokens.home)
-    public interface MyProxy extends ProxyPlace<ApplicationPresenter> {
+    public interface ApplicationProxy extends ProxyPlace<ApplicationPresenter> {
     }
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+    public ApplicationPresenter(EventBus eventBus, MyView view, ApplicationProxy proxy) {
         super(eventBus, view, proxy, RevealType.Root);
     }
 

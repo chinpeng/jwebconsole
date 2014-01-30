@@ -3,7 +3,7 @@ package org.jwebconsole.server.context.common
 import org.specs2.mutable.Specification
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.{AppConstants, AkkaTestkitSupport}
-import akka.actor.{Actor, Props}
+import akka.actor.Props
 import akka.persistence.EventsourcedProcessor
 import akka.testkit.TestProbe
 import org.jwebconsole.server.context.host.HostDeletedEvent

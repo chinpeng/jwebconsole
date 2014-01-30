@@ -2,6 +2,14 @@ package org.jwebconsole.client.model.base;
 
 public class ValidationMessage {
 
+    public ValidationMessage() {
+    }
+
+    public ValidationMessage(Integer id, String message) {
+        this.id = id;
+        this.message = message;
+    }
+
     private Integer id;
 
     private String message;
