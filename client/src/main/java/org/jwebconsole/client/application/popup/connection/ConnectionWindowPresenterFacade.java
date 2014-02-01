@@ -24,10 +24,6 @@ public class ConnectionWindowPresenterFacade {
         this.converter = converter;
     }
 
-    public String getMaskMessage() {
-        return messages.loadingMaskText();
-    }
-
     public void connect(HostConnection connection, MethodCallback<HostConnectionResponse> callback) {
         serviceFactory.getHostService().addNewHost(connection, callback);
     }

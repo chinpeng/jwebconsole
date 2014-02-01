@@ -14,14 +14,20 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
 
     void hideDialog();
 
+    void clearFields();
 
-    TextField getHostName();
+    void showLoadingMask();
 
-    PasswordField getPassword();
+    boolean isFieldsValid();
 
-    TextField getLogin();
+    void hideMask();
 
-    NumberField<Integer> getPort();
+    String getHostName();
 
-    Window getWindow();
+    Integer getPort();
+
+    String getLogin();
+
+    String getPassword();
+
 }

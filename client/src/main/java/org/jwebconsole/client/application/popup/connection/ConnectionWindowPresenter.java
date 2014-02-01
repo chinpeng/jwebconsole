@@ -8,10 +8,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.sencha.gxt.widget.core.client.form.Field;
-import com.sencha.gxt.widget.core.client.form.TextField;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEventHandler;
 import org.jwebconsole.client.model.base.ValidationMessage;
@@ -39,10 +37,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     }
 
     private void init() {
-        getView().getHostName().clear();
-        getView().getPort().clear();
-        getView().getLogin().clear();
-        getView().getPassword().clear();
+        getView().clearFields();
         getView().showDialog();
     }
 
@@ -63,9 +58,8 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     @Override
     public void connectHost() {
-        boolean valid = getView().getHostName().validate() && getView().getPort().validate();
-        if (valid) {
-            getView().getWindow().mask(facade.getMaskMessage());
+        if (getView().isFieldsValid()) {
+            getView().showLoadingMask();
             HostConnection connection = createConnection();
             makeRequestToServer(connection);
         }
@@ -75,13 +69,13 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
         facade.connect(connection, new MethodCallback<HostConnectionResponse>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
-                getView().getWindow().unmask();
+                getView().hideMask();
                 facade.displayError(throwable.getMessage());
             }
 
             @Override
             public void onSuccess(Method method, HostConnectionResponse response) {
-                getView().getWindow().unmask();
+                getView().hideMask();
                 processResponse(response);
             }
         });
@@ -89,7 +83,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void processResponse(HostConnectionResponse response) {
         if (response.isSuccess()) {
-            getView().getWindow().hide();
+            getView().hideDialog();
         } else if (!response.isValid()) {
             printValidationMessages(response);
         } else if (response.isError()) {
@@ -99,28 +93,22 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void printValidationMessages(HostConnectionResponse response) {
         for (ValidationMessage validationMessage : response.getMessages()) {
-            markInvalid(validationMessage.getId(), AppValidationId.PORT_NEGATIVE, getView().getPort());
-            markInvalid(validationMessage.getId(), AppValidationId.BIG_PORT_NUMBER, getView().getPort());
-            markInvalid(validationMessage.getId(), AppValidationId.HOST_ALREADY_CREATED, getView().getHostName());
-            markInvalid(validationMessage.getId(), AppValidationId.HOST_ALREADY_DELETED, getView().getHostName());
-            markInvalid(validationMessage.getId(), AppValidationId.PORT_EMPTY_MESSAGE, getView().getPort());
-            markInvalid(validationMessage.getId(), AppValidationId.HOST_NAME_EMPTY, getView().getHostName());
+
         }
     }
 
-    private void markInvalid(Integer id, AppValidationId validation, Field field) {
-        if (validation.getId().equals(id)) {
-            field.markInvalid(facade.getMessage(validation));
+    private void markInvalid(Integer id, ValidationMessage message, Field field) {
+        if (message.getId().equals(id)) {
+
         }
     }
-
 
     private HostConnection createConnection() {
         HostConnection result = new HostConnection();
-        result.setName(getView().getHostName().getValue());
-        result.setPort(getView().getPort().getValue());
-        result.setUser(getView().getLogin().getText());
-        result.setPassword(getView().getPassword().getText());
+        result.setName(getView().getHostName());
+        result.setPort(getView().getPort());
+        result.setUser(getView().getLogin());
+        result.setPassword(getView().getPassword());
         return result;
     }
 

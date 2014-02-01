@@ -12,6 +12,7 @@ import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.form.PasswordField;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import org.jwebconsole.client.bundle.AppResources;
+import org.jwebconsole.client.bundle.messages.Messages;
 
 public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindowUiHandlers> implements ConnectionWindowView {
 
@@ -35,8 +36,11 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     interface Binder extends UiBinder<Window, ConnectionWindowViewImpl> {
     }
 
+    private Messages appMessages;
+
     @Inject
-    public ConnectionWindowViewImpl(Binder binder, AppResources resources) {
+    public ConnectionWindowViewImpl(Binder binder, AppResources resources, Messages messages) {
+        this.appMessages = messages;
         port = new NumberField<Integer>(new NumberPropertyEditor.IntegerPropertyEditor());
         initWidget(binder.createAndBindUi(this));
         this.resources = resources;
@@ -79,27 +83,45 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     }
 
     @Override
-    public TextField getHostName() {
-        return hostName;
+    public void clearFields() {
+        hostName.clear();
+        port.clear();
+        login.clear();
+        password.clear();
     }
 
     @Override
-    public PasswordField getPassword() {
-        return password;
+    public void showLoadingMask() {
+        window.mask(appMessages.loadingMaskText());
     }
 
     @Override
-    public TextField getLogin() {
-        return login;
+    public boolean isFieldsValid() {
+        return hostName.validate() && port.validate();
     }
 
     @Override
-    public NumberField<Integer> getPort() {
-        return port;
+    public void hideMask() {
+        window.unmask();
     }
 
     @Override
-    public Window getWindow() {
-        return window;
+    public String getHostName() {
+        return hostName.getValue();
+    }
+
+    @Override
+    public Integer getPort() {
+        return port.getValue();
+    }
+
+    @Override
+    public String getLogin() {
+        return login.getValue();
+    }
+
+    @Override
+    public String getPassword() {
+        return password.getValue();
     }
 }
