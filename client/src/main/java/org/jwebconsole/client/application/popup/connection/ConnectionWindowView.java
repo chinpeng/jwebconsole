@@ -30,4 +30,8 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
 
     String getPassword();
 
+    void markPortInvalid(String message);
+
+    void markHostInvalid(String message);
+
 }

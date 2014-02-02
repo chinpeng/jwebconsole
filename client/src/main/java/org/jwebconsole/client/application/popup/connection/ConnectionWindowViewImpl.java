@@ -124,4 +124,14 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     public String getPassword() {
         return password.getValue();
     }
+
+    @Override
+    public void markPortInvalid(String message) {
+        port.markInvalid(message);
+    }
+
+    @Override
+    public void markHostInvalid(String message) {
+        hostName.markInvalid(message);
+    }
 }

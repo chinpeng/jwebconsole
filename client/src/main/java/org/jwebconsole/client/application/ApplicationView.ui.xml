@@ -27,14 +27,20 @@
                 </row:child>
                 <row:child>
                     <g:HTMLPanel addStyleNames="{res.app.appContentBody}">
-                        <g:Label>Test</g:Label>
+                        <g:HTMLPanel ui:field="leftPanel" styleName="{res.app.appLeftPanel}">
+
+                        </g:HTMLPanel>
+                        <g:HTMLPanel ui:field="rightPanel" styleName="{res.app.appRightPanel}">
+                            <gxt:ContentPanel height="580px">
+
+                            </gxt:ContentPanel>
+                        </g:HTMLPanel>
                     </g:HTMLPanel>
                 </row:child>
             </row:VerticalLayoutContainer>
 
         </gxt:FramedPanel>
     </g:HTMLPanel>
-
 
 
 </ui:UiBinder>

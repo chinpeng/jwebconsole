@@ -1,10 +1,26 @@
 .app-main-window {
     height: 100%;
     margin: 10px 10px 10px 10px;
+    min-width: 900px;
 }
 
 .app-content-body {
     height: 600px;
+    min-width: 800px;
+}
+
+.app-left-panel {
+    float: left;
+    width: 25%;
+    margin: 5px 5px 5px 5px;
+    height: 580px;
+}
+
+.app-right-panel {
+    float: left;
+    width: 72%;
+    height: 580px;
+    margin: 5px 5px 5px 5px;
 }
 
 .app-container {

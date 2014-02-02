@@ -13,4 +13,9 @@ public interface ApplicationStyles extends CssResource {
     @ClassName("app-container")
     String appContainer();
 
+    @ClassName("app-left-panel")
+    String appLeftPanel();
+
+    @ClassName("app-right-panel")
+    String appRightPanel();
 }

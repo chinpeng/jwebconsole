@@ -3,6 +3,7 @@ package org.jwebconsole.client.service;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
 
 import javax.ws.rs.Consumes;
@@ -18,7 +19,7 @@ public interface HostService extends RestService {
 
     @GET
     @Path("/status/all")
-    public void getHostStatus(MethodCallback<List<HostConnection>> callback);
+    public void getHostsStatus(MethodCallback<HostConnectionListResponse> callback);
 
     @POST
     @Path("/listen")

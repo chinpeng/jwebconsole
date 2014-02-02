@@ -7,9 +7,10 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import com.sencha.gxt.widget.core.client.form.Field;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
+import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEventHandler;
 import org.jwebconsole.client.model.base.ValidationMessage;
@@ -83,7 +84,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void processResponse(HostConnectionResponse response) {
         if (response.isSuccess()) {
-            getView().hideDialog();
+            processSuccessResult(response.getBody());
         } else if (!response.isValid()) {
             printValidationMessages(response);
         } else if (response.isError()) {
@@ -91,17 +92,35 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
         }
     }
 
+    private void processSuccessResult(HostConnection connection) {
+        getView().hideDialog();
+        getEventBus().fireEvent(new HostCreatedEvent(connection));
+    }
+
     private void printValidationMessages(HostConnectionResponse response) {
         for (ValidationMessage validationMessage : response.getMessages()) {
-
+            Integer id = validationMessage.getId();
+            if (id.equals(AppValidationId.BIG_PORT_NUMBER.getId())) {
+                getView().markPortInvalid(facade.getMessage(AppValidationId.BIG_PORT_NUMBER));
+            }
+            if (id.equals(AppValidationId.HOST_ALREADY_CREATED.getId())) {
+                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_ALREADY_CREATED));
+            }
+            if (id.equals(AppValidationId.HOST_ALREADY_DELETED.getId())) {
+                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_ALREADY_DELETED));
+            }
+            if (id.equals(AppValidationId.PORT_EMPTY_MESSAGE.getId())) {
+                getView().markPortInvalid(facade.getMessage(AppValidationId.PORT_EMPTY_MESSAGE));
+            }
+            if (id.equals(AppValidationId.HOST_NAME_EMPTY.getId())) {
+                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_NAME_EMPTY));
+            }
+            if (id.equals(AppValidationId.PORT_NEGATIVE.getId())) {
+                getView().markPortInvalid(facade.getMessage(AppValidationId.PORT_NEGATIVE));
+            }
         }
     }
 
-    private void markInvalid(Integer id, ValidationMessage message, Field field) {
-        if (message.getId().equals(id)) {
-
-        }
-    }
 
     private HostConnection createConnection() {
         HostConnection result = new HostConnection();
