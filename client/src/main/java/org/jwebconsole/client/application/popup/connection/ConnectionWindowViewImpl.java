@@ -11,12 +11,12 @@ import com.sencha.gxt.widget.core.client.form.NumberField;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.form.PasswordField;
 import com.sencha.gxt.widget.core.client.form.TextField;
-import org.jwebconsole.client.bundle.AppResources;
+import org.jwebconsole.client.bundle.AppStyles;
 import org.jwebconsole.client.bundle.messages.Messages;
 
 public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindowUiHandlers> implements ConnectionWindowView {
 
-    private final AppResources resources;
+    private final AppStyles resources;
 
     @UiField
     Window window;
@@ -39,7 +39,7 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     private Messages appMessages;
 
     @Inject
-    public ConnectionWindowViewImpl(Binder binder, AppResources resources, Messages messages) {
+    public ConnectionWindowViewImpl(Binder binder, AppStyles resources, Messages messages) {
         this.appMessages = messages;
         port = new NumberField<Integer>(new NumberPropertyEditor.IntegerPropertyEditor());
         initWidget(binder.createAndBindUi(this));

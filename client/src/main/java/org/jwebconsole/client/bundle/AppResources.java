@@ -1,25 +1,24 @@
 package org.jwebconsole.client.bundle;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
-import org.jwebconsole.client.application.ApplicationStyles;
-import org.jwebconsole.client.application.left.AvailableHostsStyles;
-import org.jwebconsole.client.application.popup.connection.ConnectionWindowStyles;
+import com.google.inject.Inject;
 
-public interface AppResources extends ClientBundle {
+public class AppResources {
 
-    AppResources INSTANCE = GWT.create(AppResources.class);
+    private AppIcons icons;
 
-    @Source("css/application.css")
-    ApplicationStyles app();
+    private AppStyles styles;
 
-    @Source("css/connection/connection-window.css")
-    ConnectionWindowStyles connectionWindow();
+    @Inject
+    public AppResources(AppIcons icons, AppStyles styles) {
+        this.icons = icons;
+        this.styles = styles;
+    }
 
-    @Source("css/left/availableHosts.css")
-    AvailableHostsStyles availableHosts();
+    public AppIcons getIcons() {
+        return icons;
+    }
 
-    @Source("img/icon_include.png")
-    ImageResource hostAvailableIcon();
+    public AppStyles getStyles() {
+        return styles;
+    }
 }

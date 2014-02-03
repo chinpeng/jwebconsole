@@ -6,4 +6,6 @@ public interface ToolbarUiHandlers extends UiHandlers {
 
     void openConnectionWindow();
 
+    void deleteConnection();
+
 }

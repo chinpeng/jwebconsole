@@ -5,15 +5,21 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.jwebconsole.client.model.base.BaseResponse;
 
-public abstract class SuccessMessage<T extends BaseResponse<?>> implements MethodCallback<T> {
+public abstract class SuccessCallback<T extends BaseResponse<?>> implements MethodCallback<T> {
+
+    public void beforeAll() {
+
+    }
 
     @Override
     public void onFailure(Method method, Throwable throwable) {
+        beforeAll();
         Info.display("Error", throwable.getMessage());
     }
 
     @Override
     public void onSuccess(Method method, T response) {
+        beforeAll();
         if (response.isError()) {
             Info.display("Error", response.getError());
         } else {

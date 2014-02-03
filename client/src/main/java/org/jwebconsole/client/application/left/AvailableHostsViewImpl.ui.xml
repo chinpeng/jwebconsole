@@ -4,15 +4,16 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree">
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppResources"/>
+    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
-    <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store" />
-    <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider" />
+    <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store"/>
+    <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider"/>
 
     <g:HTMLPanel ui:field="main">
-        <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" deferHeight="true" height="{res.availableHosts.windowHeight}">
-            <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" />
+        <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" deferHeight="true"
+                          height="{res.availableHosts.windowHeight}">
+            <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}"/>
         </gxt:ContentPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -17,6 +17,22 @@ public class ToolbarViewImpl extends ViewWithUiHandlers<ToolbarUiHandlers> imple
 
     @UiField
     TextButton createConnectionButton;
+    @UiField
+    TextButton editConnectionButton;
+    @UiField
+    TextButton deleteConnectionButton;
+
+    @Override
+    public void disableEditButtons() {
+        editConnectionButton.disable();
+        deleteConnectionButton.disable();
+    }
+
+    @Override
+    public void enableEditButtons() {
+        editConnectionButton.enable();
+        deleteConnectionButton.enable();
+    }
 
     interface Binder extends UiBinder<Widget, ToolbarViewImpl> {
     }
@@ -28,6 +44,20 @@ public class ToolbarViewImpl extends ViewWithUiHandlers<ToolbarUiHandlers> imple
     }
 
     private void init() {
+        initCreateButton();
+        initDeleteButton();
+    }
+
+    private void initDeleteButton() {
+        deleteConnectionButton.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+
+            }
+        });
+    }
+
+    private void initCreateButton() {
         createConnectionButton.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {

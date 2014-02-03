@@ -5,6 +5,8 @@ import com.gwtplatform.mvp.client.View;
 
 public interface ToolbarView extends View, HasUiHandlers<ToolbarUiHandlers> {
 
+    void disableEditButtons();
 
+    void enableEditButtons();
 
 }

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
-import org.jwebconsole.client.bundle.AppResources;
+import org.jwebconsole.client.bundle.AppStyles;
 
 import javax.inject.Inject;
 
@@ -23,7 +23,7 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     }
 
     @Inject
-    public ApplicationView(Binder uiBinder, AppResources resources) {
+    public ApplicationView(Binder uiBinder, AppStyles resources) {
         resources.app().ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
     }

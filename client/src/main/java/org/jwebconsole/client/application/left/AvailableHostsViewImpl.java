@@ -1,5 +1,7 @@
 package org.jwebconsole.client.application.left;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -19,11 +21,9 @@ import java.util.List;
 
 public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiHandlers> implements AvailableHostsView {
 
+    private final AppResources appResources;
     @UiField(provided = true)
     TreeStore<HostConnection> store;
-
-    private AppResources appResources;
-
 
     interface Binder extends UiBinder<Widget, AvailableHostsViewImpl> {
     }
@@ -32,7 +32,7 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     HTMLPanel main;
 
     @UiField
-    Tree tree;
+    Tree<HostConnection, String> tree;
 
     @Inject
     AvailableHostsViewImpl(Binder uiBinder, AppResources appResources) {
@@ -43,7 +43,17 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     }
 
     private void initAfter() {
-        tree.getStyle().setLeafIcon(appResources.hostAvailableIcon());
+        tree.getStyle().setLeafIcon(appResources.getIcons().hostAvailableIcon());
+        initClickHandler();
+    }
+
+    private void initClickHandler() {
+       tree.getSelectionModel().addSelectionHandler(new SelectionHandler<HostConnection>() {
+           @Override
+           public void onSelection(SelectionEvent<HostConnection> event) {
+               getUiHandlers().onTreeItemSelected(event.getSelectedItem());
+           }
+       });
     }
 
     private void init() {

@@ -9,7 +9,7 @@
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:container='urn:import:com.sencha.gxt.widget.core.client.container'>
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppResources"/>
+    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
