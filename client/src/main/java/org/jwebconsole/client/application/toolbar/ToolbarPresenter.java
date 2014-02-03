@@ -12,13 +12,16 @@ import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
+import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.service.SuccessCallback;
 
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
         RevealOnStartEventHandler,
         HostSelectedEventHandler {
 
+    private final ToolbarPresenterFacade facade;
     private HostConnection selectedConnection;
 
     @ProxyCodeSplit
@@ -26,8 +29,9 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     }
 
     @Inject
-    public ToolbarPresenter(EventBus eventBus, ToolbarView view, ToolbarProxy proxy) {
+    public ToolbarPresenter(EventBus eventBus, ToolbarView view, ToolbarProxy proxy, ToolbarPresenterFacade facade) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_TOOLBAR);
+        this.facade = facade;
         init();
 
     }
@@ -56,6 +60,25 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Override
     public void deleteConnection() {
+        facade.deleteHost(selectedConnection.getId(), new SuccessCallback<SimpleResponse>() {
+
+            @Override
+            public void beforeResponse() {
+
+            }
+
+            @Override
+            public void onSuccess(SimpleResponse response) {
+                if (response.isValid()) {
+                    processSuccessfulDeletion();
+                } else {
+
+                }
+            }
+        });
+    }
+
+    private void processSuccessfulDeletion() {
 
     }
 

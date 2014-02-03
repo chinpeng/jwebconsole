@@ -7,19 +7,19 @@ import org.jwebconsole.client.model.base.BaseResponse;
 
 public abstract class SuccessCallback<T extends BaseResponse<?>> implements MethodCallback<T> {
 
-    public void beforeAll() {
+    public void beforeResponse() {
 
     }
 
     @Override
     public void onFailure(Method method, Throwable throwable) {
-        beforeAll();
+        beforeResponse();
         Info.display("Error", throwable.getMessage());
     }
 
     @Override
     public void onSuccess(Method method, T response) {
-        beforeAll();
+        beforeResponse();
         if (response.isError()) {
             Info.display("Error", response.getError());
         } else {
