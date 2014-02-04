@@ -8,4 +8,6 @@ public interface ToolbarUiHandlers extends UiHandlers {
 
     void deleteConnection();
 
+    void editConnection();
+
 }

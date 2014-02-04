@@ -15,7 +15,8 @@ import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.event.RevealOnStartEventHandler;
-import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
+import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
+import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.service.SuccessCallback;
@@ -59,7 +60,7 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Override
     public void openConnectionWindow() {
-        getEventBus().fireEvent(new RevealConnectionPopupEvent());
+        getEventBus().fireEvent(new RevealAddConnectionPopupEvent());
     }
 
     @Override
@@ -85,6 +86,11 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
         });
     }
 
+    @Override
+    public void editConnection() {
+        getEventBus().fireEvent(new RevealEditConnectionPopupEvent(selectedConnection));
+    }
+
     private void processSuccessfulDeletion() {
         getEventBus().fireEvent(new HostDeletionSuccessEvent(selectedConnection));
         getView().disableEditButtons();
@@ -95,7 +101,6 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
         this.selectedConnection = event.getConnection();
         getView().enableEditButtons();
     }
-
 
 
 }

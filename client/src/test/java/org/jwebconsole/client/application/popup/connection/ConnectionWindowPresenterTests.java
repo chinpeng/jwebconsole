@@ -5,9 +5,10 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
-import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
+import org.jwebconsole.client.application.popup.connection.state.ConnectionControllerState;
+import org.jwebconsole.client.application.popup.connection.state.CreateConnectionController;
 import org.jwebconsole.client.bundle.AppValidationId;
-import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
+import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
@@ -28,6 +29,8 @@ public class ConnectionWindowPresenterTests extends Mockito {
     private Method method;
     private HostConnectionResponse response;
     private HostConnection body;
+    private ConnectionControllerState state;
+    private CreateConnectionController createController;
 
 
     @Before
@@ -39,47 +42,50 @@ public class ConnectionWindowPresenterTests extends Mockito {
         this.method = mock(Method.class);
         this.response = new HostConnectionResponse();
         this.body = mock(HostConnection.class);
+        this.state = mock(ConnectionControllerState.class);
+        this.createController = mock(CreateConnectionController.class);
+        when(state.getController()).thenReturn(createController);
         response.setBody(body);
     }
 
     @Test
     public void shouldSetUiHandlers() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         verify(view).setUiHandlers(presenter);
     }
 
     @Test
     public void shouldForceRevealOnEvent() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         ConnectionWindowPresenter presenterSpy = spy(presenter);
-        presenterSpy.onRevealEvent(new RevealConnectionPopupEvent());
+        presenterSpy.onRevealAddEvent(new RevealAddConnectionPopupEvent());
         verify(presenterSpy).forceReveal();
     }
 
     @Test
-    public void shouldInitOnBind() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
-        presenter.onBind();
+    public void shouldInitOnEvent() {
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
+        presenter.onRevealAddEvent(new RevealAddConnectionPopupEvent());
         verify(view).showDialog();
     }
 
     @Test
-    public void shouldClearViewFieldsOnInit() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
-        presenter.onBind();
-        verify(view).showDialog();
+    public void shouldInitViewFieldsOnInit() {
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
+        presenter.onRevealAddEvent(new RevealAddConnectionPopupEvent());
+        verify(createController).initViewOnAppear();
     }
 
     @Test
     public void shouldHideDialogOnCancel() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         presenter.hideDialog();
         verify(view).hideDialog();
     }
 
     @Test
     public void shouldNotMakeRequestIfFieldsAreInvalid() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(false);
         presenter.connectHost();
         verify(view, times(0)).showLoadingMask();
@@ -87,30 +93,19 @@ public class ConnectionWindowPresenterTests extends Mockito {
 
     @Test
     public void shouldShowLoadingMaskWhenRequestingServer() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         presenter.connectHost();
         verify(view).showLoadingMask();
     }
 
     @Test
-    public void shouldRequestServerWithCorrectConnectionData() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
-        when(view.isFieldsValid()).thenReturn(true);
-        when(view.getHostName()).thenReturn("test-host");
-        presenter.connectHost();
-        ArgumentCaptor<HostConnection> argumentCaptor = ArgumentCaptor.forClass(HostConnection.class);
-        verify(facade).connect(argumentCaptor.capture(), any(MethodCallback.class));
-        assertEquals(argumentCaptor.getValue().getName(), "test-host");
-    }
-
-    @Test
     public void shouldDisplayErrorOnFailure() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         Throwable error = mock(Throwable.class);
         when(error.getMessage()).thenReturn("failure");
         argumentCaptor.getValue().onFailure(null, error);
@@ -119,11 +114,11 @@ public class ConnectionWindowPresenterTests extends Mockito {
 
     @Test
     public void shouldHideLoadingMaskOnFailure() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         Throwable error = mock(Throwable.class);
         when(error.getMessage()).thenReturn("failure");
         argumentCaptor.getValue().onFailure(null, error);
@@ -132,57 +127,57 @@ public class ConnectionWindowPresenterTests extends Mockito {
 
     @Test
     public void shouldHideLoadingMaskOnSuccess() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
         verify(view).hideMask();
     }
 
     @Test
     public void shouldHideDialogOnSuccessResponse() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
         verify(view).hideDialog();
     }
     @Test
-    public void shouldFireHostCreationEventOnSuccess() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+    public void shouldFireHostChangeEventOnSuccess() {
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
-        verify(eventBus).fireEvent(any(HostCreatedEvent.class));
+        verify(createController).fireChangeEvent(any(HostConnection.class));
     }
 
     @Test
     public void shouldDisplayErrorIfResponseIsError() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(view.isFieldsValid()).thenReturn(true);
         response.setError("error");
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
         verify(facade).displayError("error");
     }
 
     @Test
     public void shouldProvideValidationMessageToViewIfValidationFailed() {
-        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
+        ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade, state);
         when(facade.getMessage(any(AppValidationId.class))).thenReturn("invalid");
         when(view.isFieldsValid()).thenReturn(true);
         response.setMessages(createValidations());
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
-        verify(facade).connect(any(HostConnection.class), argumentCaptor.capture());
+        verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
         verify(view).markHostInvalid("invalid");
     }

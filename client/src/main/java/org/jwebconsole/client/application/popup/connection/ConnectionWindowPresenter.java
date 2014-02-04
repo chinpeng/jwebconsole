@@ -9,10 +9,12 @@ import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
+import org.jwebconsole.client.application.popup.connection.state.ConnectionControllerState;
 import org.jwebconsole.client.bundle.AppValidationId;
-import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
-import org.jwebconsole.client.event.popup.RevealConnectionPopupEventHandler;
+import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
+import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEventHandler;
+import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
+import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEventHandler;
 import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
@@ -20,36 +22,62 @@ import org.jwebconsole.client.place.NameTokens;
 
 public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, ConnectionWindowPresenter.ConnectionWindowProxy> implements
         ConnectionWindowUiHandlers,
-        RevealConnectionPopupEventHandler {
+        RevealAddConnectionPopupEventHandler,
+        RevealEditConnectionPopupEventHandler{
 
     private final ConnectionWindowPresenterFacade facade;
+    private final ConnectionControllerState state;
 
     @Inject
-    public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy, ConnectionWindowPresenterFacade facade) {
+    public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy, ConnectionWindowPresenterFacade facade,
+                                     ConnectionControllerState state) {
         super(eventBus, view, proxy, RevealType.RootPopup);
         this.facade = facade;
+        this.state = state;
         view.setUiHandlers(this);
     }
 
     @Override
     protected void onBind() {
         super.onBind();
-        init();
     }
 
     private void init() {
-        getView().clearFields();
+        state.getController().initViewOnAppear();
         getView().showDialog();
     }
 
     @ProxyEvent
     @Override
-    public void onRevealEvent(RevealConnectionPopupEvent event) {
+    public void onRevealAddEvent(RevealAddConnectionPopupEvent event) {
         if (!isBound()) {
             forceReveal();
+            initWithCreationState();
         } else {
-            init();
+           initWithCreationState();
         }
+
+    }
+
+    private void initWithCreationState() {
+        state.becomeCreateConnectionController();
+        init();
+    }
+
+    @ProxyEvent
+    @Override
+    public void onRevealEditEvent(RevealEditConnectionPopupEvent event) {
+        if (!isBound()) {
+            forceReveal();
+            initWithEditState(event.getConnection());
+        } else {
+            initWithEditState(event.getConnection());
+        }
+    }
+
+    private void initWithEditState(HostConnection connection) {
+        state.becomeEditConnectionController(connection);
+        init();
     }
 
     @Override
@@ -61,13 +89,13 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     public void connectHost() {
         if (getView().isFieldsValid()) {
             getView().showLoadingMask();
-            HostConnection connection = createConnection();
-            makeRequestToServer(connection);
+            state.getController().makeRequest(getResponseCallback());
         }
     }
 
-    private void makeRequestToServer(HostConnection connection) {
-        facade.connect(connection, new MethodCallback<HostConnectionResponse>() {
+
+    private MethodCallback<HostConnectionResponse> getResponseCallback() {
+        return new MethodCallback<HostConnectionResponse>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 getView().hideMask();
@@ -79,7 +107,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
                 getView().hideMask();
                 processResponse(response);
             }
-        });
+        };
     }
 
     private void processResponse(HostConnectionResponse response) {
@@ -94,7 +122,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void processSuccessResult(HostConnection connection) {
         getView().hideDialog();
-        getEventBus().fireEvent(new HostCreatedEvent(connection));
+        state.getController().fireChangeEvent(connection);
     }
 
     private void printValidationMessages(HostConnectionResponse response) {
@@ -120,17 +148,6 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
             }
         }
     }
-
-
-    private HostConnection createConnection() {
-        HostConnection result = new HostConnection();
-        result.setName(getView().getHostName());
-        result.setPort(getView().getPort());
-        result.setUser(getView().getLogin());
-        result.setPassword(getView().getPassword());
-        return result;
-    }
-
 
     @ProxyCodeSplit
     @NameToken(NameTokens.newConnection)

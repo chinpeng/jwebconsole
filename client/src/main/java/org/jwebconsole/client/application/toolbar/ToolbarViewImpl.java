@@ -46,6 +46,16 @@ public class ToolbarViewImpl extends ViewWithUiHandlers<ToolbarUiHandlers> imple
     private void init() {
         initCreateButton();
         initDeleteButton();
+        initEditButton();
+    }
+
+    private void initEditButton() {
+        editConnectionButton.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                getUiHandlers().editConnection();
+            }
+        });
     }
 
     private void initDeleteButton() {

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.info.Info;
 import org.fusesource.restygwt.client.MethodCallback;
 
+import org.jwebconsole.client.application.popup.connection.state.CreateConnectionController;
 import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.bundle.ValidationMessageConverter;
 import org.jwebconsole.client.bundle.messages.Messages;
@@ -26,11 +27,6 @@ public class ConnectionWindowPresenterFacade {
         this.converter = converter;
         this.infoHolder = infoHolder;
     }
-
-    public void connect(HostConnection connection, MethodCallback<HostConnectionResponse> callback) {
-        serviceFactory.getHostService().addNewHost(connection, callback);
-    }
-
 
     public void displayError(String error) {
         infoHolder.printInfo(messages.errorInfoTitle(), error);

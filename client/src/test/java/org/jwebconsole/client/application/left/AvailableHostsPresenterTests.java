@@ -4,6 +4,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
@@ -53,11 +55,38 @@ public class AvailableHostsPresenterTests extends Mockito {
     }
 
     @Test
+    public void shouldRegisterSelfOnHostChangedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(eventBus).addHandler(HostChangedEvent.TYPE, presenter);
+    }
+
+    @Test
+    public void shouldRegisterSelfOnHostCreatedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(eventBus).addHandler(HostCreatedEvent.TYPE, presenter);
+    }
+
+    @Test
     public void shouldShowLoadingMaskOnDeletionStart() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
         presenter.onHostDeletionStarted(new HostDeletionStartedEvent());
         verify(view).showLoadingMask();
     }
+
+    @Test
+    public void shouldChangeViewOnHostCreatedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onHostCreated(new HostCreatedEvent(connection));
+        verify(view).addHost(connection);
+    }
+
+    @Test
+    public void shouldChangeViewOnHostChangedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onHostChanged(new HostChangedEvent(connection));
+        verify(view).changeHost(connection);
+    }
+
 
     @Test
     public void shouldHideLoadingMaskOnDeletionFailed() {

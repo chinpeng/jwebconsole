@@ -1,7 +1,7 @@
 package org.jwebconsole.server.servlet
 
 import akka.actor._
-import org.jwebconsole.server.context.host.{DeleteHostCommand, CreateHostCommand, HostCommandHandler}
+import org.jwebconsole.server.context.host.{ChangeHostCommand, DeleteHostCommand, CreateHostCommand, HostCommandHandler}
 import akka.pattern.ask
 import org.jwebconsole.server.context.host.model.SimpleHostViewRequest
 
@@ -14,9 +14,20 @@ class HostServlet(override val system: ActorSystem, readModelActor: ActorRef) ex
     contentType = formats("json")
   }
 
-  post("/listen") {
+  get("/all") {
+    executeAsync(readModelActor ? SimpleHostViewRequest)
+  }
+
+  post("/add") {
     val cmd = parsedBody.extract[CreateHostCommand]
     val valid = hostCommandHandler ? cmd
+    executeAsync(valid)
+  }
+
+  put("/edit/:id") {
+    val cmd = parsedBody.extract[ChangeHostCommand]
+    val cmdWithId = cmd.copy(id = params("id"))
+    val valid = hostCommandHandler ? cmdWithId
     executeAsync(valid)
   }
 
@@ -26,11 +37,5 @@ class HostServlet(override val system: ActorSystem, readModelActor: ActorRef) ex
     val result = hostCommandHandler ? cmd
     executeAsync(result)
   }
-
-  get("/status/all") {
-    executeAsync(readModelActor ? SimpleHostViewRequest)
-  }
-
-  case class SampleCmd(name: String, port: Int)
 
 }

@@ -11,6 +11,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.jwebconsole.client.application.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEventHandler;
 import org.jwebconsole.client.application.toolbar.event.*;
@@ -29,7 +31,9 @@ public class AvailableHostsPresenter
         RevealOnStartEventHandler,
         HostDeletionFailedEventHandler,
         HostDeletionSuccessEventHandler,
-        HostDeletionStartedEventHandler {
+        HostDeletionStartedEventHandler,
+        HostChangedEventHandler,
+        HostCreatedEventHandler{
 
 
     private AvailableHostsPresenterFacade facade;
@@ -47,6 +51,8 @@ public class AvailableHostsPresenter
         getEventBus().addHandler(HostDeletionStartedEvent.TYPE, this);
         getEventBus().addHandler(HostDeletionSuccessEvent.TYPE, this);
         getEventBus().addHandler(HostDeletionFailedEvent.TYPE, this);
+        getEventBus().addHandler(HostChangedEvent.TYPE, this);
+        getEventBus().addHandler(HostCreatedEvent.TYPE, this);
     }
 
     public void onBind() {
@@ -55,7 +61,14 @@ public class AvailableHostsPresenter
     }
 
     private void init() {
+        getView().showLoadingMask();
         facade.getHosts(new SuccessCallback<HostConnectionListResponse>() {
+
+            @Override
+            public void beforeResponse() {
+                getView().hideLoadingMask();
+            }
+
             @Override
             public void onSuccess(HostConnectionListResponse response) {
                 processResponse(response.getBody());
@@ -64,7 +77,7 @@ public class AvailableHostsPresenter
         getEventBus().addHandler(HostCreatedEvent.TYPE, new HostCreatedEventHandler() {
             @Override
             public void onHostCreated(HostCreatedEvent event) {
-                getView().addHost(event.getConnection());
+
             }
         });
 
@@ -100,6 +113,17 @@ public class AvailableHostsPresenter
     public void onHostDeletionStarted(HostDeletionStartedEvent event) {
         getView().showLoadingMask();
     }
+
+    @Override
+    public void onHostChanged(HostChangedEvent hostChangedEvent) {
+        getView().changeHost(hostChangedEvent.getConnection());
+    }
+
+    @Override
+    public void onHostCreated(HostCreatedEvent event) {
+        getView().addHost(event.getConnection());
+    }
+
 
     @ProxyCodeSplit
     public interface AvailableHostsProxy extends Proxy<AvailableHostsPresenter> {

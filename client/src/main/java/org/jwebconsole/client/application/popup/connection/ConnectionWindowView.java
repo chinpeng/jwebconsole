@@ -34,4 +34,12 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
 
     void markHostInvalid(String message);
 
+    void setHostName(String hostName);
+
+    void setPort(Integer port);
+
+    void setLogin(String login);
+
+    void setPassword(String password);
+
 }

@@ -119,5 +119,11 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
         store.remove(connection);
     }
 
+    @Override
+    public void changeHost(HostConnection connection) {
+        store.remove(connection);
+        store.add(connection);
+    }
+
 
 }

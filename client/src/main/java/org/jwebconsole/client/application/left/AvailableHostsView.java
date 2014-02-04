@@ -17,4 +17,6 @@ interface AvailableHostsView extends View, HasUiHandlers<AvailableHostsUiHandler
     void hideLoadingMask();
 
     void deleteHostConnection(HostConnection deletedHost);
+
+    void changeHost(HostConnection connection);
 }

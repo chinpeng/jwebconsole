@@ -134,4 +134,24 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     public void markHostInvalid(String message) {
         hostName.markInvalid(message);
     }
+
+    @Override
+    public void setHostName(String hostName) {
+        this.hostName.setValue(hostName);
+    }
+
+    @Override
+    public void setPort(Integer port) {
+        this.port.setValue(port);
+    }
+
+    @Override
+    public void setLogin(String login) {
+        this.login.setValue(login);
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password.setValue(password);
+    }
 }

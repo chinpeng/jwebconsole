@@ -16,12 +16,16 @@ import java.util.List;
 public interface HostService extends RestService {
 
     @GET
-    @Path("/status/all")
+    @Path("/all")
     public void getHostsStatus(MethodCallback<HostConnectionListResponse> callback);
 
     @POST
-    @Path("/listen")
+    @Path("/add")
     public void addNewHost(HostConnection connection, MethodCallback<HostConnectionResponse> callback);
+
+    @PUT
+    @Path("/edit/{id}")
+    public void editHost(@PathParam("id") String id, HostConnection connection, MethodCallback<HostConnectionResponse> callback);
 
     @DELETE
     @Path("/delete/{id}")
