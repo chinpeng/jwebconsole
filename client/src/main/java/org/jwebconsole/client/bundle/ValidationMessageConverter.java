@@ -19,6 +19,7 @@ public class ValidationMessageConverter {
     }
 
     private void init() {
+        messagesMap.put(AppValidationId.MESSAGE_UNKNOWN, validationMessages.unknownMessage());
         messagesMap.put(AppValidationId.HOST_NAME_EMPTY, validationMessages.hostnameIsEmpty());
         messagesMap.put(AppValidationId.PORT_EMPTY_MESSAGE, validationMessages.portIsEmpty());
         messagesMap.put(AppValidationId.PORT_NEGATIVE, validationMessages.portNumberNegative());

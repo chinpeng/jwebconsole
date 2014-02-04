@@ -12,7 +12,7 @@
 
     <g:HTMLPanel ui:field="main">
         <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" deferHeight="true"
-                          height="{res.availableHosts.windowHeight}">
+                          height="{res.availableHosts.windowHeight}" ui:field="panel">
             <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}"/>
         </gxt:ContentPanel>
     </g:HTMLPanel>

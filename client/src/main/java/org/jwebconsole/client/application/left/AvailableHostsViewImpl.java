@@ -11,6 +11,7 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.host.HostConnection;
@@ -33,6 +34,8 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
 
     @UiField
     Tree<HostConnection, String> tree;
+    @UiField
+    ContentPanel panel;
 
     @Inject
     AvailableHostsViewImpl(Binder uiBinder, AppResources appResources) {
@@ -99,7 +102,21 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     @Override
     public void addHost(HostConnection connection) {
         store.add(connection);
+    }
 
+    @Override
+    public void showLoadingMask() {
+        panel.mask(appResources.getMessages().loadingMaskText());
+    }
+
+    @Override
+    public void hideLoadingMask() {
+        panel.unmask();
+    }
+
+    @Override
+    public void deleteHostConnection(HostConnection connection) {
+        store.remove(connection);
     }
 
 

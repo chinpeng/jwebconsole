@@ -6,9 +6,13 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
+import org.fusesource.restygwt.client.Method;
 import org.jwebconsole.client.application.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.event.popup.RevealConnectionPopupEvent;
@@ -60,11 +64,13 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Override
     public void deleteConnection() {
+        getEventBus().fireEvent(new HostDeletionStartedEvent());
         facade.deleteHost(selectedConnection.getId(), new SuccessCallback<SimpleResponse>() {
 
             @Override
-            public void beforeResponse() {
-
+            public void onFailure(Method method, Throwable throwable) {
+                super.onFailure(method, throwable);
+                getEventBus().fireEvent(new HostDeletionFailedEvent());
             }
 
             @Override
@@ -72,14 +78,16 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
                 if (response.isValid()) {
                     processSuccessfulDeletion();
                 } else {
-
+                    facade.printValidationMessages(response.getMessages());
+                    getEventBus().fireEvent(new HostDeletionFailedEvent());
                 }
             }
         });
     }
 
     private void processSuccessfulDeletion() {
-
+        getEventBus().fireEvent(new HostDeletionSuccessEvent(selectedConnection));
+        getView().disableEditButtons();
     }
 
     @Override

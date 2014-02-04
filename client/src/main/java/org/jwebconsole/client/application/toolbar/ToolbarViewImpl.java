@@ -52,7 +52,7 @@ public class ToolbarViewImpl extends ViewWithUiHandlers<ToolbarUiHandlers> imple
         deleteConnectionButton.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-
+                getUiHandlers().deleteConnection();
             }
         });
     }

@@ -13,6 +13,7 @@ import org.jwebconsole.client.application.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEventHandler;
+import org.jwebconsole.client.application.toolbar.event.*;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.model.host.HostConnection;
@@ -25,25 +26,27 @@ import java.util.List;
 public class AvailableHostsPresenter
         extends Presenter<AvailableHostsView, AvailableHostsPresenter.AvailableHostsProxy>
         implements AvailableHostsUiHandlers,
-        RevealOnStartEventHandler {
+        RevealOnStartEventHandler,
+        HostDeletionFailedEventHandler,
+        HostDeletionSuccessEventHandler,
+        HostDeletionStartedEventHandler {
 
 
     private AvailableHostsPresenterFacade facade;
 
-    @Override
-    public void onTreeItemSelected(HostConnection connection) {
-        getEventBus().fireEvent(new HostSelectedEvent(connection));
-    }
-
-    @ProxyCodeSplit
-    public interface AvailableHostsProxy extends Proxy<AvailableHostsPresenter> {
-    }
 
     @Inject
     public AvailableHostsPresenter(EventBus eventBus, AvailableHostsView view, AvailableHostsProxy proxy, AvailableHostsPresenterFacade facade) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_LEFT_PANEL);
         this.facade = facade;
         getView().setUiHandlers(this);
+        initHandlers();
+    }
+
+    private void initHandlers() {
+        getEventBus().addHandler(HostDeletionStartedEvent.TYPE, this);
+        getEventBus().addHandler(HostDeletionSuccessEvent.TYPE, this);
+        getEventBus().addHandler(HostDeletionFailedEvent.TYPE, this);
     }
 
     public void onBind() {
@@ -64,6 +67,7 @@ public class AvailableHostsPresenter
                 getView().addHost(event.getConnection());
             }
         });
+
     }
 
     private void processResponse(List<HostConnection> connections) {
@@ -75,5 +79,31 @@ public class AvailableHostsPresenter
     public void onApplicationStart(RevealOnStartEvent event) {
         forceReveal();
     }
+
+    @Override
+    public void onTreeItemSelected(HostConnection connection) {
+        getEventBus().fireEvent(new HostSelectedEvent(connection));
+    }
+
+    @Override
+    public void onDeletionFailed(HostDeletionFailedEvent event) {
+        getView().hideLoadingMask();
+    }
+
+    @Override
+    public void onSuccessDeletion(HostDeletionSuccessEvent event) {
+        getView().hideLoadingMask();
+        getView().deleteHostConnection(event.getDeletedHost());
+    }
+
+    @Override
+    public void onHostDeletionStarted(HostDeletionStartedEvent event) {
+        getView().showLoadingMask();
+    }
+
+    @ProxyCodeSplit
+    public interface AvailableHostsProxy extends Proxy<AvailableHostsPresenter> {
+    }
+
 
 }

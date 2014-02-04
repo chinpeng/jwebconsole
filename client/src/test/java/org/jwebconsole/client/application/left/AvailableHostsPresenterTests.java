@@ -4,6 +4,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
+import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.mockito.Mockito;
 
@@ -13,6 +16,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     private AvailableHostsPresenterFacade facade;
     private EventBus eventBus;
     private AvailableHostsPresenter.AvailableHostsProxy proxy;
+    private HostConnection connection;
 
     @Before
     public void init() {
@@ -20,6 +24,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         this.facade = mock(AvailableHostsPresenterFacade.class);
         this.eventBus = mock(EventBus.class);
         this.proxy = mock(AvailableHostsPresenter.AvailableHostsProxy.class);
+        this.connection = mock(HostConnection.class);
     }
 
     @Test
@@ -27,6 +32,52 @@ public class AvailableHostsPresenterTests extends Mockito {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
         presenter.onTreeItemSelected(any(HostConnection.class));
         verify(eventBus).fireEvent(any(HostSelectedEvent.class));
+    }
+
+    @Test
+    public void shouldRegisterSelfOnDeletionStartedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(eventBus).addHandler(HostDeletionStartedEvent.TYPE, presenter);
+    }
+
+    @Test
+    public void shouldRegisterSelfOnDeletionFailedEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(eventBus).addHandler(HostDeletionFailedEvent.TYPE, presenter);
+    }
+
+    @Test
+    public void shouldRegisterSelfOnDeletionSuccessEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(eventBus).addHandler(HostDeletionSuccessEvent.TYPE, presenter);
+    }
+
+    @Test
+    public void shouldShowLoadingMaskOnDeletionStart() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onHostDeletionStarted(new HostDeletionStartedEvent());
+        verify(view).showLoadingMask();
+    }
+
+    @Test
+    public void shouldHideLoadingMaskOnDeletionFailed() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onDeletionFailed(new HostDeletionFailedEvent());
+        verify(view).hideLoadingMask();
+    }
+
+    @Test
+    public void shouldHideLoadingMaskOnDeletionSuccess() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(new HostConnection()));
+        verify(view).hideLoadingMask();
+    }
+
+    @Test
+    public void shouldDeleteHostConnectionOnDeletingSuccess() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(connection));
+        verify(view).deleteHostConnection(connection);
     }
 
 

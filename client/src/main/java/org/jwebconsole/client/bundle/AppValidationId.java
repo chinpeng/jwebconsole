@@ -2,6 +2,7 @@ package org.jwebconsole.client.bundle;
 
 public enum AppValidationId {
 
+    MESSAGE_UNKNOWN(0),
     HOST_NAME_EMPTY(1),
     PORT_EMPTY_MESSAGE(3),
     PORT_NEGATIVE(3),
@@ -19,5 +20,14 @@ public enum AppValidationId {
 
     public Integer getId() {
         return id;
+    }
+
+    public static AppValidationId fromId(Integer id) {
+        for (AppValidationId item : values()) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
+        return MESSAGE_UNKNOWN;
     }
 }
