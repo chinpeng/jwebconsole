@@ -1,13 +1,19 @@
 package org.jwebconsole.server.servlet
 
 import akka.actor._
-import org.jwebconsole.server.context.host.{ChangeHostCommand, DeleteHostCommand, CreateHostCommand, HostCommandHandler}
+import org.jwebconsole.server.context.host._
 import akka.pattern.ask
 import org.jwebconsole.server.context.host.model.SimpleHostViewRequest
+import org.jwebconsole.server.jmx.JMXConnectionChecker
+import org.jwebconsole.server.context.host.ChangeHostCommand
+import org.jwebconsole.server.context.host.CreateHostCommand
+import org.jwebconsole.server.context.host.DeleteHostCommand
 
 class HostServlet(override val system: ActorSystem, readModelActor: ActorRef) extends BaseServlet {
 
-  val hostCommandHandler = system.actorOf(Props[HostCommandHandler])
+  val connectionChecker = new JMXConnectionChecker()
+  val validator = system.actorOf(Props(new HostCommandValidator(connectionChecker)))
+  val hostCommandHandler = system.actorOf(Props(new HostCommandHandler(validator)))
 
 
   before() {

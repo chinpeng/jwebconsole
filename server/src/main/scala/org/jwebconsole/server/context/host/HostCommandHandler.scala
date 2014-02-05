@@ -3,7 +3,7 @@ package org.jwebconsole.server.context.host
 import akka.actor.{Props, ActorRef, Actor}
 import java.util.UUID
 
-class HostCommandHandler() extends Actor {
+class HostCommandHandler(validator: ActorRef) extends Actor {
 
   val executor = context.system.dispatcher
   var hosts = Map.empty[String, ActorRef]
@@ -11,7 +11,7 @@ class HostCommandHandler() extends Actor {
   def receive: Receive = {
     case cmd: CreateHostCommand =>
       val id = UUID.randomUUID().toString
-      hosts += (id -> context.actorOf(Props(new HostARActor(id))))
+      hosts += (id -> context.actorOf(Props(new HostARActor(id, validator))))
       hosts(id) ! WithSender(sender, cmd.copy(id = id))
     case cmd: HostCommand => {
       getHost(cmd) ! WithSender(sender, cmd)
@@ -20,7 +20,7 @@ class HostCommandHandler() extends Actor {
 
   def getHost(cmd: HostCommand): ActorRef = hosts.get(cmd.id) match {
     case None =>
-      val actor: ActorRef = context.actorOf(Props(new HostARActor(cmd.id)))
+      val actor: ActorRef = context.actorOf(Props(new HostARActor(cmd.id, validator)))
       val id = cmd.id
       hosts += (id -> actor)
       actor
