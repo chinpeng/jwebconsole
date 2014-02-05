@@ -1,16 +1,17 @@
 package org.jwebconsole.server.context.host
 
-import org.jwebconsole.server.util.{Valid, Invalid, Validation}
+import org.jwebconsole.server.util.{TimeoutFuture, Valid, Invalid, Validation}
 import akka.actor.{ActorLogging, Actor}
 import org.jwebconsole.server.util.ValidationConstants._
 import scala.Some
 import org.jwebconsole.server.jmx.JMXConnectionChecker
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
+import scala.concurrent.duration._
 
 class HostCommandValidator(connectionChecker: JMXConnectionChecker) extends Actor with ActorLogging {
 
   implicit val executionContext = context.system.dispatcher
+
 
   def receive: Receive = {
     case ValidateHost(model, command) => validate(model, command)
@@ -39,13 +40,13 @@ class HostCommandValidator(connectionChecker: JMXConnectionChecker) extends Acto
       case Invalid(body, msg) =>
         sender ! Invalid(body, msg)
       case Valid(body) =>
-        checkHostConnection(model)
+        checkHostConnection(changed)
     }
   }
 
   def checkHostConnection(model: HostStateModel): Unit = {
     val currentSender = sender()
-    Future(connectionChecker.checkConnection(model.name, model.port)) onComplete {
+    TimeoutFuture(3 seconds, connectionChecker.checkConnection(model.name, model.port)) onComplete {
       case Success(v) => currentSender ! Valid(model)
       case Failure(e) => currentSender ! Invalid(model, List(UnableToConnectMessage))
     }

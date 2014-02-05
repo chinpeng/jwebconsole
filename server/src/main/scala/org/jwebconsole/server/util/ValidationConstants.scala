@@ -9,5 +9,5 @@ object ValidationConstants {
   val BigNumberForPort = InvalidMessage(4, "Big number for port")
   val HostAlreadyCreated = InvalidMessage(5, "Host Already created")
   val HostDeletedMessage = InvalidMessage(6, "Host already deleted")
-  val UnableToConnectMessage = InvalidMessage(7, "Host already deleted")
+  val UnableToConnectMessage = InvalidMessage(7, "Unable to connect")
 }

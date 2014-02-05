@@ -34,10 +34,13 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
     case Invalid(body, messages) =>
       processInvalidResponse(sourceSender, messages)
       becomeDefaultWith(() => processInvalidResponse(sourceSender, messages))
-    case _ => stash()
+    case _ =>
+      log.info("Stashing events while waiting for validation")
+      stash()
   }
 
   def becomeDefaultWith(action: () => Unit): Unit = {
+    log.info("Received validation response")
     action()
     context.unbecome()
     unstashAll()
