@@ -26,6 +26,7 @@ public class ValidationMessageConverter {
         messagesMap.put(AppValidationId.BIG_PORT_NUMBER, validationMessages.bigPortNumber());
         messagesMap.put(AppValidationId.HOST_ALREADY_CREATED, validationMessages.hostAlreadyCreated());
         messagesMap.put(AppValidationId.HOST_ALREADY_DELETED, validationMessages.hostAlreadyDeleted());
+        messagesMap.put(AppValidationId.UNABLE_TO_CONNECT, validationMessages.unableToConnectMessage());
     }
 
     public String getMessage(AppValidationId appValidationId) {

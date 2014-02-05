@@ -8,7 +8,8 @@ public enum AppValidationId {
     PORT_NEGATIVE(3),
     BIG_PORT_NUMBER(4),
     HOST_ALREADY_CREATED(5),
-    HOST_ALREADY_DELETED(6);
+    HOST_ALREADY_DELETED(6),
+    UNABLE_TO_CONNECT(7);
 
 
 

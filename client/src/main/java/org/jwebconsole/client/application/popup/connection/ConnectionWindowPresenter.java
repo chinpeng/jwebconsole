@@ -146,6 +146,9 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
             if (id.equals(AppValidationId.PORT_NEGATIVE.getId())) {
                 getView().markPortInvalid(facade.getMessage(AppValidationId.PORT_NEGATIVE));
             }
+            if (id.equals(AppValidationId.UNABLE_TO_CONNECT.getId())) {
+                getView().markHostInvalid(facade.getMessage(AppValidationId.UNABLE_TO_CONNECT));
+            }
         }
     }
 
