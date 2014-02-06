@@ -30,18 +30,18 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
 
   def validationState(sourceSender: ActorRef, cmd: HostCommand): Receive = {
     case Valid(body) =>
-      becomeDefaultWith(() => processSuccessfulResponse(sourceSender, cmd))
+      becomeDefaultWith(processSuccessfulResponse(sourceSender, cmd))
     case Invalid(body, messages) =>
       processInvalidResponse(sourceSender, messages)
-      becomeDefaultWith(() => processInvalidResponse(sourceSender, messages))
+      becomeDefaultWith(processInvalidResponse(sourceSender, messages))
     case _ =>
       log.info("Stashing events while waiting for validation")
       stash()
   }
 
-  def becomeDefaultWith(action: () => Unit): Unit = {
+  def becomeDefaultWith(action: => Unit): Unit = {
     log.info("Received validation response")
-    action()
+    action
     context.unbecome()
     unstashAll()
   }
@@ -70,5 +70,6 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
   def processInvalidResponse(source: ActorRef, messages: List[InvalidMessage]): Unit = {
     source ! ResponseMessage(messages = Some(messages))
   }
+
 
 }

@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 class HostCommandValidator(connectionChecker: JMXConnectionChecker) extends Actor with ActorLogging {
 
   implicit val executionContext = context.system.dispatcher
-
+  implicit val system = context.system
 
   def receive: Receive = {
     case ValidateHost(model, command) => validate(model, command)
