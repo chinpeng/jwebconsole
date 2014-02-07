@@ -9,13 +9,10 @@ import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.jwebconsole.client.application.popup.connection.state.ConnectionControllerState;
-import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEventHandler;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEventHandler;
-import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
 import org.jwebconsole.client.place.NameTokens;
@@ -26,14 +23,11 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
         RevealEditConnectionPopupEventHandler{
 
     private final ConnectionWindowPresenterFacade facade;
-    private final ConnectionControllerState state;
 
     @Inject
-    public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy, ConnectionWindowPresenterFacade facade,
-                                     ConnectionControllerState state) {
+    public ConnectionWindowPresenter(EventBus eventBus, ConnectionWindowView view, ConnectionWindowProxy proxy, ConnectionWindowPresenterFacade facade) {
         super(eventBus, view, proxy, RevealType.RootPopup);
         this.facade = facade;
-        this.state = state;
         view.setUiHandlers(this);
     }
 
@@ -43,7 +37,8 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     }
 
     private void init() {
-        state.getController().initViewOnAppear();
+        facade.getController().initViewOnAppear();
+        getView().clearValidations();
         getView().showDialog();
     }
 
@@ -60,7 +55,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     }
 
     private void initWithCreationState() {
-        state.becomeCreateConnectionController();
+        facade.becomeCreateConnectionController();
         init();
     }
 
@@ -76,7 +71,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     }
 
     private void initWithEditState(HostConnection connection) {
-        state.becomeEditConnectionController(connection);
+        facade.becomeEditConnectionController(connection);
         init();
     }
 
@@ -89,7 +84,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     public void connectHost() {
         if (getView().isFieldsValid()) {
             getView().showLoadingMask();
-            state.getController().makeRequest(getResponseCallback());
+            facade.getController().makeRequest(getResponseCallback());
         }
     }
 
@@ -122,34 +117,11 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void processSuccessResult(HostConnection connection) {
         getView().hideDialog();
-        state.getController().fireChangeEvent(connection);
+        facade.getController().fireChangeEvent(connection);
     }
 
     private void printValidationMessages(HostConnectionResponse response) {
-        for (ValidationMessage validationMessage : response.getMessages()) {
-            Integer id = validationMessage.getId();
-            if (id.equals(AppValidationId.BIG_PORT_NUMBER.getId())) {
-                getView().markPortInvalid(facade.getMessage(AppValidationId.BIG_PORT_NUMBER));
-            }
-            if (id.equals(AppValidationId.HOST_ALREADY_CREATED.getId())) {
-                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_ALREADY_CREATED));
-            }
-            if (id.equals(AppValidationId.HOST_ALREADY_DELETED.getId())) {
-                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_ALREADY_DELETED));
-            }
-            if (id.equals(AppValidationId.PORT_EMPTY_MESSAGE.getId())) {
-                getView().markPortInvalid(facade.getMessage(AppValidationId.PORT_EMPTY_MESSAGE));
-            }
-            if (id.equals(AppValidationId.HOST_NAME_EMPTY.getId())) {
-                getView().markHostInvalid(facade.getMessage(AppValidationId.HOST_NAME_EMPTY));
-            }
-            if (id.equals(AppValidationId.PORT_NEGATIVE.getId())) {
-                getView().markPortInvalid(facade.getMessage(AppValidationId.PORT_NEGATIVE));
-            }
-            if (id.equals(AppValidationId.UNABLE_TO_CONNECT.getId())) {
-                getView().markHostInvalid(facade.getMessage(AppValidationId.UNABLE_TO_CONNECT));
-            }
-        }
+        facade.validate(response.getMessages());
     }
 
     @ProxyCodeSplit

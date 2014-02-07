@@ -42,4 +42,5 @@ public interface ConnectionWindowView extends View, HasUiHandlers<ConnectionWind
 
     void setPassword(String password);
 
+    void clearValidations();
 }

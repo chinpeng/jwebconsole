@@ -17,8 +17,8 @@
         <ui:attributes width="1" height="-1"/>
     </ui:with>
 
-    <g:HTMLPanel styleName="{res.app.appMainWindow}">
-        <gxt:FramedPanel headingText="{messages.mainWindowTitle}" addStyleNames="{res.app.appMainWindow}">
+    <g:HTMLPanel >
+        <gxt:FramedPanel headingText="{messages.mainWindowTitle}" styleName="{res.app.appMainWindow}">
             <row:VerticalLayoutContainer borders="true" addStyleNames="{res.app.appContainer}">
                 <row:child layoutData="{toolBarRowData}">
                     <g:HTMLPanel ui:field="toolbar">
@@ -31,7 +31,7 @@
 
                         </g:HTMLPanel>
                         <g:HTMLPanel ui:field="rightPanel" styleName="{res.app.appRightPanel}">
-                            <gxt:ContentPanel height="580px">
+                            <gxt:ContentPanel height="{res.availableHosts.windowHeight}">
 
                             </gxt:ContentPanel>
                         </g:HTMLPanel>

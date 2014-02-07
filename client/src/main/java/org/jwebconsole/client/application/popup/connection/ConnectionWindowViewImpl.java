@@ -154,4 +154,10 @@ public class ConnectionWindowViewImpl extends ViewWithUiHandlers<ConnectionWindo
     public void setPassword(String password) {
         this.password.setValue(password);
     }
+
+    @Override
+    public void clearValidations() {
+        this.port.clearInvalid();
+        this.hostName.clearInvalid();
+    }
 }
