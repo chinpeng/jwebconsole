@@ -54,20 +54,11 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
+                    <jettyXml>src\main\webapp\WEB-INF\jetty-jmx.xml</jettyXml>
                     <webAppConfig>
                         <contextPath>/${webapp.name}</contextPath>
                         <descriptor>src\main\webapp\WEB-INF\web.xml</descriptor>
                     </webAppConfig>
-                    <systemProperties>
-                        <!-- enable easy JMX connection to JConsole -->
-                        <systemProperty>
-                            <name>com.sun.management.jmxremote</name>
-                            <value/>
-                            <name>user.timezone</name>
-                            <value>UTC</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <!-- scanIntervalSeconds>5</scanIntervalSeconds -->
                     <reload>manual</reload>
                 </configuration>
             </plugin>

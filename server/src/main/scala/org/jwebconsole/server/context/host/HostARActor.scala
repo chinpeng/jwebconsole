@@ -32,7 +32,6 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
     case Valid(body) =>
       becomeDefaultWith(processSuccessfulResponse(sourceSender, cmd))
     case Invalid(body, messages) =>
-      processInvalidResponse(sourceSender, messages)
       becomeDefaultWith(processInvalidResponse(sourceSender, messages))
     case _ =>
       log.info("Stashing events while waiting for validation")
@@ -47,10 +46,11 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
   }
 
   def processSuccessfulResponse(source: ActorRef, cmd: HostCommand): Unit = {
+    val current = source
     persist(eventFromCommand(cmd)) {
       ev =>
         model = model.on(ev)
-        source ! ResponseMessage(body = Some(SimpleHostView(model.id, model.name, model.port)))
+        current ! ResponseMessage(body = Some(SimpleHostView(model.id, model.name, model.port)))
         context.system.eventStream.publish(ev)
     }
 
@@ -66,8 +66,8 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
         HostDeletedEvent(id)
     }
   }
-
   def processInvalidResponse(source: ActorRef, messages: List[InvalidMessage]): Unit = {
+    log.info("Sending invalid response back to client")
     source ! ResponseMessage(messages = Some(messages))
   }
 

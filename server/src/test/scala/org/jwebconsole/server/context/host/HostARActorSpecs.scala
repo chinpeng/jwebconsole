@@ -5,9 +5,10 @@ import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.actor.Props
 import akka.testkit.TestProbe
-import org.jwebconsole.server.context.common.{ResponseMessage}
+import org.jwebconsole.server.context.common.ResponseMessage
 import org.specs2.mock.Mockito
 import org.jwebconsole.server.jmx.JMXConnectionChecker
+import scala.concurrent.duration._
 
 class HostARActorSpecs extends Specification with Mockito with NoTimeConversions {
   sequential
@@ -115,6 +116,14 @@ class HostARActorSpecs extends Specification with Mockito with NoTimeConversions
       processor ! WithSender(probeRef, new CreateHostCommand(id, name, port))
       processor ! WithSender(probeRef, new DeleteHostCommand(id))
       eventProbe.expectMsg(HostDeletedEvent(id))
+    }
+  }
+
+  "host AR actor" should {
+    "process invalid response once" in new mocks {
+      processor ! WithSender(probeRef, new CreateHostCommand(id, name, -10))
+      expectValidationFailed()
+      probe.expectNoMsg(100.millis)
     }
   }
 
