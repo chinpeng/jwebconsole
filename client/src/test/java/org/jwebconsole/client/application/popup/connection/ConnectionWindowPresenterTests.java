@@ -5,9 +5,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
-import org.jwebconsole.client.application.popup.connection.state.ConnectionControllerState;
 import org.jwebconsole.client.application.popup.connection.state.CreateConnectionController;
-import org.jwebconsole.client.bundle.AppValidationId;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
@@ -18,8 +16,6 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class ConnectionWindowPresenterTests extends Mockito {
 
     private ConnectionWindowView view;
@@ -28,7 +24,6 @@ public class ConnectionWindowPresenterTests extends Mockito {
     private ConnectionWindowPresenterFacade facade;
     private Method method;
     private HostConnectionResponse response;
-    private HostConnection body;
     private CreateConnectionController createController;
 
 
@@ -40,7 +35,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
         this.facade = mock(ConnectionWindowPresenterFacade.class);
         this.method = mock(Method.class);
         this.response = new HostConnectionResponse();
-        this.body = mock(HostConnection.class);
+        HostConnection body = mock(HostConnection.class);
         this.createController = mock(CreateConnectionController.class);
         when(facade.getController()).thenReturn(createController);
         response.setBody(body);
@@ -98,6 +93,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldDisplayErrorOnFailure() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -111,6 +107,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldHideLoadingMaskOnFailure() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -124,6 +121,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldHideLoadingMaskOnSuccess() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -135,6 +133,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldHideDialogOnSuccessResponse() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -144,7 +143,9 @@ public class ConnectionWindowPresenterTests extends Mockito {
         argumentCaptor.getValue().onSuccess(method, response);
         verify(view).hideDialog();
     }
+
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldFireHostChangeEventOnSuccess() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -156,6 +157,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldDisplayErrorIfResponseIsError() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
@@ -168,6 +170,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldProvideValidationMessageToViewIfValidationFailed() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);

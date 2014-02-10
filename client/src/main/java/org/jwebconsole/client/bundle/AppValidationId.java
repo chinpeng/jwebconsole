@@ -4,7 +4,7 @@ public enum AppValidationId {
 
     MESSAGE_UNKNOWN(0),
     HOST_NAME_EMPTY(1),
-    PORT_EMPTY_MESSAGE(3),
+    PORT_EMPTY_MESSAGE(2),
     PORT_NEGATIVE(3),
     BIG_PORT_NUMBER(4),
     HOST_ALREADY_CREATED(5),
