@@ -23,7 +23,13 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
       context.become(replayingState)
       dao.createTable()
       makeReplay()
+    } else {
+      fireAvailableHosts()
     }
+  }
+
+  def fireAvailableHosts(): Unit = {
+    Future(dao.getAll).map(items => context.system.eventStream.publish(AvailableHostsList(items)))
   }
 
   def persistAsync(event: HostChangedEvent): Unit = {
@@ -64,6 +70,7 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
       updateDB(ev)
     case ReplayFinished =>
       context.become(receive)
+      fireAvailableHosts()
       unstashAll()
     case _ => stash()
 
