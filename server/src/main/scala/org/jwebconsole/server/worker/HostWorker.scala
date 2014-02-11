@@ -17,3 +17,6 @@ class HostWorker(host: SimpleHostView, commandHandler: ActorRef) extends Actor w
   }
 
 }
+
+case class StartWork()
+case class StopWork()

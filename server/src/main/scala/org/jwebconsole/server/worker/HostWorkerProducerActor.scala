@@ -13,8 +13,11 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
   }
 
   def receiveAvailableHosts: Receive = {
-    case AvailableHostsList(hosts) =>
-      hosts.foreach(println(_))
+    case AvailableHostsList(hosts) => hosts.foreach {
+      host =>
+        val worker = createWorker(host)
+        workers += (host.id -> worker)
+    }
   }
 
   def receiveEvents: Receive = {
@@ -27,7 +30,7 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
   }
 
   def changeHostParams(event: HostParametersChangedEvent): Unit = {
-    workers(event.id) ! event
+    workers.get(event.id).map(_ ! event)
   }
 
   def deleteHost(event: HostDeletedEvent): Unit = {
@@ -39,13 +42,19 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
 
   def createHost(event: HostCreatedEvent): Unit = {
     val view = SimpleHostView(event.id, event.name, event.port)
-    val worker = context.actorOf(Props(new HostWorker(view, hostCommandHandler)))
+    workers.get(event.id).map(ref => context.stop(ref))
+    val worker = createWorker(view)
     workers += (event.id -> worker)
+    worker ! StartWork()
+  }
+
+
+  def createWorker(view: SimpleHostView): ActorRef = {
+    context.actorOf(Props(new HostWorker(view, hostCommandHandler)))
   }
 
   def logUnknown: Receive = {
     case _ => log.warning("Received unknown message to worker producer")
   }
-
 
 }
