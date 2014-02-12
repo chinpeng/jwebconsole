@@ -30,13 +30,14 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
   }
 
   def fireAvailableHosts(): Unit = {
+    log.debug("Firing connections list event")
     Future(dao.getAll).map(items => context.system.eventStream.publish(AvailableHostsList(items)))
   }
 
   def persistAsync(event: HostChangedEvent): Unit = {
     Future(updateDB(event)).onComplete {
       case Failure(e) => log.error(e, "Unable to persist event")
-      case Success(v) => log.info("Successfully persisted event to read DB")
+      case Success(v) => log.debug("Successfully persisted event to read DB")
     }
   }
 
@@ -57,15 +58,18 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
     }
   }
 
-  def updateDB(event: HostChangedEvent): Unit = event match {
-    case ev: HostCreatedEvent =>
-      dao.create(SimpleHostView(ev.id, ev.name, ev.port, connected = true))
-    case ev: HostParametersChangedEvent =>
-      dao.updateParameters(SimpleHostView(ev.id, ev.name, ev.port))
-    case ev: HostDeletedEvent =>
-      dao.delete(ev.id)
-    case ev: HostDataChangedEvent =>
-      dao.updateStatus(ev.id, ev.data.connected)
+  def updateDB(event: HostChangedEvent): Unit = {
+    log.debug("updating db record for event: " + event)
+    event match {
+      case ev: HostCreatedEvent =>
+        dao.create(SimpleHostView(ev.id, ev.name, ev.port, connected = true))
+      case ev: HostParametersChangedEvent =>
+        dao.updateParameters(SimpleHostView(ev.id, ev.name, ev.port))
+      case ev: HostDeletedEvent =>
+        dao.delete(ev.id)
+      case ev: HostDataChangedEvent =>
+        dao.updateStatus(ev.id, ev.data.connected)
+    }
   }
 
   val replayingState: Receive = {
@@ -75,7 +79,10 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
       context.become(receive)
       fireAvailableHosts()
       unstashAll()
-    case _ => stash()
+      log.debug("Finished replaying state, back to normal")
+    case _ =>
+      log.debug("Stashing event")
+      stash()
 
   }
 

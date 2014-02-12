@@ -15,7 +15,9 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
   context.system.dispatcher
 
   def receiveRecover: Receive = {
-    case ev => model = model.on(ev)
+    case ev =>
+      log.debug("Receiving replay: " + ev)
+      model = model.on(ev)
   }
 
   def receiveCommand: Receive = {
@@ -26,6 +28,7 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
     case cmd: ChangeHostDataCommand =>
       persist(HostDataChangedEvent(cmd.id, cmd.data)) {
         ev =>
+          log.debug("Successfully Persisted event: " + ev)
           model = model.on(ev)
           context.system.eventStream.publish(ev)
       }
@@ -33,7 +36,7 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
 
   def receiveUserCommand: Receive = {
     case WithSender(source, cmd) =>
-      log.info("received command message to Host AR: " + cmd)
+      log.debug("received command message to Host AR: " + cmd)
       validator ! ValidateHost(model, cmd)
       context.become(validationState(source, cmd))
     case msg =>
@@ -46,12 +49,12 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
     case Invalid(body, messages) =>
       becomeDefaultWith(processInvalidResponse(sourceSender, messages))
     case _ =>
-      log.info("Stashing events while waiting for validation")
+      log.debug("Stashing events while waiting for validation")
       stash()
   }
 
   def becomeDefaultWith(action: => Unit): Unit = {
-    log.info("Received validation response")
+    log.debug("Received validation response. Back to normal behaviour.")
     action
     context.unbecome()
     unstashAll()
@@ -80,7 +83,7 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
   }
 
   def processInvalidResponse(source: ActorRef, messages: List[InvalidMessage]): Unit = {
-    log.info("Sending invalid response back to client")
+    log.debug("Command is invalid. Sending invalid response back to client")
     source ! ResponseMessage(messages = Some(messages))
   }
 

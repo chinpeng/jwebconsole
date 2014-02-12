@@ -49,7 +49,7 @@ class HostCommandValidator(connectionChecker: JMXConnectionChecker) extends Acto
     TimeoutFuture(3 seconds, connectionChecker.checkConnection(model.name, model.port)) onComplete {
       case Success(v) => currentSender ! Valid(model)
       case Failure(e) =>
-        log.error(e, "Unable to connect to target host: " + model)
+        log.error("Unable to connect to target host: " + model)
         currentSender ! Invalid(model, List(UnableToConnectMessage))
     }
   }
