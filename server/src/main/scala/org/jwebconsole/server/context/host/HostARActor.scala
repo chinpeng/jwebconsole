@@ -4,7 +4,6 @@ import akka.persistence.EventsourcedProcessor
 import org.jwebconsole.server.util._
 import org.jwebconsole.server.util.Valid
 import org.jwebconsole.server.util.Invalid
-import org.jwebconsole.server.util.ValidationConstants._
 import akka.actor.{ActorLogging, ActorRef}
 import org.jwebconsole.server.context.common.ResponseMessage
 import org.jwebconsole.server.context.host.model.SimpleHostView

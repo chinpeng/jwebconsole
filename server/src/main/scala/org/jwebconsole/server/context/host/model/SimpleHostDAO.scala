@@ -7,7 +7,7 @@ class SimpleHostDAO(db: Database) {
 
   val TableName = "all_hosts"
 
-  class HostTable(tag: Tag) extends Table[(String, String, Int)](tag, TableName) {
+  class HostTable(tag: Tag) extends Table[(String, String, Int, Boolean)](tag, TableName) {
 
     def id = column[String]("id", O.PrimaryKey)
 
@@ -15,7 +15,9 @@ class SimpleHostDAO(db: Database) {
 
     def port = column[Int]("port")
 
-    def * = (id, name, port)
+    def connected = column[Boolean]("connected")
+
+    def * = (id, name, port, connected)
   }
 
   def exists: Boolean =
@@ -28,16 +30,25 @@ class SimpleHostDAO(db: Database) {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hosts foreach (host => hostQuery +=(host.id, host.name, host.port))
+        hosts foreach (host => hostQuery +=(host.id, host.name, host.port, host.connected))
     }
   }
 
-  def update(host: SimpleHostView): Unit = {
+  def updateParameters(host: SimpleHostView): Unit = {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        val toUpdate = for (item: HostTable <- hostQuery if item.id === host.id) yield item
+        val toUpdate = for (item: HostTable <- hostQuery if item.id === host.id) yield (item.id, item.name, item.port)
         toUpdate.update((host.id, host.name, host.port))
+    }
+  }
+  
+  def updateStatus(id: String, status: Boolean):Unit = {
+    db withSession {
+      implicit session =>
+        val hostQuery = TableQuery[HostTable]
+        val toUpdate = for (item: HostTable <- hostQuery if item.id === id) yield item.connected
+        toUpdate.update(status)
     }
   }
 
@@ -45,7 +56,7 @@ class SimpleHostDAO(db: Database) {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hostQuery +=(host.id, host.name, host.port)
+        hostQuery +=(host.id, host.name, host.port, host.connected)
     }
   }
 

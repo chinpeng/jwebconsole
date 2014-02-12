@@ -4,13 +4,14 @@ import akka.actor.{Stash, Props, ActorLogging, Actor}
 import org.jwebconsole.server.util.AppConstants
 import akka.util.Timeout
 import org.jwebconsole.server.context.common._
-import org.jwebconsole.server.context.host.HostChangedEvent
+import org.jwebconsole.server.context.host._
 import scala.concurrent.Future
 import org.jwebconsole.server.context.host.HostCreatedEvent
 import scala.util.Success
 import org.jwebconsole.server.context.host.HostParametersChangedEvent
 import org.jwebconsole.server.context.common.ResponseMessage
 import scala.util.Failure
+import scala.Some
 import org.jwebconsole.server.context.host.HostDeletedEvent
 
 class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with Stash {
@@ -47,7 +48,7 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
   }
 
   def makeResponse(): Unit = {
-    val current = sender
+    val current = sender()
     Future(dao.getAll) onComplete {
       case Failure(e) =>
         log.error(e, "Unable to connect to Database")
@@ -58,11 +59,13 @@ class HostListViewActor(dao: SimpleHostDAO) extends Actor with ActorLogging with
 
   def updateDB(event: HostChangedEvent): Unit = event match {
     case ev: HostCreatedEvent =>
-      dao.create(SimpleHostView(ev.id, ev.name, ev.port))
+      dao.create(SimpleHostView(ev.id, ev.name, ev.port, connected = true))
     case ev: HostParametersChangedEvent =>
-      dao.update(SimpleHostView(ev.id, ev.name, ev.port))
+      dao.updateParameters(SimpleHostView(ev.id, ev.name, ev.port))
     case ev: HostDeletedEvent =>
       dao.delete(ev.id)
+    case ev: HostDataChangedEvent =>
+      dao.updateStatus(ev.id, ev.data.connected)
   }
 
   val replayingState: Receive = {

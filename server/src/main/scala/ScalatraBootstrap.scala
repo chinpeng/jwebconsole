@@ -37,7 +37,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
   }
 
-  def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef) {
+  def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef): ActorRef = {
     val hostWorkerProducer = system.actorOf(Props(new HostWorkerProducerActor(hostCommandHandler, new JMXConnectionFactory())))
     system.eventStream.subscribe(hostWorkerProducer, classOf[AvailableHostsList])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostParametersChangedEvent])

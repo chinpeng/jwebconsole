@@ -1,13 +1,15 @@
 package org.jwebconsole.server.worker
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{Before, Specification}
 import org.specs2.mock.Mockito
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
-import org.jwebconsole.server.jmx.JMXConnectionFactory
+import org.jwebconsole.server.jmx.{JMXConnection, JMXConnectionFactory}
 import akka.testkit.{TestActorRef, TestProbe}
 import org.jwebconsole.server.context.host.model.SimpleHostView
 import akka.actor.{Terminated, Props}
+import scala.util.{Failure, Success}
+import org.jwebconsole.server.context.host.{HostData, ChangeHostDataCommand, HostParametersChangedEvent}
 
 class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConversions {
 
@@ -15,6 +17,8 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
 
   trait mocks extends AkkaTestkitSupport {
     val connectionFactory = mock[JMXConnectionFactory]
+    val connection = mock[JMXConnection]
+    connectionFactory.createConnection(anyString, anyInt) returns Success(connection)
     val commandHandler = TestProbe()
     val handlerRef = commandHandler.ref
     val probe = TestProbe()
@@ -22,7 +26,6 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
     val host = SimpleHostView("test-id", "localhost", 8080)
     val worker: TestActorRef[HostWorkerActor] = TestActorRef(Props(new HostWorkerActor(host, handlerRef, connectionFactory)))
     val workerSource = worker.underlyingActor
-
 
     def expectTerminated(): Unit = {
       probe.expectMsgPF() {
@@ -41,8 +44,86 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
   }
 
   "Host worker" should {
-    "start polling on receiving start message" in new mocks {
+    "stop timer on stop message" in new mocks {
+      probe.watch(worker)
+      worker ! StartWork()
+      worker ! StopWork()
+      workerSource.timer.map {
+        _.isCancelled must beTrue
+      }
+    }
+  }
 
+  "Host worker" should {
+    "start timer on start message" in new mocks {
+      probe.watch(worker)
+      worker ! StartWork()
+      workerSource.timer.map {
+        _.isCancelled must beFalse
+      }
+    }
+  }
+
+  "Host worker" should {
+    "start timer on start message" in new mocks {
+      probe.watch(worker)
+      worker ! StartWork()
+      workerSource.timer.map {
+        _.isCancelled must beFalse
+      }
+    }
+  }
+
+  "Host worker" should {
+    "create new connection on change event" in new mocks {
+      val anotherConnection = mock[JMXConnection]
+      connectionFactory.createConnection(anyString, anyInt) returns Success(anotherConnection)
+      worker ! StartWork()
+      worker ! HostParametersChangedEvent("test-id", "localhost", 8080)
+      worker ! MakeConnectionPolling
+      workerSource.connection match {
+        case Success(conn) if conn == anotherConnection => success
+        case Success(conn) if conn == connection => failure
+      }
+    }
+  }
+
+  "Host worker" should {
+    "change host params on change event" in new mocks {
+      val anotherConnection = mock[JMXConnection]
+      worker ! StartWork()
+      worker ! HostParametersChangedEvent("test-id", "changedHost", 8080)
+      worker ! MakeConnectionPolling
+      workerSource.host.name mustEqual "changedHost"
+    }
+  }
+
+  "Host worker" should {
+    "send to host command actor 'connected' message" in new mocks {
+      connection.connected returns true
+      worker ! StartWork()
+      worker ! MakeConnectionPolling
+      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = true)))
+    }
+  }
+
+  "Host worker" should {
+    "send to host command actor 'not connected' message" in new mocks {
+      connection.connected returns false
+      worker ! StartWork()
+      worker ! MakeConnectionPolling
+      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))
+    }
+  }
+
+  "Host worker" should {
+    "send to host command actor 'not connected' message" in new mocks {
+      val anotherConnection = mock[JMXConnection]
+      connectionFactory.createConnection(anyString, anyInt) returns Failure(new RuntimeException())
+      worker ! StartWork()
+      worker ! HostParametersChangedEvent("test-id", "localhost", 8080)
+      worker ! MakeConnectionPolling
+      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))
     }
   }
 

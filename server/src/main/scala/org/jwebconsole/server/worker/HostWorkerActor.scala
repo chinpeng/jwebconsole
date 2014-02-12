@@ -50,6 +50,7 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
 
   def changeHostParams(ev: HostParametersChangedEvent): Unit = {
     host = host.copy(name = ev.name, port = ev.port)
+    connection = connectionFactory.createConnection(host.name, host.port)
   }
 
 }
