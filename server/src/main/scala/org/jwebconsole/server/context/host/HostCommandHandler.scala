@@ -9,13 +9,21 @@ class HostCommandHandler(validator: ActorRef) extends Actor {
   var hosts = Map.empty[String, ActorRef]
 
   def receive: Receive = {
+    receiveWorkerCommand orElse receiveUserCommand
+  }
+
+  def receiveWorkerCommand: Receive = {
+    case cmd: ChangeHostDataCommand =>
+      getHost(cmd) ! cmd
+  }
+
+  def receiveUserCommand: Receive = {
     case cmd: CreateHostCommand =>
       val id = UUID.randomUUID().toString
       hosts += (id -> context.actorOf(Props(new HostARActor(id, validator))))
-      hosts(id) ! WithSender(sender, cmd.copy(id = id))
-    case cmd: HostCommand => {
-      getHost(cmd) ! WithSender(sender, cmd)
-    }
+      hosts(id) ! WithSender(sender(), cmd.copy(id = id))
+    case cmd: HostCommand =>
+      getHost(cmd) ! WithSender(sender(), cmd)
   }
 
   def getHost(cmd: HostCommand): ActorRef = hosts.get(cmd.id) match {

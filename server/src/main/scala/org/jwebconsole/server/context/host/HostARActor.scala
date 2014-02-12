@@ -20,6 +20,19 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
   }
 
   def receiveCommand: Receive = {
+    receiveWorkerCommand orElse receiveUserCommand
+  }
+
+  def receiveWorkerCommand: Receive = {
+    case cmd: ChangeHostDataCommand =>
+      persist(HostDataChangedEvent(cmd.id, cmd.data)) {
+        ev =>
+          model = model.on(ev)
+          context.system.eventStream.publish(ev)
+      }
+  }
+
+  def receiveUserCommand: Receive = {
     case WithSender(source, cmd) =>
       log.info("received command message to Host AR: " + cmd)
       validator ! ValidateHost(model, cmd)
@@ -66,6 +79,7 @@ class HostARActor(override val processorId: String, validator: ActorRef) extends
         HostDeletedEvent(id)
     }
   }
+
   def processInvalidResponse(source: ActorRef, messages: List[InvalidMessage]): Unit = {
     log.info("Sending invalid response back to client")
     source ! ResponseMessage(messages = Some(messages))

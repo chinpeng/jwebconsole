@@ -20,4 +20,6 @@ case class HostParametersChangedEvent(id: String,
                                       user: String = "",
                                       password: String = "") extends HostChangedEvent
 
+case class HostDataChangedEvent(id: String, data: HostData) extends HostChangedEvent
+
 

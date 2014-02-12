@@ -16,6 +16,7 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
     case AvailableHostsList(hosts) => hosts.foreach {
       host =>
         val worker = createWorker(host)
+        workers.get(host.id).map(_ ! StopWork())
         workers += (host.id -> worker)
     }
   }
@@ -34,15 +35,14 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
   }
 
   def deleteHost(event: HostDeletedEvent): Unit = {
-    val worker = workers(event.id)
-    context.stop(worker)
-    workers = workers - event.id
+    workers.get(event.id).map(_ ! StopWork())
+    workers -= event.id
     log.debug("Stopped worker for host with id" + event.id)
   }
 
   def createHost(event: HostCreatedEvent): Unit = {
     val view = SimpleHostView(event.id, event.name, event.port)
-    workers.get(event.id).map(ref => context.stop(ref))
+    workers.get(event.id).map(ref => ref ! StopWork())
     val worker = createWorker(view)
     workers += (event.id -> worker)
     worker ! StartWork()

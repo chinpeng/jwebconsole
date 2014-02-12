@@ -127,4 +127,13 @@ class HostARActorSpecs extends Specification with Mockito with NoTimeConversions
     }
   }
 
+  "host AR actor" should {
+    "publish host data changed event" in new mocks {
+      system.eventStream.subscribe(eventProbeRef, classOf[HostDataChangedEvent])
+      processor ! WithSender(probeRef, CreateHostCommand(id, name, port))
+      processor ! ChangeHostDataCommand(id, HostData())
+      eventProbe.expectMsg(HostDataChangedEvent(id, HostData()))
+    }
+  }
+
 }

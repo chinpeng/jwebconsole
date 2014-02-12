@@ -5,7 +5,8 @@ case class HostStateModel(id: String = "",
                           port: Int = 0,
                           user: String = "",
                           password: String = "",
-                          deleted: Boolean = true) {
+                          deleted: Boolean = true,
+                          data: HostData = HostData()) {
 
   def on(event: Any): HostStateModel = event match {
     case HostCreatedEvent(newId, newName, newPort, newUser, newPassword) =>
@@ -14,6 +15,8 @@ case class HostStateModel(id: String = "",
       copy(id = newId, name = newName, port = newPort, user = newUser, password = newPassword)
     case HostDeletedEvent(_) =>
       copy(deleted = true)
+    case HostDataChangedEvent(_, hostData) =>
+      copy(data = hostData)
     case _ => this
   }
 

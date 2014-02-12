@@ -71,6 +71,8 @@ class HostCommandValidator(connectionChecker: JMXConnectionChecker) extends Acto
       validateChangeHostCommand(model, cmd)
     case cmd: DeleteHostCommand =>
       validateDeleteHostCommand(model, cmd)
+    case other =>
+      sender ! Invalid(model, List(UnknownErrorMessage))
   }
 
   def validateHost(item: HostStateModel): Validation[HostStateModel] = {

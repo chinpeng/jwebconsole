@@ -7,7 +7,7 @@ import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.testkit.{TestProbe, TestActorRef}
 import akka.actor.{PoisonPill, ActorRef, Props}
 import org.jwebconsole.server.context.host.model.{SimpleHostView, AvailableHostsList}
-import org.jwebconsole.server.context.host.{HostCreatedEvent, HostParametersChangedEvent}
+import org.jwebconsole.server.context.host.{HostDeletedEvent, HostCreatedEvent, HostParametersChangedEvent}
 
 class HostWorkerProducerActorSpecs extends Specification with Mockito with NoTimeConversions {
 
@@ -73,6 +73,31 @@ class HostWorkerProducerActorSpecs extends Specification with Mockito with NoTim
     "stop worker if it was already created" in new mocks {
       actor.workers += ("test-id" -> probeRef)
       ref ! HostCreatedEvent(id = "test-id", name = "test-name", port = 8080)
+      probe.expectMsg(StopWork())
+    }
+  }
+
+  "Host worker producer" should {
+    "stop worker if received deletion event" in new mocks {
+      actor.workers += ("test-id" -> probeRef)
+      ref ! HostDeletedEvent(id = "test-id")
+      probe.expectMsg(StopWork())
+    }
+  }
+
+  "Host worker producer" should {
+    "remove worker if received deletion event" in new mocks {
+      actor.workers += ("test-id" -> probeRef)
+      ref ! HostDeletedEvent(id = "test-id")
+      actor.workers.size mustEqual 0
+    }
+  }
+
+  "Host worker producer" should {
+    "should stop all previous workers on Host List Event" in new mocks {
+      actor.workers += ("test-id" -> probeRef)
+      ref ! AvailableHostsList(List(host))
+      probe.expectMsg(StopWork())
     }
   }
 

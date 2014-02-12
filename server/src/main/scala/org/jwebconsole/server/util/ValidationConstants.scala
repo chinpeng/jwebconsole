@@ -10,4 +10,5 @@ object ValidationConstants {
   val HostAlreadyCreated = InvalidMessage(5, "Host Already created")
   val HostDeletedMessage = InvalidMessage(6, "Host already deleted")
   val UnableToConnectMessage = InvalidMessage(7, "Unable to connect")
+  val UnknownErrorMessage = InvalidMessage(8, "Unknown error")
 }

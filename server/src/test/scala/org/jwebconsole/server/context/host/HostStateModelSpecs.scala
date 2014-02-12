@@ -59,4 +59,13 @@ class HostStateModelSpecs extends Specification with Mockito {
     }
   }
 
+  "Host state model" should {
+    "modify data changed event" in new HostData {
+      var model = HostStateModel()
+      val event = HostCreatedEvent(testId, name, port, login, password)
+      model = model.on(new HostDataChangedEvent(testId, HostData(connected = false)))
+      model.data.connected must beFalse
+    }
+  }
+
 }

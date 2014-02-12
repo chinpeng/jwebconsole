@@ -12,4 +12,9 @@ case class ChangeHostCommand(id: String, name: String, port: Int, user: String =
 
 case class DeleteHostCommand(id: String) extends HostCommand
 
+case class ChangeHostDataCommand(id: String, data: HostData) extends HostCommand
+
 case class WithSender(source: ActorRef, cmd: HostCommand)
+
+
+
