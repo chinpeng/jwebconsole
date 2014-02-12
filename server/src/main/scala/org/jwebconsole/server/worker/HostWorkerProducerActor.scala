@@ -3,8 +3,10 @@ package org.jwebconsole.server.worker
 import akka.actor.{Props, ActorLogging, ActorRef, Actor}
 import org.jwebconsole.server.context.host.model.{SimpleHostView, AvailableHostsList}
 import org.jwebconsole.server.context.host.{HostCreatedEvent, HostDeletedEvent, HostParametersChangedEvent}
+import org.jwebconsole.server.jmx.JMXConnectionFactory
 
-class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with ActorLogging {
+class HostWorkerProducerActor(private val hostCommandHandler: ActorRef,
+                              private val connectionFactory: JMXConnectionFactory) extends Actor with ActorLogging {
 
   var workers = Map.empty[String, ActorRef]
 
@@ -50,7 +52,7 @@ class HostWorkerProducerActor(hostCommandHandler: ActorRef) extends Actor with A
 
 
   def createWorker(view: SimpleHostView): ActorRef = {
-    context.actorOf(Props(new HostWorker(view, hostCommandHandler)))
+    context.actorOf(Props(new HostWorkerActor(view, hostCommandHandler, connectionFactory)))
   }
 
   def logUnknown: Receive = {

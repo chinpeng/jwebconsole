@@ -5,9 +5,10 @@ import org.specs2.mock.Mockito
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.testkit.{TestProbe, TestActorRef}
-import akka.actor.{PoisonPill, ActorRef, Props}
+import akka.actor.{ActorRef, Props}
 import org.jwebconsole.server.context.host.model.{SimpleHostView, AvailableHostsList}
 import org.jwebconsole.server.context.host.{HostDeletedEvent, HostCreatedEvent, HostParametersChangedEvent}
+import org.jwebconsole.server.jmx.JMXConnectionFactory
 
 class HostWorkerProducerActorSpecs extends Specification with Mockito with NoTimeConversions {
 
@@ -15,7 +16,8 @@ class HostWorkerProducerActorSpecs extends Specification with Mockito with NoTim
 
   trait mocks extends AkkaTestkitSupport {
     val handler = mock[ActorRef]
-    val ref: TestActorRef[HostWorkerProducerActor] = TestActorRef(Props(new HostWorkerProducerActor(handler)))
+    val connectionFactory = mock[JMXConnectionFactory]
+    val ref: TestActorRef[HostWorkerProducerActor] = TestActorRef(Props(new HostWorkerProducerActor(handler, connectionFactory)))
     val actor = ref.underlyingActor
     val host = SimpleHostView("test-id", "localhost", 8080)
     val probe = TestProbe()

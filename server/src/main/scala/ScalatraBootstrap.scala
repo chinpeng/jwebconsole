@@ -8,7 +8,7 @@ import org.jwebconsole.server.context.host.model.AvailableHostsList
 import org.jwebconsole.server.context.host.model.AvailableHostsList
 import org.jwebconsole.server.context.host.model.{AvailableHostsList, HostListViewActor, SimpleHostDAO}
 import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
-import org.jwebconsole.server.jmx.JMXConnectionChecker
+import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.servlet.HostServlet
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle
@@ -38,7 +38,7 @@ class ScalatraBootstrap extends LifeCycle {
   }
 
   def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef) {
-    val hostWorkerProducer = system.actorOf(Props(new HostWorkerProducerActor(hostCommandHandler)))
+    val hostWorkerProducer = system.actorOf(Props(new HostWorkerProducerActor(hostCommandHandler, new JMXConnectionFactory())))
     system.eventStream.subscribe(hostWorkerProducer, classOf[AvailableHostsList])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostParametersChangedEvent])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostDeletedEvent])
