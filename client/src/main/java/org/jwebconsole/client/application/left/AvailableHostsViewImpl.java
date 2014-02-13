@@ -2,6 +2,7 @@ package org.jwebconsole.client.application.left;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,6 +10,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.core.client.ValueProvider;
+import com.sencha.gxt.data.shared.IconProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
@@ -46,8 +48,21 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     }
 
     private void initAfter() {
-        tree.getStyle().setLeafIcon(appResources.getIcons().hostAvailableIcon());
         initClickHandler();
+        initIconProvider();
+    }
+
+    private void initIconProvider() {
+        tree.setIconProvider(new IconProvider<HostConnection>() {
+            @Override
+            public ImageResource getIcon(HostConnection model) {
+                if (model.getConnected() != null && model.getConnected().equals(true)) {
+                    return appResources.getIcons().iconHostOn();
+                } else {
+                    return appResources.getIcons().iconHostOff();
+                }
+            }
+        });
     }
 
     private void initClickHandler() {

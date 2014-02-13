@@ -33,8 +33,9 @@ public class AvailableHostsPresenter
         HostDeletionSuccessEventHandler,
         HostDeletionStartedEventHandler,
         HostChangedEventHandler,
-        HostCreatedEventHandler{
+        HostCreatedEventHandler {
 
+    private static final int SCHEDULE_TIME = 10000;
 
     private AvailableHostsPresenterFacade facade;
 
@@ -62,7 +63,7 @@ public class AvailableHostsPresenter
 
     private void init() {
         getView().showLoadingMask();
-        facade.getHosts(new SuccessCallback<HostConnectionListResponse>() {
+        facade.scheduleReceiveHosts(SCHEDULE_TIME, new SuccessCallback<HostConnectionListResponse>() {
 
             @Override
             public void beforeResponse() {
@@ -74,13 +75,6 @@ public class AvailableHostsPresenter
                 processResponse(response.getBody());
             }
         });
-        getEventBus().addHandler(HostCreatedEvent.TYPE, new HostCreatedEventHandler() {
-            @Override
-            public void onHostCreated(HostCreatedEvent event) {
-
-            }
-        });
-
     }
 
     private void processResponse(List<HostConnection> connections) {

@@ -13,7 +13,14 @@ class JMXConnection(private val connector: JMXConnector) {
   def connected: Boolean = {
     Try(connector.getConnectionId) match {
       case Success(_) => true
-      case Failure(e) => false
+      case Failure(e) => withRecover()
+    }
+  }
+
+  def withRecover(): Boolean = {
+    Try(connector.connect()) match {
+      case Success(_) => true
+      case Failure(_) => false
     }
   }
 

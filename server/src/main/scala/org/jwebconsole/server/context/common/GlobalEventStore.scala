@@ -20,7 +20,7 @@ class GlobalEventStore extends EventsourcedProcessor with ActorLogging {
     case event: AppEvent =>
       persist(event) {
         ev =>
-          log.debug("persisted event" + ev)
+          log.debug("persisted event to event store: " + ev)
       }
     case other =>
       log.warning("Unknown message was delivered to global event store: " + other)

@@ -6,7 +6,10 @@
         </encoder>
     </appender>
 
-    <root level='info'>
+    <logger name="scala.slick" level="ERROR" />
+    <logger name="org.jwebconsole.server" level="DEBUG" />
+
+    <root level='ERROR'>
         <appender-ref ref='STDOUT'/>
     </root>
 

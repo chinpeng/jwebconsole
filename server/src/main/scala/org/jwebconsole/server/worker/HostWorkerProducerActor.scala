@@ -18,6 +18,7 @@ class HostWorkerProducerActor(private val hostCommandHandler: ActorRef,
     case AvailableHostsList(hosts) => hosts.foreach {
       host =>
         val worker = createWorker(host)
+        worker ! StartWork()
         workers.get(host.id).map(_ ! StopWork())
         workers += (host.id -> worker)
     }

@@ -8,9 +8,6 @@ public interface AppIcons extends ClientBundle {
 
     AppIcons INSTANCE = GWT.create(AppIcons.class);
 
-    @Source("img/icons/icon_include.png")
-    ImageResource hostAvailableIcon();
-
     @Source("img/icons/icon-add.png")
     ImageResource iconAdd();
 
@@ -19,5 +16,11 @@ public interface AppIcons extends ClientBundle {
 
     @Source("img/icons/icon-delete.png")
     ImageResource iconDelete();
+
+    @Source("img/icons/icon-host-on.png")
+    ImageResource iconHostOn();
+
+    @Source("img/icons/icon-host-off.png")
+    ImageResource iconHostOff();
 
 }

@@ -7,6 +7,7 @@ public class HostConnection {
     private Integer port;
     private String user;
     private String password;
+    private Boolean connected;
 
     public String getId() {
         return id;
@@ -46,5 +47,13 @@ public class HostConnection {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getConnected() {
+        return connected;
+    }
+
+    public void setConnected(Boolean connected) {
+        this.connected = connected;
     }
 }
