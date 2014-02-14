@@ -3,9 +3,10 @@ package org.jwebconsole.server.jmx
 import javax.management.remote.{JMXServiceURL, JMXConnectorFactory, JMXConnector}
 import scala.util.{Success, Failure, Try}
 import org.slf4j.LoggerFactory
+import org.jwebconsole.server.context.host.HostData
 
 
-class JMXConnection(private val host: String, private val port: Int) {
+class JMXConnection(private val host: String, private val port: Int, parser: JMXDataParser) {
 
   val log = LoggerFactory.getLogger(classOf[JMXConnection])
 
@@ -16,6 +17,16 @@ class JMXConnection(private val host: String, private val port: Int) {
     } match {
       case Success(_) => true
       case Failure(e) => false
+    }
+  }
+
+  def retrieveHostData: HostData = {
+    withConnection {
+      connection =>
+        parser.parse(connection)
+    } match {
+      case Success(v) => v
+      case Failure(e) => HostData()
     }
   }
 

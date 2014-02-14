@@ -4,11 +4,9 @@ import javax.servlet.ServletContext
 import org.jwebconsole.server.context.host._
 import org.jwebconsole.server.context.host.HostDeletedEvent
 import org.jwebconsole.server.context.host.HostParametersChangedEvent
-import org.jwebconsole.server.context.host.model.AvailableHostsList
-import org.jwebconsole.server.context.host.model.AvailableHostsList
-import org.jwebconsole.server.context.host.model.{AvailableHostsList, HostListViewActor, SimpleHostDAO}
 import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
+import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDAO, HostListViewActor, AvailableHostsList}
 import org.jwebconsole.server.servlet.HostServlet
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle

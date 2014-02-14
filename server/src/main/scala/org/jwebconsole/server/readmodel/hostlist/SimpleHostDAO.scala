@@ -1,9 +1,10 @@
-package org.jwebconsole.server.context.host.model
+package org.jwebconsole.server.readmodel.hostlist
 
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
+import org.jwebconsole.server.readmodel.common.ReplayingDAO
 
-class SimpleHostDAO(db: Database) {
+class SimpleHostDAO(db: Database) extends ReplayingDAO {
 
   val TableName = "all_hosts"
 
@@ -42,8 +43,8 @@ class SimpleHostDAO(db: Database) {
         toUpdate.update((host.id, host.name, host.port))
     }
   }
-  
-  def updateStatus(id: String, status: Boolean):Unit = {
+
+  def updateStatus(id: String, status: Boolean): Unit = {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]

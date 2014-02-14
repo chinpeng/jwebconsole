@@ -6,9 +6,9 @@ import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.testkit.{TestProbe, TestActorRef}
 import akka.actor.{ActorRef, Props}
-import org.jwebconsole.server.context.host.model.{SimpleHostView, AvailableHostsList}
 import org.jwebconsole.server.context.host.{HostDeletedEvent, HostCreatedEvent, HostParametersChangedEvent}
 import org.jwebconsole.server.jmx.JMXConnectionFactory
+import org.jwebconsole.server.readmodel.hostlist.{AvailableHostsList, SimpleHostView}
 
 class HostWorkerProducerActorSpecs extends Specification with Mockito with NoTimeConversions {
 

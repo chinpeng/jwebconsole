@@ -3,12 +3,12 @@ package org.jwebconsole.server.servlet
 import akka.actor._
 import org.jwebconsole.server.context.host._
 import akka.pattern.ask
-import org.jwebconsole.server.context.host.model.{AvailableHostsList, SimpleHostViewRequest}
 import org.jwebconsole.server.jmx.JMXConnectionChecker
 import org.jwebconsole.server.context.host.ChangeHostCommand
 import org.jwebconsole.server.context.host.CreateHostCommand
 import org.jwebconsole.server.context.host.DeleteHostCommand
 import org.jwebconsole.server.worker.HostWorkerProducerActor
+import org.jwebconsole.server.readmodel.hostlist.SimpleHostViewRequest
 
 class HostServlet(override val system: ActorSystem, readModelActor: ActorRef, hostCommandHandler: ActorRef) extends BaseServlet {
 

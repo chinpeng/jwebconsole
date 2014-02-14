@@ -117,6 +117,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
 
     private void processSuccessResult(HostConnection connection) {
         getView().hideDialog();
+        connection.setConnected(true);
         facade.getController().fireChangeEvent(connection);
     }
 

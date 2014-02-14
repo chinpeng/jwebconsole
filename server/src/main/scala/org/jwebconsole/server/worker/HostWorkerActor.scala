@@ -1,12 +1,12 @@
 package org.jwebconsole.server.worker
 
-import org.jwebconsole.server.context.host.model.SimpleHostView
 import akka.actor.{Cancellable, ActorLogging, Actor, ActorRef}
 import org.jwebconsole.server.context.host.{ChangeHostDataCommand, HostData, HostParametersChangedEvent}
 import org.jwebconsole.server.jmx.{JMXConnection, JMXConnectionFactory}
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.Future
+import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 
 class HostWorkerActor(@volatile var host: SimpleHostView,
                       commandHandler: ActorRef,

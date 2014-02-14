@@ -1,4 +1,4 @@
-package org.jwebconsole.server.context.host.model
+package org.jwebconsole.server.readmodel.hostlist
 
 trait HostReadMessage
 

@@ -9,6 +9,7 @@ class JMXConnectionChecker {
     val serviceUrl = new JMXServiceURL(url)
     val jmxConnector = JMXConnectorFactory.connect(serviceUrl, null)
     jmxConnector.getConnectionId
+    jmxConnector.close()
   }
 
 }
