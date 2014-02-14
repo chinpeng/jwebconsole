@@ -6,6 +6,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -27,6 +28,8 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     private final AppResources appResources;
     @UiField(provided = true)
     TreeStore<HostConnection> store;
+
+    private CancellableSelectionHandler<HostConnection> selectHandler;
 
     interface Binder extends UiBinder<Widget, AvailableHostsViewImpl> {
     }
@@ -66,12 +69,14 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     }
 
     private void initClickHandler() {
-       tree.getSelectionModel().addSelectionHandler(new SelectionHandler<HostConnection>() {
-           @Override
-           public void onSelection(SelectionEvent<HostConnection> event) {
-               getUiHandlers().onTreeItemSelected(event.getSelectedItem());
-           }
-       });
+        this.selectHandler = new CancellableSelectionHandler<HostConnection>() {
+            @Override
+            public void onSelectionMade(SelectionEvent<HostConnection> event) {
+                getUiHandlers().onTreeItemSelected(event.getSelectedItem());
+            }
+        };
+        selectHandler.enable();
+        tree.getSelectionModel().addSelectionHandler(selectHandler);
     }
 
     private void init() {
@@ -109,9 +114,23 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
 
     @Override
     public void fillTree(List<HostConnection> connections) {
+        HostConnection selectedHost = tree.getSelectionModel().getSelectedItem();
+        store.clear();
         for (HostConnection connection : connections) {
             store.add(connection);
+            if (selectedHost != null && connection.getId().equals(selectedHost.getId())) {
+                selectedHost = connection;
+            }
         }
+        restoreSelection(selectedHost);
+    }
+
+    private void restoreSelection(HostConnection selectedHost) {
+        selectHandler.cancel();
+        if (selectedHost != null) {
+            tree.getSelectionModel().select(selectedHost, false);
+        }
+        selectHandler.enable();
     }
 
     @Override
@@ -140,5 +159,27 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
         store.add(connection);
     }
 
+    private static abstract class CancellableSelectionHandler<T> implements SelectionHandler<T> {
+
+        private boolean cancelled = false;
+
+        public void cancel() {
+            cancelled = true;
+        }
+
+        public void enable() {
+            cancelled = false;
+        }
+
+        @Override
+        public void onSelection(SelectionEvent<T> event) {
+            if (!cancelled) {
+                onSelectionMade(event);
+            }
+        }
+
+        public abstract void onSelectionMade(SelectionEvent<T> event);
+
+    }
 
 }

@@ -1,27 +1,35 @@
 package org.jwebconsole.server.jmx
 
-import javax.management.remote.JMXConnector
-import scala.util.{Failure, Success, Try}
+import javax.management.remote.{JMXServiceURL, JMXConnectorFactory, JMXConnector}
+import scala.util.{Success, Failure, Try}
+import org.slf4j.LoggerFactory
 
-class JMXConnection(private val connector: JMXConnector) {
 
+class JMXConnection(private val host: String, private val port: Int) {
 
-  def disconnect(): Unit = {
-    Try(connector.close())
-  }
+  val log = LoggerFactory.getLogger(classOf[JMXConnection])
 
   def connected: Boolean = {
-    Try(connector.getConnectionId) match {
+    withConnection {
+      connection =>
+        connection.getConnectionId
+    } match {
       case Success(_) => true
-      case Failure(e) => withRecover()
+      case Failure(e) => false
     }
   }
 
-  def withRecover(): Boolean = {
-    Try(connector.connect()) match {
-      case Success(_) => true
-      case Failure(_) => false
+  private def withConnection[T](action: JMXConnector => T): Try[T] = {
+    val res = Try {
+      val url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"
+      val serviceUrl = new JMXServiceURL(url)
+      val connector = JMXConnectorFactory.connect(serviceUrl, null)
+      val result = action(connector)
+      connector.close()
+      result
     }
+    if (res.isFailure)
+      log.debug("Unable to connect to host: $host:$port")
+    res
   }
-
 }

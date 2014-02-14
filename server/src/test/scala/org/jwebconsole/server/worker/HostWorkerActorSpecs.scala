@@ -18,7 +18,7 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
   trait mocks extends AkkaTestkitSupport {
     val connectionFactory = mock[JMXConnectionFactory]
     val connection = mock[JMXConnection]
-    connectionFactory.createConnection(anyString, anyInt) returns Success(connection)
+    connectionFactory.createConnection(anyString, anyInt) returns connection
     val commandHandler = TestProbe()
     val handlerRef = commandHandler.ref
     val probe = TestProbe()
@@ -77,13 +77,13 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
   "Host worker" should {
     "create new connection on change event" in new mocks {
       val anotherConnection = mock[JMXConnection]
-      connectionFactory.createConnection(anyString, anyInt) returns Success(anotherConnection)
+      connectionFactory.createConnection(anyString, anyInt) returns anotherConnection
       worker ! StartWork()
       worker ! HostParametersChangedEvent("test-id", "localhost", 8080)
       worker ! MakeConnectionPolling
       workerSource.connection match {
-        case Success(conn) if conn == anotherConnection => success
-        case Success(conn) if conn == connection => failure
+        case conn if conn == anotherConnection => success
+        case conn if conn == connection => failure
       }
     }
   }
@@ -111,17 +111,6 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
     "send to host command actor 'not connected' message" in new mocks {
       connection.connected returns false
       worker ! StartWork()
-      worker ! MakeConnectionPolling
-      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))
-    }
-  }
-
-  "Host worker" should {
-    "send to host command actor 'not connected' message" in new mocks {
-      val anotherConnection = mock[JMXConnection]
-      connectionFactory.createConnection(anyString, anyInt) returns Failure(new RuntimeException())
-      worker ! StartWork()
-      worker ! HostParametersChangedEvent("test-id", "localhost", 8080)
       worker ! MakeConnectionPolling
       commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))
     }

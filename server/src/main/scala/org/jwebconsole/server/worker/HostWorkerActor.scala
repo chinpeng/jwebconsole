@@ -17,7 +17,7 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
 
   var timer: Option[Cancellable] = None
 
-  @volatile var connection: Try[JMXConnection] = connectionFactory.createConnection(host.name, host.port)
+  @volatile var connection: JMXConnection = connectionFactory.createConnection(host.name, host.port)
 
   override def receive: Receive = {
     case StopWork() =>
@@ -40,11 +40,9 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
   def makePolling(): Unit = {
     val currentConnection = connection
     val currentHost = host
-    Future(for (conn <- currentConnection) yield conn.connected) onComplete {
-      t => t.flatten match {
-        case Success(v) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = v))
-        case Failure(e) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = false))
-      }
+    Future(currentConnection.connected) onComplete {
+      case Success(v) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = v))
+      case Failure(e) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = false))
     }
   }
 
