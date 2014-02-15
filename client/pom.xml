@@ -54,10 +54,10 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <jettyXml>src\main\webapp\WEB-INF\jetty-jmx.xml</jettyXml>
+                    <jettyXml>src/main/webapp/WEB-INF/jetty-jmx.xml</jettyXml>
                     <webAppConfig>
                         <contextPath>/${webapp.name}</contextPath>
-                        <descriptor>src\main\webapp\WEB-INF\web.xml</descriptor>
+                        <descriptor>src/main/webapp/WEB-INF/web.xml</descriptor>
                     </webAppConfig>
                     <reload>manual</reload>
                 </configuration>
@@ -102,6 +102,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwt.version}</version>
                 <configuration>
+                    <draftCompile>true</draftCompile>
                     <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
                     <strict>true</strict>
 

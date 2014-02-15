@@ -11,7 +11,7 @@ class JMXDataParser {
   )
 
   def parse(connection: JMXConnector): HostData = {
-    var hostData = HostData()
+    var hostData = HostData(connected = true)
     converters.foreach {
       conv =>
         hostData = conv.fromConnection(connection, hostData)

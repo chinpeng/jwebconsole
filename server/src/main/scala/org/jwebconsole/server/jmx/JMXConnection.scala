@@ -10,16 +10,6 @@ class JMXConnection(private val host: String, private val port: Int, parser: JMX
 
   val log = LoggerFactory.getLogger(classOf[JMXConnection])
 
-  def connected: Boolean = {
-    withConnection {
-      connection =>
-        connection.getConnectionId
-    } match {
-      case Success(_) => true
-      case Failure(e) => false
-    }
-  }
-
   def retrieveHostData: HostData = {
     withConnection {
       connection =>

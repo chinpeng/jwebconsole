@@ -3,11 +3,13 @@ package org.jwebconsole.server.readmodel.common
 import akka.actor.{Stash, ActorLogging, Props, Actor}
 import org.jwebconsole.server.context.common.{ReplayFinished, AppEvent, EventStoreReplayingActor}
 import org.jwebconsole.server.context.host.HostChangedEvent
-import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Try, Failure, Success}
 
 trait ReadModelReplayingActor {
   this: Actor with ActorLogging with Stash =>
+
+  implicit val executor = context.system.dispatcher
 
   override def preStart() {
     if (!dao.exists()) {
@@ -20,8 +22,11 @@ trait ReadModelReplayingActor {
   }
 
   val replayingState: Receive = {
-    case ev: HostChangedEvent =>
-      persistReplay(ev)
+    case ev: AppEvent =>
+      Try(persistReplay(ev)) match {
+        case Success(_) => log.debug("Persisted replaying event:" + ev)
+        case Failure(ex) => log.error(ex, "Unable to persist event: " + ev)
+      }
     case ReplayFinished =>
       context.unbecome()
       unstashAll()
@@ -33,9 +38,9 @@ trait ReadModelReplayingActor {
 
   }
 
-  def futurePersist(action: () => Unit)(successAction: () => Unit) {
+  def futurePersist(action: => Unit) {
     Future(action) onComplete {
-      case Success(v) => successAction()
+      case Success(v) => log.debug("Successfully persisted event:" + v)
       case Failure(e) => log.error(e, "Unable to persist event")
     }
   }

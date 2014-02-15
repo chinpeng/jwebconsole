@@ -7,7 +7,8 @@ import org.jwebconsole.server.context.host.HostParametersChangedEvent
 import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDAO, HostListViewActor, AvailableHostsList}
-import org.jwebconsole.server.servlet.HostServlet
+import org.jwebconsole.server.readmodel.threads.{ThreadDataViewActor, ThreadDataDAO}
+import org.jwebconsole.server.servlet.{ThreadDataServlet, HostServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle
 import scala.slick.driver.H2Driver.simple._
@@ -29,10 +30,19 @@ class ScalatraBootstrap extends LifeCycle {
     val validator = system.actorOf(Props(new HostCommandValidator(connectionChecker)))
     val hostCommandHandler = system.actorOf(Props(new HostCommandHandler(validator)))
     val hostWorkerProducer = createWorkerProducer(system, hostCommandHandler)
+    val threadDataView = initThreadReadModel(system)
     val readModel = system.actorOf(Props(new HostListViewActor(dao)))
     system.eventStream.subscribe(eventStore, classOf[AppEvent])
     system.eventStream.subscribe(readModel, classOf[HostChangedEvent])
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
+    context.mount(new ThreadDataServlet(system, threadDataView), "/thread/*")
+  }
+
+  def initThreadReadModel(system: ActorSystem): ActorRef = {
+    val dao = new ThreadDataDAO(db)
+    val threadDataView = system.actorOf(Props(new ThreadDataViewActor(dao)))
+    system.eventStream.subscribe(threadDataView, classOf[HostDataChangedEvent])
+    threadDataView
   }
 
   def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef): ActorRef = {

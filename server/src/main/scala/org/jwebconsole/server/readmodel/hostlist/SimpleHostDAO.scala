@@ -4,7 +4,7 @@ import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
 import org.jwebconsole.server.readmodel.common.ReplayingDAO
 
-class SimpleHostDAO(db: Database) extends ReplayingDAO {
+class SimpleHostDAO(val db: Database) extends ReplayingDAO {
 
   val TableName = "all_hosts"
 

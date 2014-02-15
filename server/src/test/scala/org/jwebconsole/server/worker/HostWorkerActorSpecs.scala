@@ -1,13 +1,13 @@
 package org.jwebconsole.server.worker
 
-import org.specs2.mutable.{Before, Specification}
+import org.specs2.mutable.Specification
 import org.specs2.mock.Mockito
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import org.jwebconsole.server.jmx.{JMXConnection, JMXConnectionFactory}
 import akka.testkit.{TestActorRef, TestProbe}
 import akka.actor.{Terminated, Props}
-import scala.util.{Failure, Success}
+import scala.util.Success
 import org.jwebconsole.server.context.host.{HostData, ChangeHostDataCommand, HostParametersChangedEvent}
 import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 
@@ -100,7 +100,7 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
 
   "Host worker" should {
     "send to host command actor 'connected' message" in new mocks {
-      connection.connected returns true
+      connection.retrieveHostData returns HostData(connected = true)
       worker ! StartWork()
       worker ! MakeConnectionPolling
       commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = true)))
@@ -109,7 +109,7 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
 
   "Host worker" should {
     "send to host command actor 'not connected' message" in new mocks {
-      connection.connected returns false
+      connection.retrieveHostData returns HostData(connected = false)
       worker ! StartWork()
       worker ! MakeConnectionPolling
       commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))

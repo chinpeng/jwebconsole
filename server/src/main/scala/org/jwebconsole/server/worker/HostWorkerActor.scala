@@ -40,8 +40,8 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
   def makePolling(): Unit = {
     val currentConnection = connection
     val currentHost = host
-    Future(currentConnection.connected) onComplete {
-      case Success(v) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = v))
+    Future(currentConnection.retrieveHostData) onComplete {
+      case Success(v) => commandHandler ! ChangeHostDataCommand(currentHost.id, v)
       case Failure(e) => commandHandler ! ChangeHostDataCommand(currentHost.id, HostData(connected = false))
     }
   }
