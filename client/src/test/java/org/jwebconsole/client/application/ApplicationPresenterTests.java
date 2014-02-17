@@ -2,9 +2,12 @@ package org.jwebconsole.client.application;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jwebconsole.client.event.GlobalEventBusHolder;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.mockito.Mockito;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static org.junit.Assert.assertEquals;
 
 public class ApplicationPresenterTests extends Mockito {
 
@@ -25,5 +28,13 @@ public class ApplicationPresenterTests extends Mockito {
         presenter.onReveal();
         verify(eventBus).fireEvent(any(RevealOnStartEvent.class));
     }
+
+    @Test
+    @SuppressWarnings("unused")
+    public void shouldPutEventBusToHolderOnStart() {
+        ApplicationPresenter presenter = new ApplicationPresenter(eventBus, view, proxy);
+        assertEquals(GlobalEventBusHolder.getEventBus(), eventBus);
+    }
+
 
 }

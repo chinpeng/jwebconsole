@@ -26,6 +26,7 @@ import java.util.List;
 public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiHandlers> implements AvailableHostsView {
 
     private final AppResources appResources;
+
     @UiField(provided = true)
     TreeStore<HostConnection> store;
 
@@ -113,27 +114,6 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     }
 
     @Override
-    public void fillTree(List<HostConnection> connections) {
-        HostConnection selectedHost = tree.getSelectionModel().getSelectedItem();
-        store.clear();
-        for (HostConnection connection : connections) {
-            store.add(connection);
-            if (selectedHost != null && connection.getId().equals(selectedHost.getId())) {
-                selectedHost = connection;
-            }
-        }
-        restoreSelection(selectedHost);
-    }
-
-    private void restoreSelection(HostConnection selectedHost) {
-        selectHandler.cancel();
-        if (selectedHost != null) {
-            tree.getSelectionModel().select(selectedHost, false);
-        }
-        selectHandler.enable();
-    }
-
-    @Override
     public void addHost(HostConnection connection) {
         store.add(connection);
     }
@@ -157,6 +137,31 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     public void changeHost(HostConnection connection) {
         store.remove(connection);
         store.add(connection);
+    }
+
+    @Override
+    public void disableSelectionHandler() {
+        selectHandler.cancel();
+    }
+
+    @Override
+    public void enableSelectionHandler() {
+        selectHandler.enable();
+    }
+
+    @Override
+    public void clearStore() {
+        this.store.clear();
+    }
+
+    @Override
+    public void addConnection(HostConnection connection) {
+        store.add(connection);
+    }
+
+    @Override
+    public void setSelection(HostConnection connection) {
+        tree.getSelectionModel().select(connection, false);
     }
 
     private static abstract class CancellableSelectionHandler<T> implements SelectionHandler<T> {

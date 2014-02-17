@@ -8,8 +8,6 @@ import java.util.List;
 
 interface AvailableHostsView extends View, HasUiHandlers<AvailableHostsUiHandlers> {
 
-    void fillTree(List<HostConnection> connections);
-
     void addHost(HostConnection connection);
 
     void showLoadingMask();
@@ -19,4 +17,14 @@ interface AvailableHostsView extends View, HasUiHandlers<AvailableHostsUiHandler
     void deleteHostConnection(HostConnection deletedHost);
 
     void changeHost(HostConnection connection);
+
+    void disableSelectionHandler();
+
+    void enableSelectionHandler();
+
+    void clearStore();
+
+    void addConnection(HostConnection connection);
+
+    void setSelection(HostConnection connection);
 }

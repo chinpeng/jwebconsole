@@ -38,6 +38,7 @@ public class AvailableHostsPresenter
     private static final int SCHEDULE_TIME = 10000;
 
     private AvailableHostsPresenterFacade facade;
+    private HostConnection selectedConnection;
 
 
     @Inject
@@ -72,13 +73,22 @@ public class AvailableHostsPresenter
 
             @Override
             public void onSuccess(HostConnectionListResponse response) {
-                processResponse(response.getBody());
+                processConnectionListResponse(response.getBody());
             }
         });
     }
 
-    private void processResponse(List<HostConnection> connections) {
-        getView().fillTree(connections);
+    private void processConnectionListResponse(List<HostConnection> connections) {
+        getView().clearStore();
+        getView().disableSelectionHandler();
+        for (HostConnection connection : connections) {
+            getView().addConnection(connection);
+            if (selectedConnection != null && connection.getId().equals(selectedConnection.getId())) {
+                this.selectedConnection = connection;
+            }
+        }
+        getView().setSelection(selectedConnection);
+        getView().enableSelectionHandler();
     }
 
     @ProxyEvent
@@ -89,6 +99,7 @@ public class AvailableHostsPresenter
 
     @Override
     public void onTreeItemSelected(HostConnection connection) {
+        this.selectedConnection = connection;
         getEventBus().fireEvent(new HostSelectedEvent(connection));
         facade.revealThreadContentPlace(connection.getId());
     }
@@ -111,7 +122,10 @@ public class AvailableHostsPresenter
 
     @Override
     public void onHostChanged(HostChangedEvent hostChangedEvent) {
+        getView().disableSelectionHandler();
         getView().changeHost(hostChangedEvent.getConnection());
+        getView().setSelection(hostChangedEvent.getConnection());
+        getView().enableSelectionHandler();
     }
 
     @Override

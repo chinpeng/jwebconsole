@@ -32,7 +32,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     @Test
     public void shouldFireClickedEventWhenTreeItemWasSelected() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
-        presenter.onTreeItemSelected(any(HostConnection.class));
+        presenter.onTreeItemSelected(new HostConnection());
         verify(eventBus).fireEvent(any(HostSelectedEvent.class));
     }
 
