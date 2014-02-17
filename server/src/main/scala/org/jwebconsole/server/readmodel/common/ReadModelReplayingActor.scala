@@ -2,8 +2,7 @@ package org.jwebconsole.server.readmodel.common
 
 import akka.actor.{Stash, ActorLogging, Props, Actor}
 import org.jwebconsole.server.context.common.{ReplayFinished, AppEvent, EventStoreReplayingActor}
-import org.jwebconsole.server.context.host.HostChangedEvent
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.util.{Try, Failure, Success}
 
 trait ReadModelReplayingActor {
@@ -12,6 +11,16 @@ trait ReadModelReplayingActor {
   implicit val executor = context.system.dispatcher
 
   override def preStart() {
+    Try(tryRecover()) match {
+      case Success(_) => log.debug("Successful recover")
+      case Failure(e) =>
+        log.error(e, "Unable to recover")
+        context.unbecome()
+    }
+  }
+
+
+  def tryRecover():Unit = {
     if (!dao.exists()) {
       context.become(replayingState)
       dao.createTable()

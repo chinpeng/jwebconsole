@@ -13,6 +13,10 @@ public class HostSelectedEvent extends GwtEvent<HostSelectedEventHandler> {
         this.connection = connection;
     }
 
+    public static Type<HostSelectedEventHandler> getType() {
+        return TYPE;
+    }
+
     @Override
     public Type<HostSelectedEventHandler> getAssociatedType() {
         return TYPE;

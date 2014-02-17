@@ -8,6 +8,8 @@ public class NameTokens {
 
     public static final String newConnection = "newConnection";
 
+    public static final String thread = "thread";
+
     public static String getHome() {
         return home;
     }
@@ -18,5 +20,9 @@ public class NameTokens {
 
     public static String getNewConnection() {
         return newConnection;
+    }
+
+    public static String getThread() {
+        return thread;
     }
 }

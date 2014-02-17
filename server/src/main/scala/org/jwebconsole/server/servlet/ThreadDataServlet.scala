@@ -10,7 +10,7 @@ class ThreadDataServlet(val system: ActorSystem, threadDataView: ActorRef) exten
     contentType = formats("json")
   }
 
-  get("/all/:id") {
+  get("/:id/all") {
     val id = params("id")
     val req = ThreadDataRequest(id)
     executeAsync(threadDataView ? req)

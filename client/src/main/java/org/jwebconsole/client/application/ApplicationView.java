@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.sencha.gxt.widget.core.client.ContentPanel;
 import org.jwebconsole.client.bundle.AppStyles;
 
 import javax.inject.Inject;
@@ -15,9 +16,9 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     @UiField
     HTMLPanel toolbar;
     @UiField
-    HTMLPanel rightPanel;
-    @UiField
     HTMLPanel leftPanel;
+    @UiField
+    ContentPanel contentPanel;
 
     public interface Binder extends UiBinder<Widget, ApplicationView> {
     }
@@ -38,6 +39,10 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
         if (slot == ApplicationPresenter.SLOT_LEFT_PANEL) {
             leftPanel.clear();
             leftPanel.add(content);
+        }
+        if (slot == ApplicationPresenter.SLOT_CONTENT_PANEL) {
+            contentPanel.clear();
+            contentPanel.add(content);
         }
     }
 }

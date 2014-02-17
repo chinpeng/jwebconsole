@@ -23,6 +23,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
     @ContentSlot
     public static final Type<RevealContentHandler<?>> SLOT_LEFT_PANEL = new Type<RevealContentHandler<?>>();
 
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> SLOT_CONTENT_PANEL = new Type<RevealContentHandler<?>>();
+
 
     @ProxyStandard
     @NameToken(NameTokens.home)

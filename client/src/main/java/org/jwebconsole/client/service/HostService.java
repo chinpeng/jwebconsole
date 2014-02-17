@@ -11,24 +11,24 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("../hosts")
+@Path(ServiceConstants.SERVICE_PATH + "hosts")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface HostService extends RestService {
 
     @GET
     @Path("/all")
-    public void getHostsStatus(MethodCallback<HostConnectionListResponse> callback);
+    void getHostsStatus(MethodCallback<HostConnectionListResponse> callback);
 
     @POST
     @Path("/add")
-    public void addNewHost(HostConnection connection, MethodCallback<HostConnectionResponse> callback);
+    void addNewHost(HostConnection connection, MethodCallback<HostConnectionResponse> callback);
 
     @PUT
     @Path("/edit/{id}")
-    public void editHost(@PathParam("id") String id, HostConnection connection, MethodCallback<HostConnectionResponse> callback);
+    void editHost(@PathParam("id") String id, HostConnection connection, MethodCallback<HostConnectionResponse> callback);
 
     @DELETE
     @Path("/delete/{id}")
-    public void delete(@PathParam("id") String id, MethodCallback<SimpleResponse> callback);
+    void delete(@PathParam("id") String id, MethodCallback<SimpleResponse> callback);
 
 }

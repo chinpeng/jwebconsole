@@ -31,7 +31,7 @@
 
                         </g:HTMLPanel>
                         <g:HTMLPanel ui:field="rightPanel" styleName="{res.app.appRightPanel}">
-                            <gxt:ContentPanel height="{res.availableHosts.windowHeight}">
+                            <gxt:ContentPanel height="{res.availableHosts.windowHeight}" ui:field="contentPanel">
 
                             </gxt:ContentPanel>
                         </g:HTMLPanel>
