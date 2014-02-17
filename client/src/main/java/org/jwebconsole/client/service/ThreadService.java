@@ -3,6 +3,7 @@ package org.jwebconsole.client.service;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
+import org.jwebconsole.client.model.thread.ThreadCountListResponse;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +17,6 @@ public interface ThreadService extends RestService {
 
     @GET
     @Path("/{id}/all")
-    void getHostsStatus(@PathParam("id") String hostId, MethodCallback<HostConnectionListResponse> callback);
+    void getThreadInfo(@PathParam("id") String hostId, MethodCallback<ThreadCountListResponse> callback);
 
 }

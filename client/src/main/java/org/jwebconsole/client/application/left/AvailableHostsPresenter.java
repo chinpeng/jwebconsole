@@ -90,6 +90,7 @@ public class AvailableHostsPresenter
     @Override
     public void onTreeItemSelected(HostConnection connection) {
         getEventBus().fireEvent(new HostSelectedEvent(connection));
+        facade.revealThreadContentPlace(connection.getId());
     }
 
     @Override
