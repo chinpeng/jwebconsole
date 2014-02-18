@@ -46,7 +46,7 @@ public class ThreadCountChartWidget implements IsWidget {
         chart.addAxis(createDateAxis());
         chart.addSeries(createThreadCountLineSeries());
         chart.addSeries(createPeakThreadCountLineSeries());
-        chart.setWidth(900);
+        chart.setWidth(1000);
         chart.setHeight(600);
     }
 
@@ -60,7 +60,7 @@ public class ThreadCountChartWidget implements IsWidget {
         catAxis.setLabelProvider(new LabelProvider<Date>() {
             @Override
             public String getLabel(Date item) {
-                DateTimeFormat format = DateTimeFormat.getFormat("HH:mm:SS");
+                DateTimeFormat format = DateTimeFormat.getFormat("HH:mm:ss");
                 return format.format(item);
             }
         });
@@ -124,7 +124,38 @@ public class ThreadCountChartWidget implements IsWidget {
 
     public void populate(List<ThreadCountEntity> entities) {
         store.clear();
-        store.addAll(entities.subList(entities.size() - 1 - 10, entities.size() - 1));
+        List<ThreadCountEntity> filteredEntities = entities.subList(Math.max(entities.size() - 1 - 15, 0), entities.size() - 1);
+        store.addAll(filteredEntities);
+        int min = getMin(filteredEntities);
+        int max = getMax(filteredEntities);
+        getThreadCountAxis().setMinimum(min);
+        getThreadCountAxis().setMaximum(max);
         chart.redrawChart();
+    }
+
+    private int getMin(List<ThreadCountEntity> filteredEntities) {
+        int min = Integer.MAX_VALUE;
+        for (ThreadCountEntity item : filteredEntities) {
+            if (item.getThreadCount() < min) {
+                min = item.getThreadCount();
+            }
+        }
+        return Math.max(min - 5, 0);
+    }
+
+    private int getMax(List<ThreadCountEntity> filteredEntities) {
+        int max = 0;
+        for (ThreadCountEntity item : filteredEntities) {
+            if (item.getThreadCount() > max) {
+                max = item.getThreadCount();
+            }
+        }
+        return max + 5;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private NumericAxis<ThreadCountEntity> getThreadCountAxis() {
+        return (NumericAxis<ThreadCountEntity>) chart.getAxis(Chart.Position.LEFT);
     }
 }
