@@ -8,6 +8,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import akka.util.Timeout
 import akka.actor.ActorSystem
+import java.text.SimpleDateFormat
 
 trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport with CorsSupport {
 
@@ -21,7 +22,9 @@ trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSu
 
   implicit val timeout = Timeout(5 seconds)
 
-  protected implicit val jsonFormats: Formats = DefaultFormats
+  implicit val jsonFormats = new DefaultFormats {
+    override def dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  }
 
   def executeAsync[T](future: Future[T]): AsyncResult = {
     new AsyncResult {

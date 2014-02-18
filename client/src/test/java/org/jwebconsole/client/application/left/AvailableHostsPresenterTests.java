@@ -1,6 +1,8 @@
 package org.jwebconsole.client.application.left;
 
 import com.google.web.bindery.event.shared.EventBus;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
@@ -10,7 +12,16 @@ import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.model.host.HostConnectionListResponse;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class AvailableHostsPresenterTests extends Mockito {
 
@@ -19,6 +30,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     private EventBus eventBus;
     private AvailableHostsPresenter.AvailableHostsProxy proxy;
     private HostConnection connection;
+    private Method method;
 
     @Before
     public void init() {
@@ -27,6 +39,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         this.eventBus = mock(EventBus.class);
         this.proxy = mock(AvailableHostsPresenter.AvailableHostsProxy.class);
         this.connection = mock(HostConnection.class);
+        this.method = mock(Method.class);
     }
 
     @Test
@@ -109,5 +122,57 @@ public class AvailableHostsPresenterTests extends Mockito {
         verify(view).deleteHostConnection(connection);
     }
 
+    @Test
+    public void shouldDisableHandlerWhileChangingHost() {
+        AvailableHostsMockView mockView = new AvailableHostsMockView();
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
+        presenter.onHostChanged(new HostChangedEvent(new HostConnection()));
+        assertFalse(mockView.isSelectionFired());
+    }
+
+    @Test
+    public void shouldEnableHandlerAfterChangingHost() {
+        AvailableHostsMockView mockView = new AvailableHostsMockView();
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
+        presenter.onHostChanged(new HostChangedEvent(new HostConnection()));
+        assertTrue(mockView.isEnabled());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldDisableHandlerWhileInsertingHosts() {
+        AvailableHostsMockView mockView = new AvailableHostsMockView();
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
+        ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
+        presenter.onBind();
+        verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
+        argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
+        assertFalse(mockView.isSelectionFired());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldApplyPreviousSelectionOnAddingHosts() {
+        when(connection.getId()).thenReturn("test-id");
+        AvailableHostsMockView mockView = new AvailableHostsMockView();
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
+        presenter.onTreeItemSelected(connection);
+        ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
+        presenter.onBind();
+        verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
+        argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
+        assertEquals(connection, mockView.getSelectedItem());
+    }
+
+
+
+
+    private HostConnectionListResponse createConnectionsResponse() {
+        HostConnectionListResponse response = new HostConnectionListResponse();
+        List<HostConnection> result = new ArrayList<HostConnection>();
+        result.add(connection);
+        response.setBody(result);
+        return response;
+    }
 
 }

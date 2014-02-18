@@ -85,9 +85,9 @@ public class AvailableHostsPresenter
             getView().addConnection(connection);
             if (selectedConnection != null && connection.getId().equals(selectedConnection.getId())) {
                 this.selectedConnection = connection;
+                getView().setSelection(selectedConnection);
             }
         }
-        getView().setSelection(selectedConnection);
         getView().enableSelectionHandler();
     }
 
@@ -113,6 +113,7 @@ public class AvailableHostsPresenter
     public void onSuccessDeletion(HostDeletionSuccessEvent event) {
         getView().hideLoadingMask();
         getView().deleteHostConnection(event.getDeletedHost());
+        this.selectedConnection = null;
     }
 
     @Override
