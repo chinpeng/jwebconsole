@@ -8,10 +8,9 @@ import org.jwebconsole.server.context.host.ChangeHostCommand
 import org.jwebconsole.server.context.host.CreateHostCommand
 import org.jwebconsole.server.context.host.DeleteHostCommand
 import org.jwebconsole.server.worker.HostWorkerProducerActor
-import org.jwebconsole.server.readmodel.hostlist.SimpleHostViewRequest
+import org.jwebconsole.server.readmodel.hostlist.{SimpleHostViewRequest, SimpleHostViewListRequest}
 
 class HostServlet(override val system: ActorSystem, readModelActor: ActorRef, hostCommandHandler: ActorRef) extends BaseServlet {
-
 
 
   before() {
@@ -19,7 +18,12 @@ class HostServlet(override val system: ActorSystem, readModelActor: ActorRef, ho
   }
 
   get("/all") {
-    executeAsync(readModelActor ? SimpleHostViewRequest)
+    executeAsync(readModelActor ? SimpleHostViewListRequest)
+  }
+
+  get("get/id") {
+    val id = params("id")
+    executeAsync(readModelActor ? SimpleHostViewRequest(id))
   }
 
   post("/add") {

@@ -10,8 +10,6 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import org.fusesource.restygwt.client.Defaults;
-import org.jwebconsole.client.event.GlobalEventBusHolder;
 import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.place.NameTokens;
 
@@ -35,15 +33,12 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
     }
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, MyView view, ApplicationProxy proxy) {
+    public ApplicationPresenter(EventBus eventBus, MyView view, ApplicationProxy proxy, ApplicationInitializer initializer) {
         super(eventBus, view, proxy, RevealType.Root);
-        initApp(eventBus);
+        initializer.init();
     }
 
-    private void initApp(EventBus eventBus) {
-        GlobalEventBusHolder.setEventBus(eventBus);
-        Defaults.setDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
+
 
     @Override
     protected void onReveal() {

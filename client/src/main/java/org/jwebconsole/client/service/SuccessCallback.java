@@ -20,7 +20,9 @@ public abstract class SuccessCallback<T extends BaseResponse<?>> implements Meth
     }
 
     private void fireInfoEvent(String title, String message) {
-        GlobalEventBusHolder.getEventBus().fireEvent(new PrintInfoEvent(title, message));
+        if (GlobalEventBusHolder.getEventBus() != null) {
+            GlobalEventBusHolder.getEventBus().fireEvent(new PrintInfoEvent(title, message));
+        }
     }
 
     @Override

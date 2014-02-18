@@ -1,6 +1,5 @@
 package org.jwebconsole.client.application.content.thread;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -38,9 +37,10 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        String hostId = request.getParameter(AppParams.HOST_ID, "");
+        String hostId = request.getParameter(AppParams.HOST_ID, "").trim();
         if (hostId.equals("")) {
             facade.printEmptyHostIdMessage();
+            facade.redirectToErrorPlace();
         } else {
             makeThreadCountInfoRequest(hostId);
         }
@@ -56,6 +56,6 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
     }
 
     private void processThreadCountInfoResponse(List<ThreadCountEntity> entities) {
-        Window.alert(entities.toString());
+        getView().populateChart(entities);
     }
 }

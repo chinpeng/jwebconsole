@@ -37,19 +37,24 @@ class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging 
   def receive: Receive = {
     case ev: HostChangedEvent =>
       persistAsync(ev)
+    case SimpleHostViewListRequest =>
+      makeResponse(dao.getAll)
     case SimpleHostViewRequest =>
-      makeResponse()
+      makeResponse(dao.getSingle)
+    case msg =>
+      log.warning("Received unhandled message to Host View" + msg)
   }
 
-  def makeResponse(): Unit = {
+  def makeResponse[T](queryMethod: => T): Unit = {
     val current = sender()
-    Future(dao.getAll) onComplete {
+    Future(queryMethod) onComplete {
       case Failure(e) =>
         log.error(e, "Unable to connect to Database")
         current ! ResponseMessage(error = Some("Unable to connect to Database"))
       case Success(v) => current ! ResponseMessage(body = Some(v))
     }
   }
+
 
   def persistReplay(ev: AppEvent): Unit = {
     ev match {
@@ -66,4 +71,6 @@ class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging 
 
 }
 
-case object SimpleHostViewRequest
+case object SimpleHostViewListRequest
+
+case class SimpleHostViewRequest(hostId: String)

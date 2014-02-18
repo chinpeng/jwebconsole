@@ -17,6 +17,7 @@
     <inherits name='com.gwtplatform.dispatch.Dispatch' />
     <inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
+    <inherits name="com.sencha.gxt.chart.Chart"/>
 
     <source path='client' />
     <source path='shared' />
