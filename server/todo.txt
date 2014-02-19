@@ -1,3 +1,0 @@
-1. Test Coverage on Glue actor
-2. Figure out how to mock traits
-3. Start all connections after VM restart

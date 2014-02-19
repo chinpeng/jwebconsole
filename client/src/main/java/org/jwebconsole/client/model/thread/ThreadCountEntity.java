@@ -10,6 +10,17 @@ public class ThreadCountEntity {
     private Integer threadCount;
     private Integer peakThreadCount;
 
+    public ThreadCountEntity() {
+    }
+
+    public ThreadCountEntity(Integer id, String hostId, Date time, Integer threadCount, Integer peakThreadCount) {
+        this.id = id;
+        this.hostId = hostId;
+        this.time = time;
+        this.threadCount = threadCount;
+        this.peakThreadCount = peakThreadCount;
+    }
+
     public Integer getId() {
         return id;
     }

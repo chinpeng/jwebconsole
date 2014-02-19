@@ -58,14 +58,18 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
             @Override
             public void onSuccess(Method method, HostConnectionResponse hostConnectionResponse) {
-                getEventBus().fireEvent(new HideContentMaskEvent());
-                if (hostConnectionResponse.isError()) {
-                    processInvalidHostId();
-                } else {
-                    processResponse(hostConnectionResponse.getBody());
-                }
+                processSuccess(hostConnectionResponse);
             }
         });
+    }
+
+    private void processSuccess(HostConnectionResponse hostConnectionResponse) {
+        getEventBus().fireEvent(new HideContentMaskEvent());
+        if (hostConnectionResponse.isError()) {
+            processInvalidHostId();
+        } else {
+            processResponse(hostConnectionResponse.getBody());
+        }
     }
 
     private void processResponse(HostConnection body) {
