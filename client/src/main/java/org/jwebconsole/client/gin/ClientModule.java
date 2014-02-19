@@ -1,6 +1,6 @@
 package org.jwebconsole.client.gin;
 
-import org.jwebconsole.client.application.ApplicationModule;
+import org.jwebconsole.client.application.main.ApplicationModule;
 import org.jwebconsole.client.place.NameTokens;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;

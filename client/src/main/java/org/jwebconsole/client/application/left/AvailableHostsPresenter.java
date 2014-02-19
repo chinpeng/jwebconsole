@@ -9,7 +9,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import org.jwebconsole.client.application.ApplicationPresenter;
+import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;

@@ -35,7 +35,7 @@ public class ThreadContentPresenterTests extends Mockito {
         ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
         when(request.getParameter(AppParams.HOST_ID, "")).thenReturn("");
         presenter.prepareFromRequest(request);
-        verify(facade).printEmptyHostIdMessage();
+        verify(facade).printHosNotExistsMessage();
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ThreadContentPresenterTests extends Mockito {
         ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
         when(request.getParameter(AppParams.HOST_ID, "")).thenReturn("  ");
         presenter.prepareFromRequest(request);
-        verify(facade).printEmptyHostIdMessage();
+        verify(facade).printHosNotExistsMessage();
     }
 
     @Test

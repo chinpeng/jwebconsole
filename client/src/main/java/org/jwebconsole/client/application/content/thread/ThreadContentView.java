@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface ThreadContentView extends View, HasUiHandlers<ThreadContentUiHandlers> {
 
-    void populateChart(List<ThreadCountEntity> entities);
-
 }

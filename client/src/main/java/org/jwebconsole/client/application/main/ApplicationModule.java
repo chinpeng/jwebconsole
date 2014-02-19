@@ -1,7 +1,6 @@
-package org.jwebconsole.client.application;
+package org.jwebconsole.client.application.main;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import org.fusesource.restygwt.client.Defaults;
 import org.jwebconsole.client.application.content.thread.ThreadContentModule;
 import org.jwebconsole.client.application.left.AvailableHostsModule;
 import org.jwebconsole.client.application.popup.connection.ConnectionWindowModule;

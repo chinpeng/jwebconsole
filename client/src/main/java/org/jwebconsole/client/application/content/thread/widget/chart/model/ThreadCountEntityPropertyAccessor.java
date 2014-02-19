@@ -1,4 +1,4 @@
-package org.jwebconsole.client.application.content.thread.widget;
+package org.jwebconsole.client.application.content.thread.widget.chart.model;
 
 import com.google.gwt.editor.client.Editor;
 import com.sencha.gxt.core.client.ValueProvider;

@@ -21,7 +21,7 @@ class HostServlet(override val system: ActorSystem, readModelActor: ActorRef, ho
     executeAsync(readModelActor ? SimpleHostViewListRequest)
   }
 
-  get("get/id") {
+  get("/get/:id") {
     val id = params("id")
     executeAsync(readModelActor ? SimpleHostViewRequest(id))
   }

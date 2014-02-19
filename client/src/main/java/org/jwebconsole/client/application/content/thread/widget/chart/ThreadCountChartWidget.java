@@ -1,4 +1,4 @@
-package org.jwebconsole.client.application.content.thread.widget;
+package org.jwebconsole.client.application.content.thread.widget.chart;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -17,6 +17,7 @@ import com.sencha.gxt.chart.client.draw.sprite.Sprite;
 import com.sencha.gxt.chart.client.draw.sprite.TextSprite;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import org.jwebconsole.client.application.content.thread.widget.chart.model.ThreadCountEntityPropertyAccessor;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.thread.ThreadCountEntity;
 
@@ -136,7 +137,7 @@ public class ThreadCountChartWidget implements IsWidget {
     private int getMin(List<ThreadCountEntity> filteredEntities) {
         int min = Integer.MAX_VALUE;
         for (ThreadCountEntity item : filteredEntities) {
-            if (item.getThreadCount() < min) {
+            if (item.getPeakThreadCount() < min) {
                 min = item.getThreadCount();
             }
         }

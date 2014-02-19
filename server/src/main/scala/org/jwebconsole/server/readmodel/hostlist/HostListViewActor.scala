@@ -39,8 +39,8 @@ class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging 
       persistAsync(ev)
     case SimpleHostViewListRequest =>
       makeResponse(dao.getAll)
-    case SimpleHostViewRequest =>
-      makeResponse(dao.getSingle)
+    case SimpleHostViewRequest(id) =>
+      makeResponse(dao.getSingle(id))
     case msg =>
       log.warning("Received unhandled message to Host View" + msg)
   }

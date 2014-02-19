@@ -1,4 +1,4 @@
-package org.jwebconsole.client.application;
+package org.jwebconsole.client.application.main;
 
 import com.google.gwt.resources.client.CssResource;
 

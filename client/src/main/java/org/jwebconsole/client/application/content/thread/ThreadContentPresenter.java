@@ -7,19 +7,22 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import org.jwebconsole.client.application.ApplicationPresenter;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
-import org.jwebconsole.client.model.thread.ThreadCountListResponse;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.jwebconsole.client.application.main.ApplicationPresenter;
+import org.jwebconsole.client.application.main.event.HideContentMaskEvent;
+import org.jwebconsole.client.application.main.event.ShowContentMaskEvent;
+import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.model.host.HostConnectionResponse;
 import org.jwebconsole.client.place.AppParams;
 import org.jwebconsole.client.place.NameTokens;
-import org.jwebconsole.client.service.SuccessCallback;
-
-import java.util.List;
 
 public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadContentPresenter.ThreadContentProxy>
         implements ThreadContentUiHandlers {
 
     private final ThreadContentPresenterFacade facade;
+
+    public static final Object THREAD_CHART_WIDGET_SLOT = new Object();
 
     @Inject
     public ThreadContentPresenter(EventBus eventBus, ThreadContentView view, ThreadContentProxy proxy, ThreadContentPresenterFacade facade) {
@@ -39,23 +42,44 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
         super.prepareFromRequest(request);
         String hostId = request.getParameter(AppParams.HOST_ID, "").trim();
         if (hostId.equals("")) {
-            facade.printEmptyHostIdMessage();
-            facade.redirectToErrorPlace();
+            processInvalidHostId();
         } else {
-            makeThreadCountInfoRequest(hostId);
+            makeHostRequest(hostId);
         }
     }
 
-    private void makeThreadCountInfoRequest(String hostId) {
-        facade.makeThreadCountRequest(hostId, new SuccessCallback<ThreadCountListResponse>() {
+    private void makeHostRequest(String hostId) {
+        getEventBus().fireEvent(new ShowContentMaskEvent());
+        facade.makeHostRequest(hostId, new MethodCallback<HostConnectionResponse>() {
             @Override
-            public void onSuccess(ThreadCountListResponse response) {
-                processThreadCountInfoResponse(response.getBody());
+            public void onFailure(Method method, Throwable throwable) {
+                processFailure(throwable);
+            }
+
+            @Override
+            public void onSuccess(Method method, HostConnectionResponse hostConnectionResponse) {
+                getEventBus().fireEvent(new HideContentMaskEvent());
+                if (hostConnectionResponse.isError()) {
+                    processInvalidHostId();
+                } else {
+                    processResponse(hostConnectionResponse.getBody());
+                }
             }
         });
     }
 
-    private void processThreadCountInfoResponse(List<ThreadCountEntity> entities) {
-        getView().populateChart(entities);
+    private void processResponse(HostConnection body) {
+        facade.revealThreadCountChartPresenter(this, body);
     }
+
+    private void processFailure(Throwable throwable) {
+        getEventBus().fireEvent(new HideContentMaskEvent());
+        facade.printError(throwable);
+    }
+
+    private void processInvalidHostId() {
+        facade.printHosNotExistsMessage();
+        facade.redirectToErrorPlace();
+    }
+
 }

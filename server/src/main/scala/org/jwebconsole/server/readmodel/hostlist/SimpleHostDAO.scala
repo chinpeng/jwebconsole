@@ -78,11 +78,12 @@ class SimpleHostDAO(val db: Database) extends ReplayingDAO {
     }
   }
 
-  def getSingle: SimpleHostView = {
+  def getSingle(hostId: String): SimpleHostView = {
     db withSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
-        hostQuery.list().map(record => SimpleHostView(record._1, record._2, record._3, record._4)).head
+        val res = for (item: HostTable <- hostQuery if item.id === hostId) yield item
+        res.list().map(record => SimpleHostView(record._1, record._2, record._3, record._4)).head
     }
   }
 

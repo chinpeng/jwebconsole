@@ -7,7 +7,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.fusesource.restygwt.client.Method;
-import org.jwebconsole.client.application.ApplicationPresenter;
+import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;

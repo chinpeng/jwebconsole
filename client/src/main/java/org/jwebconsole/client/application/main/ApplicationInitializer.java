@@ -1,4 +1,4 @@
-package org.jwebconsole.client.application;
+package org.jwebconsole.client.application.main;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
