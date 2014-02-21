@@ -16,7 +16,7 @@ import java.util.List;
 public interface HostService extends RestService {
 
     @GET
-    @Path("get/{id}")
+    @Path("/get/{id}")
     void getHost(@PathParam("id") String id, MethodCallback<HostConnectionResponse> callback);
 
     @GET

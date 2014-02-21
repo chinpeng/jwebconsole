@@ -24,7 +24,7 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
 
     def peakThreadCount = column[Int]("peakThreadCount")
 
-    def * = (id, hostId, time, threadCount, peakThreadCount) <> (ThreadDataRow.tupled, ThreadDataRow.unapply)
+    def * = (id, hostId, time, threadCount, peakThreadCount) <>(ThreadDataRow.tupled, ThreadDataRow.unapply)
   }
 
   val threadDataQuery = TableQuery[ThreadDataTable]
@@ -58,6 +58,17 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
       implicit session =>
         val res = for (row <- threadDataQuery if row.hostId === hostId) yield row
         res.list()
+    }
+  }
+
+  def getLastNumberOfEntities(hostId: String, bound: Int): List[ThreadDataRow] = {
+    db withSession {
+      implicit session =>
+        threadDataQuery
+          .filter(_.hostId === hostId)
+          .sortBy(_.time.desc)
+          .take(bound)
+          .list()
     }
   }
 

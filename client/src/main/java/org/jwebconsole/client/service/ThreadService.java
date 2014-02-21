@@ -19,4 +19,11 @@ public interface ThreadService extends RestService {
     @Path("/{id}/all")
     void getThreadInfo(@PathParam("id") String hostId, MethodCallback<ThreadCountListResponse> callback);
 
+    @GET
+    @Path("/last/{number}/{hostId}")
+    void getLastNumberOfThreadInfo(
+            @PathParam("number") Integer number,
+            @PathParam("hostId") String hostId,
+            MethodCallback<ThreadCountListResponse> callback);
+
 }
