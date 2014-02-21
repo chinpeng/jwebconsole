@@ -4,6 +4,7 @@ import javax.management.remote.{JMXServiceURL, JMXConnectorFactory, JMXConnector
 import scala.util.{Success, Failure, Try}
 import org.slf4j.LoggerFactory
 import org.jwebconsole.server.context.host.HostData
+import java.util.Date
 
 
 class JMXConnection(private val host: String, private val port: Int, parser: JMXDataParser) {

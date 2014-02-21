@@ -103,7 +103,9 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
       connection.retrieveHostData returns HostData(connected = true)
       worker ! StartWork()
       worker ! MakeConnectionPolling
-      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = true)))
+      commandHandler.expectMsgPF() {
+        case ChangeHostDataCommand("test-id", data) if data.connected => true
+      }
     }
   }
 
@@ -112,7 +114,9 @@ class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConvers
       connection.retrieveHostData returns HostData(connected = false)
       worker ! StartWork()
       worker ! MakeConnectionPolling
-      commandHandler.expectMsg(ChangeHostDataCommand("test-id", HostData(connected = false)))
+      commandHandler.expectMsgPF() {
+        case ChangeHostDataCommand("test-id", data) if !data.connected => true
+      }
     }
   }
 

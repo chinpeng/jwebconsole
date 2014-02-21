@@ -26,7 +26,7 @@
         <junit.version>4.11</junit.version>
         <slick.version>2.0.0</slick.version>
         <c3p0.version>0.9.1.2</c3p0.version>
-        <h2.version>1.3.174</h2.version>
+        <h2.version>1.3.173</h2.version>
         <jetty-version>8.1.14.v20131031</jetty-version>
     </properties>
 

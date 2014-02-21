@@ -82,10 +82,11 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
 
     @Override
     public void enableAutoResize() {
+        final Integer margin = Integer.parseInt(appResources.getStyles().threadCountChartStyles().chartMargin());
         resizeHandler = Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
-                chart.onResize(chartPanel.getOffsetWidth(), chart.getOffsetHeight());
+                chart.onResize(chartPanel.getOffsetWidth() - margin, chart.getOffsetHeight());
             }
         });
     }

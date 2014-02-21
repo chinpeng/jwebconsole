@@ -7,6 +7,7 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.Future
 import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
+import java.util.Date
 
 class HostWorkerActor(@volatile var host: SimpleHostView,
                       commandHandler: ActorRef,

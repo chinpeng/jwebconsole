@@ -6,4 +6,7 @@ public interface ThreadCountChartStyles extends CssResource {
 
     @ClassName("thread-chart-main-panel")
     String threadChartMainPanel();
+
+    String chartMargin();
+
 }

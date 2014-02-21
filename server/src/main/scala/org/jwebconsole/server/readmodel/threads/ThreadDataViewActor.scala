@@ -19,7 +19,7 @@ class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLoggin
 
   def persistReplay(event: AppEvent): Unit = event match {
     case ev: HostDataChangedEvent =>
-      dao.addThreadDataRecord(ev.id, ev.data.threadData)
+      dao.addThreadDataRecord(ev.id, ev.data.threadData, ev.data.time)
   }
 
   def persistAsync(event: HostDataChangedEvent): Unit = {
@@ -29,10 +29,11 @@ class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLoggin
   def makeResponse[T](daoAction: => T): Unit = {
     val current = sender()
     Future(daoAction) onComplete {
-      case Success(v) => current ! ResponseMessage(body = Some(v))
-      case Failure(e) => current !
+      case Success(v) =>
+        current ! ResponseMessage(body = Some(v))
+      case Failure(e) =>
         log.error(e, "Unable to request DB")
-        ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage))
+        current ! ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage))
     }
   }
 

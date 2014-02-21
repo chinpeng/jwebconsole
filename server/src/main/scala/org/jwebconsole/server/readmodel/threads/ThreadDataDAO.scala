@@ -5,6 +5,7 @@ import org.jwebconsole.server.context.host.ThreadData
 import scala.slick.driver.H2Driver.simple._
 import java.sql.Timestamp
 import scala.slick.jdbc.meta.MTable
+import java.util.Date
 
 class ThreadDataDAO(val db: Database) extends ReplayingDAO {
 
@@ -44,11 +45,10 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
     }
   }
 
-  def addThreadDataRecord(hostId: String, threadData: ThreadData): Unit = {
+  def addThreadDataRecord(hostId: String, threadData: ThreadData, time: Date): Unit = {
     db withSession {
       implicit session =>
-        val time = System.currentTimeMillis()
-        val row = ThreadDataRow(0, hostId, new Timestamp(time), threadData.threadCount, threadData.peakThreadCount)
+        val row = ThreadDataRow(0, hostId, new Timestamp(time.getTime), threadData.threadCount, threadData.peakThreadCount)
         threadDataQuery += row
     }
   }
@@ -66,9 +66,10 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
       implicit session =>
         threadDataQuery
           .filter(_.hostId === hostId)
-          .sortBy(_.time.desc)
+          .sortBy(_.time.desc.nullsFirst)
           .take(bound)
           .list()
+          .sortBy(_.time)
     }
   }
 
