@@ -1,6 +1,7 @@
 package org.jwebconsole.client.event.info;
 
 import com.google.gwt.event.shared.GwtEvent;
+import org.jwebconsole.client.model.base.ErrorMessage;
 
 public class PrintInfoEvent extends GwtEvent<PrintInfoEventHandler> {
 
@@ -8,6 +9,7 @@ public class PrintInfoEvent extends GwtEvent<PrintInfoEventHandler> {
 
     private String title = "";
     private String text;
+    private ErrorMessage errorMessage;
 
     public PrintInfoEvent(String title) {
         this.title = title;
@@ -16,6 +18,10 @@ public class PrintInfoEvent extends GwtEvent<PrintInfoEventHandler> {
     public PrintInfoEvent(String title, String text) {
         this.title = title;
         this.text = text;
+    }
+
+    public PrintInfoEvent(ErrorMessage errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     @Override
@@ -34,5 +40,9 @@ public class PrintInfoEvent extends GwtEvent<PrintInfoEventHandler> {
 
     public String getText() {
         return text;
+    }
+
+    public ErrorMessage getErrorMessage() {
+        return errorMessage;
     }
 }

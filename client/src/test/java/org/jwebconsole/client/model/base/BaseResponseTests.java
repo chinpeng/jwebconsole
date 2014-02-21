@@ -41,16 +41,9 @@ public class BaseResponseTests extends Mockito {
     }
 
     @Test
-    public void shouldBeSuccessIfErrorIsEmpty() {
-        BaseResponse<Object> response = new BaseResponse<Object>();
-        response.setError("");
-        assertTrue(response.isSuccess());
-    }
-
-    @Test
     public void shouldBeNotSuccessIfErrorIsFull() {
         BaseResponse<Object> response = new BaseResponse<Object>();
-        response.setError("error");
+        response.setError(new ErrorMessage());
         assertFalse(response.isSuccess());
     }
 

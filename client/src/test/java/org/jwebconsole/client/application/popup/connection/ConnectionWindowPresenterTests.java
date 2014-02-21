@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.popup.connection.state.CreateConnectionController;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
+import org.jwebconsole.client.model.base.ErrorMessage;
 import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
@@ -103,7 +104,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
         Throwable error = mock(Throwable.class);
         when(error.getMessage()).thenReturn("failure");
         argumentCaptor.getValue().onFailure(null, error);
-        verify(facade).displayError("failure");
+        verify(facade).displayUnknowError();
     }
 
     @Test
@@ -161,12 +162,12 @@ public class ConnectionWindowPresenterTests extends Mockito {
     public void shouldDisplayErrorIfResponseIsError() {
         ConnectionWindowPresenter presenter = new ConnectionWindowPresenter(eventBus, view, proxy, facade);
         when(view.isFieldsValid()).thenReturn(true);
-        response.setError("error");
+        response.setError(new ErrorMessage());
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.connectHost();
         verify(createController).makeRequest(argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, response);
-        verify(facade).displayError("error");
+        verify(facade).displayError(any(ErrorMessage.class));
     }
 
     @Test

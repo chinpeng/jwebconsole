@@ -94,7 +94,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 getView().hideMask();
-                facade.displayError(throwable.getMessage());
+                facade.displayUnknowError();
             }
 
             @Override

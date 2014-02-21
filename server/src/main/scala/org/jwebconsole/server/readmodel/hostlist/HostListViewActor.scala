@@ -1,7 +1,7 @@
 package org.jwebconsole.server.readmodel.hostlist
 
-import akka.actor.{Stash, ActorLogging, Actor}
-import org.jwebconsole.server.util.AppConstants
+import akka.actor.{ActorRef, Stash, ActorLogging, Actor}
+import org.jwebconsole.server.util.{ErrorMessages, ErrorMessage, AppConstants}
 import akka.util.Timeout
 import org.jwebconsole.server.context.common._
 import org.jwebconsole.server.context.host._
@@ -11,6 +11,7 @@ import org.jwebconsole.server.context.common.ResponseMessage
 import scala.util.Failure
 import scala.Some
 import org.jwebconsole.server.readmodel.common.ReadModelReplayingActor
+import java.sql.SQLException
 
 class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
 
@@ -45,16 +46,26 @@ class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging 
       log.warning("Received unhandled message to Host View" + msg)
   }
 
+  def processFailure(e: Throwable, currentSender: ActorRef): Unit = {
+    def respondWithError(msg: ErrorMessage): Unit = {
+      log.error(e, msg.message)
+      currentSender ! ResponseMessage(error = Some(msg))
+    }
+    e match {
+      case e: SQLException => respondWithError(ErrorMessages.DbConnectionFailureMessage)
+      case e: NoSuchElementException => respondWithError(ErrorMessages.HostNotFoundMessage)
+      case _ => respondWithError(ErrorMessages.UnknownErrorMessage)
+    }
+  }
+
   def makeResponse[T](queryMethod: => T): Unit = {
     val current = sender()
     Future(queryMethod) onComplete {
       case Failure(e) =>
-        log.error(e, "Unable to connect to Database")
-        current ! ResponseMessage(error = Some("Unable to connect to Database"))
+        processFailure(e, current)
       case Success(v) => current ! ResponseMessage(body = Some(v))
     }
   }
-
 
   def persistReplay(ev: AppEvent): Unit = {
     ev match {

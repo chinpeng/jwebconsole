@@ -117,9 +117,9 @@
                     <copyWebapp>true</copyWebapp>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <i18nMessagesBundles>
-                        <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ValidationMessages
-                        </i18nMessagesBundle>
+                        <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ValidationMessages</i18nMessagesBundle>
                         <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.Messages</i18nMessagesBundle>
+                        <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ErrorMessages</i18nMessagesBundle>
                     </i18nMessagesBundles>
                     <runTarget>jwebconsole.html</runTarget>
                     <modules>

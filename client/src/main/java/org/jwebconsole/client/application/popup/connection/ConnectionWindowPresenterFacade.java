@@ -4,8 +4,10 @@ import com.google.inject.Inject;
 
 import org.jwebconsole.client.application.popup.connection.state.ConnectionController;
 import org.jwebconsole.client.application.popup.connection.state.ConnectionControllerState;
+import org.jwebconsole.client.bundle.AppErrorId;
 import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.common.InfoHolder;
+import org.jwebconsole.client.model.base.ErrorMessage;
 import org.jwebconsole.client.model.base.ValidationMessage;
 import org.jwebconsole.client.model.host.HostConnection;
 
@@ -27,8 +29,12 @@ public class ConnectionWindowPresenterFacade {
         this.state = state;
     }
 
-    public void displayError(String error) {
-        infoHolder.printInfo(messages.errorInfoTitle(), error);
+    public void displayError(ErrorMessage error) {
+        infoHolder.printError(error);
+    }
+
+    public void displayUnknowError() {
+        infoHolder.printError(new ErrorMessage(AppErrorId.UNKNOWN_ERROR.getId(), ""));
     }
 
 

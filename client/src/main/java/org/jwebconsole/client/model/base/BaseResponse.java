@@ -8,7 +8,7 @@ public class BaseResponse<T> {
 
     List<ValidationMessage> messages;
 
-    String error;
+    ErrorMessage error;
 
     public T getBody() {
         return body;
@@ -26,11 +26,11 @@ public class BaseResponse<T> {
         this.messages = messages;
     }
 
-    public String getError() {
+    public ErrorMessage getError() {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(ErrorMessage error) {
         this.error = error;
     }
 
@@ -39,7 +39,7 @@ public class BaseResponse<T> {
     }
 
     public boolean isError() {
-        return error != null && !error.isEmpty();
+        return error != null;
     }
 
     public boolean isSuccess() {
