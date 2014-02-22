@@ -6,6 +6,7 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.thread.ThreadCountEntity;
 import org.jwebconsole.client.model.thread.ThreadCountListResponse;
+import org.jwebconsole.client.service.AppCallback;
 import org.jwebconsole.client.service.SuccessCallback;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
 
     private ThreadCountChartPresenterFacade facade;
     private HostConnection selectedConnection;
+    private List<ThreadCountEntity> entities;
 
     @Inject
     public ThreadCountChartPresenter(EventBus eventBus, ThreadCountChartView view, ThreadCountChartPresenterFacade facade) {
@@ -22,13 +24,14 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     }
 
     public void init(HostConnection selectedConnection) {
+        facade.destoryTimer();
         this.selectedConnection = selectedConnection;
         makeServerRequest();
     }
 
     private void makeServerRequest() {
         getView().mask(facade.getLoadingMessage());
-        facade.getLastFifteenThreadInfoRows(selectedConnection.getId(), new SuccessCallback<ThreadCountListResponse>() {
+        facade.getLastFifteenThreadInfoRows(selectedConnection.getId(), new AppCallback<ThreadCountListResponse>() {
 
             @Override
             public void beforeResponse() {
@@ -38,17 +41,35 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
             @Override
             public void onSuccess(ThreadCountListResponse response) {
                 processThreadCountListResponse(response.getBody());
+                startChartUpdating();
             }
         });
     }
 
-    @Override
-    public void unbind() {
-        super.unbind();
-        getView().hideChart();
+    private void startChartUpdating() {
+        facade.scheduleUpdateTimer(selectedConnection.getId(), new SuccessCallback<ThreadCountEntity>() {
+            @Override
+            public void onSuccess(ThreadCountEntity body) {
+                entities.add(body);
+                updateView();
+            }
+        });
+    }
+
+    private void updateView() {
+        getView().clearChart();
+        if (!entities.isEmpty()) {
+            entities.remove(0);
+        }
+        for (ThreadCountEntity threadCountEntity : entities) {
+            getView().addThreadCountEntity(threadCountEntity);
+        }
+        provideChartAxisBounds(entities);
+        getView().refreshChart();
     }
 
     private void processThreadCountListResponse(List<ThreadCountEntity> items) {
+        this.entities = items;
         initView();
         provideChartAxisBounds(items);
         populateChartWithEntities(items);
@@ -73,6 +94,8 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     private void provideChartAxisBounds(List<ThreadCountEntity> items) {
         getView().setMinThreadAxis(facade.getMinAxisBound(items));
         getView().setMaxThreadAxis(facade.getMaxAxisBound(items));
+        getView().setMinDate(facade.getMinDate(items));
+        getView().setMaxDate(facade.getMaxDate(items));
     }
 
 }

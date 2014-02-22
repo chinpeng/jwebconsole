@@ -1,7 +1,6 @@
 package org.jwebconsole.client.application.toolbar;
 
 import com.google.web.bindery.event.shared.EventBus;
-import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
@@ -9,10 +8,9 @@ import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.event.RevealOnStartEvent;
-import org.jwebconsole.client.event.info.PrintInfoEvent;
 import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.host.HostConnection;
-import org.jwebconsole.client.service.SuccessCallback;
+import org.jwebconsole.client.service.AppCallback;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -84,12 +82,12 @@ public class ToolbarPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldFireFailedEventWhenHostDeletionFailed() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        ArgumentCaptor<SuccessCallback> argumentCaptor = ArgumentCaptor.forClass(SuccessCallback.class);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
-        SuccessCallback<SimpleResponse> callback = argumentCaptor.getValue();
+        AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onFailure(null, failure);
         ArgumentCaptor<HostDeletionFailedEvent> eventCaptor = ArgumentCaptor.forClass(HostDeletionFailedEvent.class);
         verify(eventBus, times(2)).fireEvent(eventCaptor.capture());
@@ -100,12 +98,12 @@ public class ToolbarPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldFireSuccessEventWhenHostDeletionSucceed() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        ArgumentCaptor<SuccessCallback> argumentCaptor = ArgumentCaptor.forClass(SuccessCallback.class);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
-        SuccessCallback<SimpleResponse> callback = argumentCaptor.getValue();
+        AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onSuccess(null, new SimpleResponse());
         ArgumentCaptor<HostDeletionSuccessEvent> eventCaptor = ArgumentCaptor.forClass(HostDeletionSuccessEvent.class);
         verify(eventBus, times(2)).fireEvent(eventCaptor.capture());
@@ -117,13 +115,13 @@ public class ToolbarPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldFireFailedEventWhenHostDeletionInvalid() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        ArgumentCaptor<SuccessCallback> argumentCaptor = ArgumentCaptor.forClass(SuccessCallback.class);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         when(response.isValid()).thenReturn(false);
         presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
-        SuccessCallback<SimpleResponse> callback = argumentCaptor.getValue();
+        AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onSuccess(null, response);
         ArgumentCaptor<HostDeletionFailedEvent> eventCaptor = ArgumentCaptor.forClass(HostDeletionFailedEvent.class);
         verify(eventBus, times(2)).fireEvent(eventCaptor.capture());
@@ -134,13 +132,13 @@ public class ToolbarPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldDisableButtonsAfterSuccessDeletion() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        ArgumentCaptor<SuccessCallback> argumentCaptor = ArgumentCaptor.forClass(SuccessCallback.class);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         when(response.isValid()).thenReturn(true);
         presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
-        SuccessCallback<SimpleResponse> callback = argumentCaptor.getValue();
+        AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onSuccess(null, response);
         verify(view).disableEditButtons();
     }

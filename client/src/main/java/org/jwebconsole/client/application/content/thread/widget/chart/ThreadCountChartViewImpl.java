@@ -11,8 +11,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.chart.client.chart.Chart;
+import com.sencha.gxt.chart.client.chart.Legend;
 import com.sencha.gxt.chart.client.chart.axis.CategoryAxis;
 import com.sencha.gxt.chart.client.chart.axis.NumericAxis;
+import com.sencha.gxt.chart.client.chart.axis.TimeAxis;
 import com.sencha.gxt.chart.client.chart.series.LineSeries;
 import com.sencha.gxt.chart.client.draw.Color;
 import com.sencha.gxt.chart.client.draw.path.PathSprite;
@@ -32,10 +34,12 @@ import org.jwebconsole.client.model.thread.ThreadCountEntity;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.List;
 
 public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChartUiHandlers> implements ThreadCountChartView {
 
     private static final ThreadCountEntityPropertyAccessor accessor = GWT.create(ThreadCountEntityPropertyAccessor.class);
+    public static final int DEFAULT_INSETS = 20;
 
     private AppResources appResources;
     private ListStore<ThreadCountEntity> store;
@@ -62,6 +66,16 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     @Override
     public void setMaxThreadAxis(Integer value) {
         getThreadCountAxis().setMaximum(value);
+    }
+
+    @Override
+    public void setMinDate(Date date) {
+        getTimeAxis().setStartDate(date);
+    }
+
+    @Override
+    public void setMaxDate(Date date) {
+        getTimeAxis().setEndDate(date);
     }
 
     @Override
@@ -94,11 +108,6 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         chart.show();
     }
 
-    @Override
-    public void hideChart() {
-        chart.hide();
-    }
-
     private void init() {
         chart = new Chart<ThreadCountEntity>();
         chart.setShadowChart(true);
@@ -106,15 +115,25 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         chart.setStore(store);
         chart.addAxis(createNumericAxis());
         chart.addAxis(createDateAxis());
-        chart.addSeries(createThreadCountLineSeries());
         chart.addSeries(createPeakThreadCountLineSeries());
+        chart.addSeries(createThreadCountLineSeries());
+        chart.setLegend(createLegend());
+        chart.setAnimated(true);
         chart.hide();
-        chart.setDefaultInsets(20);
+        chart.setDefaultInsets(DEFAULT_INSETS);
         chartPanel.add(chart);
     }
 
-    private CategoryAxis<ThreadCountEntity, Date> createDateAxis() {
-        CategoryAxis<ThreadCountEntity, Date> catAxis = new CategoryAxis<ThreadCountEntity, Date>();
+    private Legend<ThreadCountEntity> createLegend() {
+        final Legend<ThreadCountEntity> legend = new Legend<ThreadCountEntity>();
+        legend.setPosition(Chart.Position.RIGHT);
+        legend.setItemHighlighting(true);
+        legend.setItemHiding(true);
+        return legend;
+    }
+
+    private TimeAxis<ThreadCountEntity> createDateAxis() {
+        TimeAxis<ThreadCountEntity> catAxis = new TimeAxis<ThreadCountEntity>();
         catAxis.setPosition(Chart.Position.BOTTOM);
         catAxis.setField(accessor.time());
         TextSprite title = new TextSprite(appResources.getMessages().chartTimeAxisTitle());
@@ -155,12 +174,14 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         series.setYField(accessor.threadCount());
         series.setStroke(ThreadCountLineConstants.STROKE_COLOR);
         series.setShowMarkers(true);
+        series.setMarkerIndex(1);
         series.setSmooth(true);
         series.setFill(ThreadCountLineConstants.FILL_COLOR);
-        PathSprite marker = ThreadCountLineConstants.PATH_SPRITE;
+        Sprite marker = ThreadCountLineConstants.PATH_SPRITE;
         marker.setFill(ThreadCountLineConstants.FILL_COLOR);
         series.setMarkerConfig(marker);
         series.setHighlighting(true);
+        series.setLegendTitle(appResources.getMessages().threadCountLineSeriesTitle());
         return series;
     }
 
@@ -170,16 +191,23 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         series.setYField(accessor.peakThreadCount());
         series.setStroke(PeakThreadCountConstants.STROKE_COLOR);
         series.setShowMarkers(true);
+        series.setMarkerIndex(1);
         Sprite marker = PeakThreadCountConstants.PATH_SPRITE;
         marker.setFill(PeakThreadCountConstants.FILL_COLOR);
         series.setMarkerConfig(marker);
         series.setHighlighting(true);
+        series.setLegendTitle(appResources.getMessages().peakThreadCountLineSeriesTitle());
         return series;
     }
 
     @SuppressWarnings("unchecked")
     private NumericAxis<ThreadCountEntity> getThreadCountAxis() {
         return (NumericAxis<ThreadCountEntity>) chart.getAxis(Chart.Position.LEFT);
+    }
+
+    @SuppressWarnings("unchecked")
+    private TimeAxis<ThreadCountEntity> getTimeAxis() {
+        return (TimeAxis<ThreadCountEntity>) chart.getAxis(Chart.Position.BOTTOM);
     }
 
 

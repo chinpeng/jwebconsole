@@ -4,6 +4,9 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
 import org.jwebconsole.client.model.thread.ThreadCountEntity;
 
+import java.util.Date;
+import java.util.List;
+
 public interface ThreadCountChartView extends View, HasUiHandlers<ThreadCountChartUiHandlers> {
 
     void setMinThreadAxis(Integer value);
@@ -22,5 +25,8 @@ public interface ThreadCountChartView extends View, HasUiHandlers<ThreadCountCha
 
     void showChart();
 
-    void hideChart();
+    void setMinDate(Date date);
+
+    void setMaxDate(Date date);
+
 }

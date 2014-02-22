@@ -20,7 +20,7 @@ import org.jwebconsole.client.event.RevealOnStartEvent;
 import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
-import org.jwebconsole.client.service.SuccessCallback;
+import org.jwebconsole.client.service.AppCallback;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class AvailableHostsPresenter
 
     private void init() {
         getView().showLoadingMask();
-        facade.scheduleReceiveHosts(SCHEDULE_TIME, new SuccessCallback<HostConnectionListResponse>() {
+        facade.scheduleReceiveHosts(SCHEDULE_TIME, new AppCallback<HostConnectionListResponse>() {
 
             @Override
             public void beforeResponse() {

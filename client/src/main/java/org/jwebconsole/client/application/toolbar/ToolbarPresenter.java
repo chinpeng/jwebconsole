@@ -19,7 +19,7 @@ import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.host.HostConnection;
-import org.jwebconsole.client.service.SuccessCallback;
+import org.jwebconsole.client.service.AppCallback;
 
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
@@ -66,7 +66,7 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     @Override
     public void deleteConnection() {
         getEventBus().fireEvent(new HostDeletionStartedEvent());
-        facade.deleteHost(selectedConnection.getId(), new SuccessCallback<SimpleResponse>() {
+        facade.deleteHost(selectedConnection.getId(), new AppCallback<SimpleResponse>() {
 
             @Override
             public void onFailure(Method method, Throwable throwable) {
