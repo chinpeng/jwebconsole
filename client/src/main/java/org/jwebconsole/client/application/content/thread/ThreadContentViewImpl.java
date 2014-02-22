@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.sencha.gxt.widget.core.client.FramedPanel;
 import org.jwebconsole.client.bundle.AppResources;
 
 import javax.inject.Inject;
@@ -13,9 +14,8 @@ import javax.inject.Inject;
 public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHandlers> implements ThreadContentView {
 
     private final AppResources appResources;
-
     @UiField
-    HTMLPanel mainPanel;
+    FramedPanel chartPanel;
 
     interface Binder extends UiBinder<Widget, ThreadContentViewImpl> {
     }
@@ -34,8 +34,8 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         if (slot == ThreadContentPresenter.THREAD_CHART_WIDGET_SLOT) {
-            mainPanel.clear();
-            mainPanel.add(content);
+            chartPanel.add(content);
+            chartPanel.forceLayout();
         }
     }
 }

@@ -6,10 +6,8 @@
     <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
-    <g:HTMLPanel addStyleNames="{res.threadCountChartStyles.threadChartMainPanel}">
-        <gxt:FramedPanel headingText="{messages.threadCountChartHeading}" height="350" ui:field="chartPanel" width="100%">
+    <row:SimpleContainer ui:field="chartPanel">
 
-        </gxt:FramedPanel>
-    </g:HTMLPanel>
+    </row:SimpleContainer>
 
 </ui:UiBinder>

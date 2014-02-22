@@ -16,10 +16,6 @@ public interface ThreadCountChartView extends View, HasUiHandlers<ThreadCountCha
 
     void clearChart();
 
-    void enableAutoResize();
-
-    void disableAutoResize();
-
     void mask(String message);
 
     void unmask();

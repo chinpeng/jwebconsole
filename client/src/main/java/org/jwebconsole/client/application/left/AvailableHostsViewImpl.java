@@ -36,9 +36,6 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     }
 
     @UiField
-    HTMLPanel main;
-
-    @UiField
     Tree<HostConnection, String> tree;
     @UiField
     ContentPanel panel;

@@ -13,30 +13,56 @@
         <ui:attributes width="1" height="-1"/>
     </ui:with>
 
-    <g:HTMLPanel >
-        <gxt:FramedPanel headingText="{messages.mainWindowTitle}" styleName="{res.app.appMainWindow}">
-            <row:VerticalLayoutContainer borders="true" addStyleNames="{res.app.appContainer}">
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="contentLayoutData">
+        <ui:attributes width="1" height="1"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="sideMargins">
+        <ui:attributes top="4" right="4" bottom="4" left="4"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="centerMargins">
+        <ui:attributes top="4" right="4" bottom="4" left="4"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData"
+             field="centerLayoutData">
+        <ui:attributes width=".85" height="1" margins="{centerMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData"
+             field="sideLayoutData">
+        <ui:attributes width=".15" height="1" margins="{sideMargins}"/>
+    </ui:with>
+
+
+    <row:Viewport>
+        <gxt:FramedPanel headingText="{messages.mainWindowTitle}">
+            <row:VerticalLayoutContainer borders="true">
                 <row:child layoutData="{toolBarRowData}">
-                    <g:HTMLPanel ui:field="toolbar">
+                    <row:SimpleContainer ui:field="toolbar">
 
-                    </g:HTMLPanel>
+                    </row:SimpleContainer>
                 </row:child>
-                <row:child>
-                    <g:HTMLPanel addStyleNames="{res.app.appContentBody}">
-                        <g:HTMLPanel ui:field="leftPanel" styleName="{res.app.appLeftPanel}">
+                <row:child layoutData="{contentLayoutData}">
+                    <row:HorizontalLayoutContainer>
+                        <row:child layoutData="{sideLayoutData}">
+                            <row:SimpleContainer ui:field="leftPanel">
 
-                        </g:HTMLPanel>
-                        <g:HTMLPanel ui:field="rightPanel" styleName="{res.app.appRightPanel}">
-                            <gxt:ContentPanel height="{res.availableHosts.windowHeight}" ui:field="contentPanel">
+                            </row:SimpleContainer>
+                        </row:child>
+                        <row:child layoutData="{centerLayoutData}">
+                            <gxt:ContentPanel ui:field="contentPanel">
 
                             </gxt:ContentPanel>
-                        </g:HTMLPanel>
-                    </g:HTMLPanel>
+                        </row:child>
+                    </row:HorizontalLayoutContainer>
                 </row:child>
             </row:VerticalLayoutContainer>
 
         </gxt:FramedPanel>
-    </g:HTMLPanel>
+    </row:Viewport>
 
 
 </ui:UiBinder>

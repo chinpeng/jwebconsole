@@ -21,6 +21,7 @@ import com.sencha.gxt.chart.client.draw.sprite.TextSprite;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.DateAxisConstants;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.NumberAxisConstants;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.PeakThreadCountConstants;
@@ -39,10 +40,9 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     private AppResources appResources;
     private ListStore<ThreadCountEntity> store;
     private Chart<ThreadCountEntity> chart;
-    private HandlerRegistration resizeHandler;
 
     @UiField
-    FramedPanel chartPanel;
+    SimpleContainer chartPanel;
 
     interface Binder extends UiBinder<Widget, ThreadCountChartViewImpl> {
     }
@@ -50,7 +50,6 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     @Inject
     ThreadCountChartViewImpl(Binder uiBinder, AppResources appResources) {
         this.appResources = appResources;
-        appResources.getStyles().threadCountChartStyles().ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
@@ -78,24 +77,6 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     @Override
     public void clearChart() {
         store.clear();
-    }
-
-    @Override
-    public void enableAutoResize() {
-        final Integer margin = Integer.parseInt(appResources.getStyles().threadCountChartStyles().chartMargin());
-        resizeHandler = Window.addResizeHandler(new ResizeHandler() {
-            @Override
-            public void onResize(ResizeEvent event) {
-                chart.onResize(chartPanel.getOffsetWidth() - margin, chart.getOffsetHeight());
-            }
-        });
-    }
-
-    @Override
-    public void disableAutoResize() {
-        if (resizeHandler != null) {
-            resizeHandler.removeHandler();
-        }
     }
 
     @Override

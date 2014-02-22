@@ -46,7 +46,6 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     public void unbind() {
         super.unbind();
         getView().hideChart();
-        getView().disableAutoResize();
     }
 
     private void processThreadCountListResponse(List<ThreadCountEntity> items) {
@@ -69,7 +68,6 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
 
     private void initView() {
         getView().clearChart();
-        getView().enableAutoResize();
     }
 
     private void provideChartAxisBounds(List<ThreadCountEntity> items) {

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.sencha.gxt.widget.core.client.ContentPanel;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.bundle.AppStyles;
 
@@ -17,9 +18,9 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     private final AppResources appResources;
 
     @UiField
-    HTMLPanel toolbar;
+    SimpleContainer toolbar;
     @UiField
-    HTMLPanel leftPanel;
+    SimpleContainer leftPanel;
     @UiField
     ContentPanel contentPanel;
 
@@ -29,7 +30,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 
     @Inject
     public ApplicationView(Binder uiBinder, AppResources resources) {
-        resources.getStyles().app().ensureInjected();
         this.appResources = resources;
         initWidget(uiBinder.createAndBindUi(this));
     }
@@ -44,10 +44,12 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
         if (slot == ApplicationPresenter.SLOT_LEFT_PANEL) {
             leftPanel.clear();
             leftPanel.add(content);
+            leftPanel.forceLayout();
         }
         if (slot == ApplicationPresenter.SLOT_CONTENT_PANEL) {
             contentPanel.clear();
             contentPanel.add(content);
+            contentPanel.forceLayout();
         }
     }
 

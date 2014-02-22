@@ -10,10 +10,9 @@
     <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store"/>
     <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider"/>
 
-    <g:HTMLPanel ui:field="main">
-        <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" deferHeight="true"
-                          height="{res.availableHosts.windowHeight}" ui:field="panel">
-            <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}"/>
-        </gxt:ContentPanel>
-    </g:HTMLPanel>
+
+    <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true">
+        <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" deferHeight="true"/>
+    </gxt:ContentPanel>
+
 </ui:UiBinder>
