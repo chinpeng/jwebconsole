@@ -69,7 +69,7 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
           .sortBy(_.time.desc.nullsFirst)
           .take(bound)
           .list()
-          .sortBy(_.time)
+          .sortBy(_.time.getTime)
     }
   }
 

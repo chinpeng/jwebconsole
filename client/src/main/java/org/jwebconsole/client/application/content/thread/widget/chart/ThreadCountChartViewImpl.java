@@ -128,6 +128,7 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         chart.addSeries(createThreadCountLineSeries());
         chart.addSeries(createPeakThreadCountLineSeries());
         chart.hide();
+        chart.setDefaultInsets(20);
         chartPanel.add(chart);
     }
 
@@ -157,7 +158,7 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         title.setFontSize(NumberAxisConstants.TITLE_FONT_SIZE);
         axis.setTitleConfig(title);
         axis.setMinorTickSteps(NumberAxisConstants.TICK_STEPS);
-        axis.setDisplayGrid(true);
+        axis.setDisplayGrid(false);
         PathSprite odd = new PathSprite();
         odd.setOpacity(NumberAxisConstants.OPACITY);
         odd.setFill(NumberAxisConstants.FILL_COLOR);
