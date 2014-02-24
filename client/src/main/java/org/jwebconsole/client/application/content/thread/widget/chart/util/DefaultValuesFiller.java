@@ -1,6 +1,5 @@
 package org.jwebconsole.client.application.content.thread.widget.chart.util;
 
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.jwebconsole.client.model.thread.ThreadCountEntity;
 
 import java.util.Date;
