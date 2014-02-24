@@ -9,13 +9,15 @@ import org.jwebconsole.client.model.thread.ThreadCountListResponse;
 import org.jwebconsole.client.service.AppCallback;
 import org.jwebconsole.client.service.SuccessCallback;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartView> {
 
     private ThreadCountChartPresenterFacade facade;
     private HostConnection selectedConnection;
-    private List<ThreadCountEntity> entities;
+    private LinkedList<ThreadCountEntity> entities;
 
     @Inject
     public ThreadCountChartPresenter(EventBus eventBus, ThreadCountChartView view, ThreadCountChartPresenterFacade facade) {
@@ -59,7 +61,7 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     private void updateView() {
         getView().clearChart();
         if (!entities.isEmpty()) {
-            entities.remove(0);
+            entities.removeFirst();
         }
         for (ThreadCountEntity threadCountEntity : entities) {
             getView().addThreadCountEntity(threadCountEntity);
@@ -69,7 +71,8 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     }
 
     private void processThreadCountListResponse(List<ThreadCountEntity> items) {
-        this.entities = items;
+        facade.appendWithDefaultValues(items);
+        this.entities = new LinkedList<ThreadCountEntity>(items);
         initView();
         provideChartAxisBounds(items);
         populateChartWithEntities(items);

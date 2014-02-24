@@ -3,7 +3,7 @@ package org.jwebconsole.server.readmodel.threads
 import akka.actor.{Actor, ActorLogging, Stash}
 import org.jwebconsole.server.readmodel.common.ReadModelReplayingActor
 import org.jwebconsole.server.context.common.{ResponseMessage, AppEvent}
-import org.jwebconsole.server.context.host.HostDataChangedEvent
+import org.jwebconsole.server.context.host.{HostDeletedEvent, HostDataChangedEvent}
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import org.jwebconsole.server.util.ErrorMessages
@@ -20,6 +20,8 @@ class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLoggin
   def persistReplay(event: AppEvent): Unit = event match {
     case ev: HostDataChangedEvent =>
       dao.addThreadDataRecord(ev.id, ev.data.threadData, ev.data.time)
+    case HostDeletedEvent(hostId: String) =>
+      dao.deleteHostRecord(hostId)
   }
 
   def persistAsync(event: HostDataChangedEvent): Unit = {
@@ -44,6 +46,7 @@ class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLoggin
       makeResponse(dao.getAllForHost(hostId))
     case ThreadDataLastNrRequest(hostId, number) =>
       makeResponse(dao.getLastNumberOfEntities(hostId, number))
+
   }
 
 }

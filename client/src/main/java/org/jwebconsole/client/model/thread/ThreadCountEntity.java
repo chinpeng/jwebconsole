@@ -60,4 +60,15 @@ public class ThreadCountEntity {
     public void setPeakThreadCount(Integer peakThreadCount) {
         this.peakThreadCount = peakThreadCount;
     }
+
+    @Override
+    public String toString() {
+        return "ThreadCountEntity{" +
+                "id=" + id +
+                ", hostId='" + hostId + '\'' +
+                ", time=" + time +
+                ", threadCount=" + threadCount +
+                ", peakThreadCount=" + peakThreadCount +
+                '}';
+    }
 }

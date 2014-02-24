@@ -55,6 +55,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         verify(eventBus).addHandler(HostDeletionStartedEvent.TYPE, presenter);
     }
 
+
     @Test
     public void shouldRegisterSelfOnDeletionFailedEvent() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
@@ -163,9 +164,6 @@ public class AvailableHostsPresenterTests extends Mockito {
         argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
         assertEquals(connection, mockView.getSelectedItem());
     }
-
-
-
 
     private HostConnectionListResponse createConnectionsResponse() {
         HostConnectionListResponse response = new HostConnectionListResponse();

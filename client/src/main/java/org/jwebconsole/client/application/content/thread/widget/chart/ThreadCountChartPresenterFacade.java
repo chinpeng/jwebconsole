@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.jwebconsole.client.application.content.thread.widget.chart.util.AxisBoundCounter;
 import org.jwebconsole.client.application.content.thread.widget.chart.util.DateAxisBoundCounter;
+import org.jwebconsole.client.application.content.thread.widget.chart.util.DefaultValuesFiller;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.thread.ThreadCountEntity;
 import org.jwebconsole.client.model.thread.ThreadCountListResponse;
@@ -21,19 +22,25 @@ public class ThreadCountChartPresenterFacade {
     private AppResources appResources;
     private AxisBoundCounter axisBoundCounter;
     private DateAxisBoundCounter dateAxisBoundCounter;
+    private DefaultValuesFiller filler;
 
-    private static final Integer DEFAULT_QUERY_ROW_COUNT = 15;
+    private static final Integer DEFAULT_QUERY_ROW_COUNT = 30;
     private static final Integer UPDATE_TIME = 3000;
     private static final Integer ONE_QUERY_ROW_COUNT = 1;
     private Timer timer;
 
 
     @Inject
-    public ThreadCountChartPresenterFacade(ServiceFactory serviceFactory, AppResources appResources, AxisBoundCounter axisBoundCounter, DateAxisBoundCounter dateAxisBoundCounter) {
+    public ThreadCountChartPresenterFacade(ServiceFactory serviceFactory,
+                                           AppResources appResources,
+                                           AxisBoundCounter axisBoundCounter,
+                                           DateAxisBoundCounter dateAxisBoundCounter,
+                                           DefaultValuesFiller filler) {
         this.serviceFactory = serviceFactory;
         this.appResources = appResources;
         this.axisBoundCounter = axisBoundCounter;
         this.dateAxisBoundCounter = dateAxisBoundCounter;
+        this.filler = filler;
     }
 
     public void getLastFifteenThreadInfoRows(String hostId, MethodCallback<ThreadCountListResponse> callback) {
@@ -82,5 +89,9 @@ public class ThreadCountChartPresenterFacade {
 
     public Date getMaxDate(List<ThreadCountEntity> entities) {
         return dateAxisBoundCounter.getMaxDate(entities);
+    }
+
+    public void appendWithDefaultValues(List<ThreadCountEntity> entities) {
+        filler.fillWithDefaultValues(DEFAULT_QUERY_ROW_COUNT, entities);
     }
 }

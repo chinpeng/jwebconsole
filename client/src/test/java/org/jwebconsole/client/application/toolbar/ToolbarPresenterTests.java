@@ -153,4 +153,19 @@ public class ToolbarPresenterTests extends Mockito {
         assertEquals(eventCaptor.getValue().getClass(), HostDeletionStartedEvent.class);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldRedirectToHomeAfterDeletionEvent() {
+        ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
+        when(connection.getId()).thenReturn("test-id");
+        when(response.isValid()).thenReturn(true);
+        presenter.onHostSelected(new HostSelectedEvent(connection));
+        presenter.deleteConnection();
+        verify(facade).deleteHost(anyString(), argumentCaptor.capture());
+        AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
+        callback.onSuccess(null, response);
+        verify(facade).redirectToHome();
+    }
+
 }

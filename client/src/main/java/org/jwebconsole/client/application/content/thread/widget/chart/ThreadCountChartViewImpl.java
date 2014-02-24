@@ -133,20 +133,21 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     }
 
     private TimeAxis<ThreadCountEntity> createDateAxis() {
-        TimeAxis<ThreadCountEntity> catAxis = new TimeAxis<ThreadCountEntity>();
-        catAxis.setPosition(Chart.Position.BOTTOM);
-        catAxis.setField(accessor.time());
+        TimeAxis<ThreadCountEntity> dateAxis = new TimeAxis<ThreadCountEntity>();
+        dateAxis.setPosition(Chart.Position.BOTTOM);
+        dateAxis.setField(accessor.time());
         TextSprite title = new TextSprite(appResources.getMessages().chartTimeAxisTitle());
         title.setFontSize(DateAxisConstants.TITLE_FONT_SIZE);
-        catAxis.setTitleConfig(title);
-        catAxis.setLabelProvider(new LabelProvider<Date>() {
+        dateAxis.setTitleConfig(title);
+        dateAxis.setLabelProvider(new LabelProvider<Date>() {
             @Override
             public String getLabel(Date item) {
                 DateTimeFormat format = DateAxisConstants.DATE_FORMAT;
                 return format.format(item);
             }
         });
-        return catAxis;
+        dateAxis.setLabelStepRatio(DateAxisConstants.STEP_RATIO);
+        return dateAxis;
     }
 
     private NumericAxis<ThreadCountEntity> createNumericAxis() {

@@ -94,6 +94,7 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     private void processSuccessfulDeletion() {
         getEventBus().fireEvent(new HostDeletionSuccessEvent(selectedConnection));
         getView().disableEditButtons();
+        facade.redirectToHome();
     }
 
     @Override

@@ -8,9 +8,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
@@ -98,6 +99,11 @@ public class AvailableHostsPresenter
     }
 
     @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+    }
+
+    @Override
     public void onTreeItemSelected(HostConnection connection) {
         this.selectedConnection = connection;
         getEventBus().fireEvent(new HostSelectedEvent(connection));
@@ -133,7 +139,6 @@ public class AvailableHostsPresenter
     public void onHostCreated(HostCreatedEvent event) {
         getView().addHost(event.getConnection());
     }
-
 
     @ProxyCodeSplit
     public interface AvailableHostsProxy extends Proxy<AvailableHostsPresenter> {

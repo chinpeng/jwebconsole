@@ -73,4 +73,13 @@ class ThreadDataDAO(val db: Database) extends ReplayingDAO {
     }
   }
 
+  def deleteHostRecord(hostId: String): Unit = {
+    db withSession {
+      implicit session =>
+        threadDataQuery
+          .filter(_.hostId === hostId)
+          .delete
+    }
+  }
+
 }

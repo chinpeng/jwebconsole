@@ -6,5 +6,6 @@ public class DateAxisConstants {
 
     public static final Integer TITLE_FONT_SIZE = 18;
     public static final DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat("HH:mm:ss");
+    public static final Integer STEP_RATIO = 3;
 
 }
