@@ -8,7 +8,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
@@ -23,8 +22,6 @@ import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.service.AppCallback;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -41,7 +38,6 @@ public class AvailableHostsPresenter
     private static final int SCHEDULE_TIME = 10000;
 
     private AvailableHostsPresenterFacade facade;
-    private List<HostConnection> connections = new ArrayList<HostConnection>();
 
 
     @Inject
@@ -62,29 +58,32 @@ public class AvailableHostsPresenter
 
     public void onBind() {
         super.onBind();
-        init();
     }
 
     @Override
     public void onReset() {
+        facade.stopTimer();
         super.onReset();
-        getView().disableSelectionHandler();
-        prepareSelectionFromRequest();
-        getView().enableSelectionHandler();
-    }
-
-    private void prepareSelectionFromRequest() {
-        String hostId = facade.getHostIdFromPlaceRequest();
-        for (HostConnection connection : connections) {
-            if (connection.getId().equals(hostId)) {
-                getView().setSelection(connection);
-            }
-        }
+        init();
     }
 
     private void init() {
         getView().showLoadingMask();
+        makeHostsListRequest();
+        scheduleHostsListRequest();
+    }
+
+    private void scheduleHostsListRequest() {
         facade.scheduleReceiveHosts(SCHEDULE_TIME, new AppCallback<HostConnectionListResponse>() {
+            @Override
+            public void onSuccess(HostConnectionListResponse response) {
+                processConnectionListResponse(response.getBody());
+            }
+        });
+    }
+
+    private void makeHostsListRequest() {
+        facade.getHosts(new AppCallback<HostConnectionListResponse>() {
 
             @Override
             public void beforeResponse() {
@@ -94,18 +93,41 @@ public class AvailableHostsPresenter
             @Override
             public void onSuccess(HostConnectionListResponse response) {
                 processConnectionListResponse(response.getBody());
+                fireHostChangedEvent(response.getBody());
             }
         });
     }
 
-    private void processConnectionListResponse(List<HostConnection> connections) {
-        this.connections = connections;
-        getView().clearStore();
+    private void fireHostChangedEvent(List<HostConnection> body) {
+        HostConnection selection = getSelectionFromRequest(body);
+        getEventBus().fireEvent(new HostSelectedEvent(selection));
+    }
 
+    private void processConnectionListResponse(List<HostConnection> connections) {
+        getView().clearStore();
         for (HostConnection connection : connections) {
             getView().addConnection(connection);
         }
-        prepareSelectionFromRequest();
+        applySelection(connections);
+    }
+
+    private void applySelection(List<HostConnection> connections) {
+        getView().disableSelectionHandler();
+        HostConnection selection = getSelectionFromRequest(connections);
+        if (selection != null) {
+            getView().setSelection(selection);
+        }
+        getView().enableSelectionHandler();
+    }
+
+    private HostConnection getSelectionFromRequest(List<HostConnection> connections) {
+        String hostId = facade.getHostIdFromPlaceRequest();
+        for (HostConnection connection : connections) {
+            if (connection.getId().equals(hostId)) {
+                return connection;
+            }
+        }
+        return null;
     }
 
     @ProxyEvent
@@ -115,13 +137,7 @@ public class AvailableHostsPresenter
     }
 
     @Override
-    public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
-    }
-
-    @Override
     public void onTreeItemSelected(HostConnection connection) {
-        getEventBus().fireEvent(new HostSelectedEvent(connection));
         facade.revealThreadContentPlace(connection.getId());
     }
 
@@ -134,18 +150,8 @@ public class AvailableHostsPresenter
     public void onSuccessDeletion(HostDeletionSuccessEvent event) {
         getView().hideLoadingMask();
         getView().deleteHostConnection(event.getDeletedHost());
-        removeConnectionById(event.getDeletedHost().getId());
     }
 
-    private void removeConnectionById(String hostId) {
-        Iterator<HostConnection> connectionIterator = connections.iterator();
-        while (connectionIterator.hasNext()) {
-            HostConnection current = connectionIterator.next();
-            if (current.getId().equals(hostId)) {
-                connectionIterator.remove();
-            }
-        }
-    }
 
     @Override
     public void onHostDeletionStarted(HostDeletionStartedEvent event) {

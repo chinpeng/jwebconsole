@@ -9,16 +9,17 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.main.event.HideContentMaskEvent;
 import org.jwebconsole.client.application.main.event.ShowContentMaskEvent;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
-import org.jwebconsole.client.place.AppParams;
 import org.jwebconsole.client.place.NameTokens;
 
 public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadContentPresenter.ThreadContentProxy>
-        implements ThreadContentUiHandlers {
+        implements ThreadContentUiHandlers, HostSelectedEventHandler {
 
     private final ThreadContentPresenterFacade facade;
 
@@ -28,7 +29,21 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
     public ThreadContentPresenter(EventBus eventBus, ThreadContentView view, ThreadContentProxy proxy, ThreadContentPresenterFacade facade) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_CONTENT_PANEL);
         this.facade = facade;
+        init(view);
+    }
+
+    private void init(ThreadContentView view) {
         view.setUiHandlers(this);
+        getEventBus().addHandler(HostSelectedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onHostSelected(HostSelectedEvent event) {
+        if (event.getConnection() != null) {
+            facade.revealThreadCountChartPresenter(this, event.getConnection());
+        } else {
+            facade.disableChart();
+        }
     }
 
     @ProxyCodeSplit
@@ -39,13 +54,13 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     @Override
     public void prepareFromRequest(PlaceRequest request) {
-        super.prepareFromRequest(request);
+       /* super.prepareFromRequest(request);
         String hostId = request.getParameter(AppParams.HOST_ID, "").trim();
         if (hostId.equals("")) {
             processInvalidHostId();
         } else {
             makeHostRequest(hostId);
-        }
+        }*/
     }
 
     private void makeHostRequest(String hostId) {

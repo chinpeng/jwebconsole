@@ -27,8 +27,11 @@ trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSu
   }
 
   def executeAsync[T](future: Future[T]): AsyncResult = {
+    val delay = Future(Thread.sleep(1000))
+    val result = for (first <- delay;
+        second <- future) yield second
     new AsyncResult {
-      val is = future
+      val is = result
     }
   }
 

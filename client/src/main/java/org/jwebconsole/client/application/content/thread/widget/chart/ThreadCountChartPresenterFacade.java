@@ -77,7 +77,7 @@ public class ThreadCountChartPresenterFacade {
     }
 
 
-    public void destoryTimer() {
+    public void destroyTimer() {
         if (timer != null) {
             timer.cancel();
         }

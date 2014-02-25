@@ -56,4 +56,16 @@ public class HostConnection {
     public void setConnected(Boolean connected) {
         this.connected = connected;
     }
+
+    @Override
+    public String toString() {
+        return "HostConnection{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", port=" + port +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", connected=" + connected +
+                '}';
+    }
 }

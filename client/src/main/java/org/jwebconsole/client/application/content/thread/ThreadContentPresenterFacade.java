@@ -55,4 +55,7 @@ public class ThreadContentPresenterFacade {
         parent.setInSlot(ThreadContentPresenter.THREAD_CHART_WIDGET_SLOT, threadCountChartPresenter);
     }
 
+    public void disableChart() {
+        threadCountChartPresenter.destroy();
+    }
 }

@@ -27,4 +27,5 @@ interface AvailableHostsView extends View, HasUiHandlers<AvailableHostsUiHandler
     void addConnection(HostConnection connection);
 
     void setSelection(HostConnection connection);
+
 }

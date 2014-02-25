@@ -9,7 +9,6 @@ import org.jwebconsole.client.model.thread.ThreadCountListResponse;
 import org.jwebconsole.client.service.AppCallback;
 import org.jwebconsole.client.service.SuccessCallback;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +25,10 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     }
 
     public void init(HostConnection selectedConnection) {
-        facade.destoryTimer();
+        facade.destroyTimer();
         this.selectedConnection = selectedConnection;
         makeServerRequest();
+        startChartUpdating();
     }
 
     private void makeServerRequest() {
@@ -43,7 +43,6 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
             @Override
             public void onSuccess(ThreadCountListResponse response) {
                 processThreadCountListResponse(response.getBody());
-                startChartUpdating();
             }
         });
     }
@@ -101,4 +100,7 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
         getView().setMaxDate(facade.getMaxDate(items));
     }
 
+    public void destroy() {
+        facade.destroyTimer();
+    }
 }

@@ -159,6 +159,7 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     @Override
     public void setSelection(HostConnection connection) {
         tree.getSelectionModel().select(connection, false);
+        //Window.alert(connection.toString());
     }
 
     private static abstract class CancellableSelectionHandler<T> implements SelectionHandler<T> {

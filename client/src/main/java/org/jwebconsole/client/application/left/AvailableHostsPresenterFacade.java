@@ -15,6 +15,7 @@ public class AvailableHostsPresenterFacade {
 
     private final ServiceFactory serviceFactory;
     private PlaceManager placeManager;
+    private Timer timer;
 
     @Inject
     public AvailableHostsPresenterFacade(ServiceFactory serviceFactory, PlaceManager placeManager) {
@@ -27,8 +28,7 @@ public class AvailableHostsPresenterFacade {
     }
 
     public void scheduleReceiveHosts(final int time, final MethodCallback<HostConnectionListResponse> callback) {
-        getHosts(callback);
-        Timer timer = new Timer() {
+        this.timer = new Timer() {
             @Override
             public void run() {
                 serviceFactory.getHostService().getHostsStatus(callback);
@@ -49,4 +49,9 @@ public class AvailableHostsPresenterFacade {
         return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, "");
     }
 
+    public void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
 }

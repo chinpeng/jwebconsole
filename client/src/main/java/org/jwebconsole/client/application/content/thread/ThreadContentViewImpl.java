@@ -14,6 +14,7 @@ import javax.inject.Inject;
 public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHandlers> implements ThreadContentView {
 
     private final AppResources appResources;
+
     @UiField
     FramedPanel chartPanel;
 
@@ -34,8 +35,11 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         if (slot == ThreadContentPresenter.THREAD_CHART_WIDGET_SLOT) {
+            chartPanel.clear();
             chartPanel.add(content);
             chartPanel.forceLayout();
         }
     }
+
+
 }
