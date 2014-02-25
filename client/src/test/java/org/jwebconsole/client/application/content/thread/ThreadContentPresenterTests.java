@@ -15,7 +15,6 @@ public class ThreadContentPresenterTests extends Mockito {
     private ThreadContentPresenter.ThreadContentProxy proxy;
     private EventBus eventBus;
     private ThreadContentPresenterFacade facade;
-    private PlaceRequest request;
     private HostConnection connection;
 
     @Before
@@ -24,7 +23,6 @@ public class ThreadContentPresenterTests extends Mockito {
         this.proxy = mock(ThreadContentPresenter.ThreadContentProxy.class);
         this.eventBus = new SimpleEventBus();
         this.facade = mock(ThreadContentPresenterFacade.class);
-        this.request = mock(PlaceRequest.class);
         this.connection = mock(HostConnection.class);
         when(connection.getId()).thenReturn("test-id");
     }
@@ -44,7 +42,6 @@ public class ThreadContentPresenterTests extends Mockito {
     }
 
     @Test
-    @SuppressWarnings("unused")
     public void shouldInitChartWidgetWhenConnectionIsFull() {
         ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
         eventBus.fireEvent(new HostSelectedEvent(connection));
