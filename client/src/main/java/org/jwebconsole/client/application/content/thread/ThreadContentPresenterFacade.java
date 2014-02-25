@@ -34,21 +34,6 @@ public class ThreadContentPresenterFacade {
         this.threadCountChartPresenter = threadCountChartPresenter;
     }
 
-    public void printHosNotExistsMessage() {
-        eventBus.fireEvent(new PrintInfoEvent(resources.getMessages().invalidHostIdMessage()));
-    }
-
-    public void makeHostRequest(String hostId, MethodCallback<HostConnectionResponse> callback) {
-        serviceFactory.getHostService().getHost(hostId, callback);
-    }
-
-    public void redirectToErrorPlace() {
-        placeManager.revealErrorPlace(NameTokens.thread);
-    }
-
-    public void printError(Throwable throwable) {
-        eventBus.fireEvent(new PrintInfoEvent(throwable.getMessage()));
-    }
 
     public void revealThreadCountChartPresenter(HasSlots parent, HostConnection connection) {
         threadCountChartPresenter.init(connection);

@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.place.AppParams;
 import org.jwebconsole.client.place.NameTokens;
@@ -43,6 +42,10 @@ public class AvailableHostsPresenterFacade {
                 .with(AppParams.HOST_ID, hostId)
                 .build();
         placeManager.revealPlace(request);
+    }
+
+    public void revealHomePlace() {
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
     }
 
     public String getHostIdFromPlaceRequest() {

@@ -100,7 +100,11 @@ public class AvailableHostsPresenter
 
     private void fireHostChangedEvent(List<HostConnection> body) {
         HostConnection selection = getSelectionFromRequest(body);
-        getEventBus().fireEvent(new HostSelectedEvent(selection));
+        if (selection != null) {
+            getEventBus().fireEvent(new HostSelectedEvent(selection));
+        } else {
+            facade.revealHomePlace();
+        }
     }
 
     private void processConnectionListResponse(List<HostConnection> connections) {

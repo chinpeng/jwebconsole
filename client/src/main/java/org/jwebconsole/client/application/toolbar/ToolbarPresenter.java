@@ -10,6 +10,8 @@ import org.fusesource.restygwt.client.Method;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
@@ -24,10 +26,13 @@ import org.jwebconsole.client.service.AppCallback;
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
         RevealOnStartEventHandler,
-        HostSelectedEventHandler {
+        HostSelectedEventHandler,
+        HostChangedEventHandler {
 
     private final ToolbarPresenterFacade facade;
     private HostConnection selectedConnection;
+
+
 
     @ProxyCodeSplit
     public interface ToolbarProxy extends Proxy<ToolbarPresenter> {
@@ -44,6 +49,7 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     private void init() {
         getView().setUiHandlers(this);
         getEventBus().addHandler(HostSelectedEvent.TYPE, this);
+        getEventBus().addHandler(HostChangedEvent.TYPE, this);
     }
 
     @Override
@@ -61,6 +67,11 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     @Override
     public void openConnectionWindow() {
         getEventBus().fireEvent(new RevealAddConnectionPopupEvent());
+    }
+
+    @Override
+    public void onHostChanged(HostChangedEvent hostChangedEvent) {
+        selectedConnection = hostChangedEvent.getConnection();
     }
 
     @Override

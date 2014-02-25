@@ -43,10 +43,10 @@ public class AvailableHostsPresenterTests extends Mockito {
     }
 
     @Test
-    public void shouldFireClickedEventWhenTreeItemWasSelected() {
+    public void shouldRevealHostPlaceWhenHostWasSelected() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
         presenter.onTreeItemSelected(new HostConnection());
-        verify(eventBus).fireEvent(any(HostSelectedEvent.class));
+        verify(facade).revealThreadContentPlace(anyString());
     }
 
     @Test
@@ -142,10 +142,12 @@ public class AvailableHostsPresenterTests extends Mockito {
     @Test
     @SuppressWarnings("unchecked")
     public void shouldDisableHandlerWhileInsertingHosts() {
+        when(connection.getId()).thenReturn("test-id");
+        when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
         AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
-        presenter.onBind();
+        presenter.onReset();
         verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
         assertFalse(mockView.isSelectionFired());
@@ -155,14 +157,29 @@ public class AvailableHostsPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldApplyPreviousSelectionOnAddingHosts() {
         when(connection.getId()).thenReturn("test-id");
+        when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
         AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         presenter.onTreeItemSelected(connection);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
-        presenter.onBind();
+        presenter.onReset();
         verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
         assertEquals(connection, mockView.getSelectedItem());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldNotFireSelectionEventIfHostIdIsEmpty() {
+        when(connection.getId()).thenReturn("test-id");
+        when(facade.getHostIdFromPlaceRequest()).thenReturn("non-existing--id");
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        presenter.onTreeItemSelected(connection);
+        ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
+        presenter.onReset();
+        verify(facade).getHosts(argumentCaptor.capture());
+        argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
+        verify(eventBus, times(0)).fireEvent(any(HostSelectedEvent.class));
     }
 
     private HostConnectionListResponse createConnectionsResponse() {

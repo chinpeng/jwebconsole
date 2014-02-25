@@ -1,9 +1,11 @@
 package org.jwebconsole.client.application.toolbar;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
+import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
@@ -25,6 +27,7 @@ public class ToolbarPresenterTests extends Mockito {
     private HostConnection connection;
     private Throwable failure;
     private SimpleResponse response;
+    private SimpleEventBus realBus;
 
     @Before
     public void init() {
@@ -35,6 +38,7 @@ public class ToolbarPresenterTests extends Mockito {
         this.connection = mock(HostConnection.class);
         this.failure = mock(Throwable.class);
         this.response = mock(SimpleResponse.class);
+        realBus = new SimpleEventBus();
     }
 
     @Test
@@ -166,6 +170,20 @@ public class ToolbarPresenterTests extends Mockito {
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onSuccess(null, response);
         verify(facade).redirectToHome();
+    }
+
+    @Test
+    public void shouldHandleHostChangedEvent() {
+        ToolbarPresenter presenter = new ToolbarPresenter(realBus, view, proxy, facade);
+        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
+        ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
+        when(connection.getId()).thenReturn("test-id");
+        when(response.isValid()).thenReturn(true);
+        realBus.fireEvent(new HostChangedEvent(connection));
+        presenter.deleteConnection();
+        verify(facade).deleteHost(idCaptor.capture(), argumentCaptor.capture());
+        assertEquals("test-id", idCaptor.getValue());
+
     }
 
 }
