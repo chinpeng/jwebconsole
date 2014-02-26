@@ -16,7 +16,7 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
 
     private ThreadCountChartPresenterFacade facade;
     private HostConnection selectedConnection;
-    private LinkedList<ThreadCountEntity> entities;
+    private LinkedList<ThreadCountEntity> entities = new LinkedList<ThreadCountEntity>();
 
     @Inject
     public ThreadCountChartPresenter(EventBus eventBus, ThreadCountChartView view, ThreadCountChartPresenterFacade facade) {
