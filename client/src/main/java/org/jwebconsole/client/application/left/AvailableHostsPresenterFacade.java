@@ -57,4 +57,11 @@ public class AvailableHostsPresenterFacade {
             timer.cancel();
         }
     }
+
+    public void rescheduleTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer.run();
+        }
+    }
 }

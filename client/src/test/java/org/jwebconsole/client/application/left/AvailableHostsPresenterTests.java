@@ -1,6 +1,7 @@
 package org.jwebconsole.client.application.left;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
@@ -31,6 +32,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     private AvailableHostsPresenter.AvailableHostsProxy proxy;
     private HostConnection connection;
     private Method method;
+    private SimpleEventBus realEventBus;
 
     @Before
     public void init() {
@@ -40,6 +42,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         this.proxy = mock(AvailableHostsPresenter.AvailableHostsProxy.class);
         this.connection = mock(HostConnection.class);
         this.method = mock(Method.class);
+        this.realEventBus = new SimpleEventBus();
     }
 
     @Test
@@ -182,6 +185,22 @@ public class AvailableHostsPresenterTests extends Mockito {
         verify(eventBus, times(0)).fireEvent(any(HostSelectedEvent.class));
     }
 
+    @Test
+    @SuppressWarnings("unused")
+    public void shouldResetTimerOnHostCreationEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        realEventBus.fireEvent(new HostCreatedEvent(connection));
+        verify(facade).rescheduleTimer();
+    }
+
+    @Test
+    @SuppressWarnings("unused")
+    public void shouldResetTimerOnHostChangeEvent() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        realEventBus.fireEvent(new HostChangedEvent(connection));
+        verify(facade).rescheduleTimer();
+    }
+
     private HostConnectionListResponse createConnectionsResponse() {
         HostConnectionListResponse response = new HostConnectionListResponse();
         List<HostConnection> result = new ArrayList<HostConnection>();
@@ -189,5 +208,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         response.setBody(result);
         return response;
     }
+
+
 
 }

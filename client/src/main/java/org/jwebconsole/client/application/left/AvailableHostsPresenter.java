@@ -164,6 +164,7 @@ public class AvailableHostsPresenter
 
     @Override
     public void onHostChanged(HostChangedEvent hostChangedEvent) {
+        facade.rescheduleTimer();
         getView().disableSelectionHandler();
         getView().changeHost(hostChangedEvent.getConnection());
         getView().setSelection(hostChangedEvent.getConnection());
@@ -172,6 +173,7 @@ public class AvailableHostsPresenter
 
     @Override
     public void onHostCreated(HostCreatedEvent event) {
+        facade.rescheduleTimer();
         getView().addHost(event.getConnection());
     }
 

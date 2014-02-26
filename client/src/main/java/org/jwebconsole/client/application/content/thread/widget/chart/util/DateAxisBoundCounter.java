@@ -6,6 +6,8 @@ import java.util.*;
 
 public class DateAxisBoundCounter {
 
+    private Date defaultDate;
+
     private static final Comparator<ThreadCountEntity> TIME_COMPARATOR = new Comparator<ThreadCountEntity>() {
 
         @Override
@@ -21,11 +23,27 @@ public class DateAxisBoundCounter {
         }
     };
 
+    public DateAxisBoundCounter() {
+
+    }
+
+    public DateAxisBoundCounter(Date defaultDate) {
+        this.defaultDate = defaultDate;
+    }
+
     public Date getMinDate(List<ThreadCountEntity> entities) {
         if (entities == null || entities.isEmpty()) {
-            return new Date();
+            return getDefaultDate();
         } else {
             return countMinDate(entities);
+        }
+    }
+
+    public Date getMaxDate(List<ThreadCountEntity> entities) {
+        if (entities == null || entities.isEmpty()) {
+            return getDefaultDate();
+        } else {
+            return countMaxDate(entities);
         }
     }
 
@@ -35,18 +53,17 @@ public class DateAxisBoundCounter {
         return copy.get(0).getTime();
     }
 
-    public Date getMaxDate(List<ThreadCountEntity> entities) {
-        if (entities == null || entities.isEmpty()) {
-            return new Date();
-        } else {
-            return countMaxDate(entities);
-        }
-    }
-
     private Date countMaxDate(List<ThreadCountEntity> entities) {
         ArrayList<ThreadCountEntity> copy = new ArrayList<ThreadCountEntity>(entities);
         Collections.sort(copy, TIME_COMPARATOR);
         return copy.get(copy.size() - 1).getTime();
+    }
+
+    private Date getDefaultDate() {
+        if (defaultDate == null) {
+            return new Date();
+        }
+        return defaultDate;
     }
 
 }
