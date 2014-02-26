@@ -64,4 +64,8 @@ public class AvailableHostsPresenterFacade {
             timer.run();
         }
     }
+
+    public boolean isAtHomePlace() {
+        return placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.home);
+    }
 }

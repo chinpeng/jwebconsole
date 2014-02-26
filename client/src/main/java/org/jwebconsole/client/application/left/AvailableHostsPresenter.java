@@ -102,8 +102,6 @@ public class AvailableHostsPresenter
         HostConnection selection = getSelectionFromRequest(body);
         if (selection != null) {
             getEventBus().fireEvent(new HostSelectedEvent(selection));
-        } else {
-            facade.revealHomePlace();
         }
     }
 
@@ -120,8 +118,16 @@ public class AvailableHostsPresenter
         HostConnection selection = getSelectionFromRequest(connections);
         if (selection != null) {
             getView().setSelection(selection);
+        } else {
+            revealHomePlace();
         }
         getView().enableSelectionHandler();
+    }
+
+    private void revealHomePlace() {
+        if (!facade.isAtHomePlace()) {
+            facade.revealHomePlace();
+        }
     }
 
     private HostConnection getSelectionFromRequest(List<HostConnection> connections) {
