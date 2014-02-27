@@ -1,4 +1,4 @@
-package org.jwebconsole.server.readmodel.threads
+package org.jwebconsole.server.readmodel.threads.count
 
 import org.jwebconsole.server.readmodel.common.ReplayingDAO
 import org.jwebconsole.server.context.host.ThreadData
@@ -7,7 +7,7 @@ import java.sql.Timestamp
 import scala.slick.jdbc.meta.MTable
 import java.util.Date
 
-class ThreadDataDAO(val db: Database) extends ReplayingDAO {
+class ThreadCountDao(val db: Database) extends ReplayingDAO {
 
   val TableName = "thread_data_table"
 

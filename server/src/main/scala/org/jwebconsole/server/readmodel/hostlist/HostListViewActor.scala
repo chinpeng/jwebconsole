@@ -13,7 +13,7 @@ import scala.Some
 import org.jwebconsole.server.readmodel.common.ReadModelReplayingActor
 import java.sql.SQLException
 
-class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
+class HostListViewActor(val dao: SimpleHostDao) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
   implicit val exec = context.system.dispatcher

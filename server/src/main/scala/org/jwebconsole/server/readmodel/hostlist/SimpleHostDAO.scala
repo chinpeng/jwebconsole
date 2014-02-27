@@ -5,7 +5,7 @@ import scala.slick.jdbc.meta.MTable
 import org.jwebconsole.server.readmodel.common.ReplayingDAO
 import java.sql.SQLException
 
-class SimpleHostDAO(val db: Database) extends ReplayingDAO {
+class SimpleHostDao(val db: Database) extends ReplayingDAO {
 
   val TableName = "all_hosts"
 

@@ -1,4 +1,4 @@
-package org.jwebconsole.server.readmodel.threads
+package org.jwebconsole.server.readmodel.threads.count
 
 import akka.actor.{Actor, ActorLogging, Stash}
 import org.jwebconsole.server.readmodel.common.ReadModelReplayingActor
@@ -7,14 +7,11 @@ import org.jwebconsole.server.context.host.{HostDeletedEvent, HostDataChangedEve
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import org.jwebconsole.server.util.ErrorMessages
+import org.jwebconsole.server.readmodel.threads._
 
-class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
+class ThreadCountViewActor(val dao: ThreadCountDao) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
 
-  def filterFunc: PartialFunction[AppEvent, Boolean] = {
-    case ev: HostDeletedEvent => true
-    case ev: HostDataChangedEvent => true
-    case _ => false
-  }
+  def filterFunc = commonThreadFilterFunc
 
   def afterRecover(): Unit = Unit
 

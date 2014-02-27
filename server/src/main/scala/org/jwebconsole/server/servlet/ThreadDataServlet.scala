@@ -2,7 +2,8 @@ package org.jwebconsole.server.servlet
 
 import akka.actor._
 import akka.pattern.ask
-import org.jwebconsole.server.readmodel.threads.{ThreadDataLastNrRequest, ThreadDataRequest}
+import org.jwebconsole.server.readmodel.threads.ThreadDataLastNrRequest
+import org.jwebconsole.server.readmodel.threads.count.{ThreadDataLastNrRequest, ThreadDataRequest}
 
 class ThreadDataServlet(val system: ActorSystem, threadDataView: ActorRef) extends BaseServlet {
 

@@ -18,7 +18,7 @@ import org.jwebconsole.server.context.common.ResponseMessage
 class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
 
   trait mocks extends AkkaTestkitSupport {
-    val dao = mock[SimpleHostDAO]
+    val dao = mock[SimpleHostDao]
     dao.exists returns true
     val actor: TestActorRef[HostListViewActor] = TestActorRef(Props(new HostListViewActor(dao)))
     val source = actor.underlyingActor

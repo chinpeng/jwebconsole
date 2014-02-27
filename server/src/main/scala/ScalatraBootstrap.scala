@@ -6,8 +6,9 @@ import org.jwebconsole.server.context.host.HostDeletedEvent
 import org.jwebconsole.server.context.host.HostParametersChangedEvent
 import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
-import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDAO, HostListViewActor, AvailableHostsList}
-import org.jwebconsole.server.readmodel.threads.{ThreadDataViewActor, ThreadDataDAO}
+import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
+import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
+import org.jwebconsole.server.readmodel.threads.ThreadDataViewActor
 import org.jwebconsole.server.servlet.{ThreadDataServlet, HostServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle
@@ -25,7 +26,7 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
     val system = ActorSystem("app-system")
     val eventStore = system.actorOf(Props(new GlobalEventStore))
-    val dao = new SimpleHostDAO(db)
+    val dao = new SimpleHostDao(db)
     val connectionChecker = new JMXConnectionChecker()
     val validator = system.actorOf(Props(new HostCommandValidator(connectionChecker)))
     val hostCommandHandler = system.actorOf(Props(new HostCommandHandler(validator)))
@@ -39,8 +40,8 @@ class ScalatraBootstrap extends LifeCycle {
   }
 
   def initThreadReadModel(system: ActorSystem): ActorRef = {
-    val dao = new ThreadDataDAO(db)
-    val threadDataView = system.actorOf(Props(new ThreadDataViewActor(dao)))
+    val dao = new ThreadCountDao(db)
+    val threadDataView = system.actorOf(Props(new ThreadCountViewActor(dao)))
     system.eventStream.subscribe(threadDataView, classOf[HostDataChangedEvent])
     threadDataView
   }
