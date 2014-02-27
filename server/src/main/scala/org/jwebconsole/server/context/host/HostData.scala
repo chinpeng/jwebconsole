@@ -7,4 +7,13 @@ case class HostData(
                      time: Date = new Date(),
                      threadData: ThreadData = ThreadData()) {}
 
-case class ThreadData(threadCount: Int = 0, peakThreadCount: Int = 0) {}
+case class ThreadData(threadCount: Int = 0,
+                      peakThreadCount: Int = 0,
+                      availableThreads: List[AvailableThread] = List()) {}
+
+case class AvailableThread(id: Long = 0,
+                           name: String = "",
+                           state: String = "",
+                           totalBlocked: Int = 0,
+                           totalWaited: Int = 0,
+                           stackTrace: List[String] = List())
