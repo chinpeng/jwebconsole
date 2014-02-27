@@ -1,6 +1,6 @@
 package org.jwebconsole.server.context.host
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{SpecificationWithJUnit, Specification}
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.actor.Props
@@ -10,7 +10,7 @@ import org.specs2.mock.Mockito
 import org.jwebconsole.server.jmx.JMXConnectionChecker
 import scala.concurrent.duration._
 
-class HostARActorSpecs extends Specification with Mockito with NoTimeConversions {
+class HostARActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
   sequential
 
   trait mocks extends AkkaTestkitSupport {

@@ -1,6 +1,6 @@
 package org.jwebconsole.server.worker
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{SpecificationWithJUnit, Specification}
 import org.specs2.mock.Mockito
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
@@ -11,7 +11,7 @@ import scala.util.Success
 import org.jwebconsole.server.context.host.{HostData, ChangeHostDataCommand, HostParametersChangedEvent}
 import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 
-class HostWorkerActorSpecs extends Specification with Mockito with NoTimeConversions {
+class HostWorkerActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
 
   sequential
 

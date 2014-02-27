@@ -1,6 +1,6 @@
 package org.jwebconsole.server.context.common
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{SpecificationWithJUnit, Specification}
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.{AppConstants, AkkaTestkitSupport}
 import akka.actor.Props
@@ -8,7 +8,7 @@ import akka.persistence.EventsourcedProcessor
 import akka.testkit.TestProbe
 import org.jwebconsole.server.context.host.HostDeletedEvent
 
-class GlobalEventStoreSpecs extends Specification with NoTimeConversions {
+class GlobalEventStoreSpecs extends SpecificationWithJUnit with NoTimeConversions {
   sequential
 
   trait mocks extends AkkaTestkitSupport {

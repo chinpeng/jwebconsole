@@ -1,14 +1,15 @@
 package org.jwebconsole.server.context.common
 
-import org.specs2.mutable.{Before, Specification}
+import org.specs2.mutable.{SpecificationWithJUnit, Before, Specification}
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.testkit.{TestActorRef, TestActor, TestProbe}
 import akka.actor.Props
 import org.jwebconsole.server.context.host.{HostCreatedEvent, HostDeletedEvent}
 import scala.concurrent.duration._
+import org.specs2.runner.JUnitRunner
 
-class EventStoreReplayingActorSpecs extends Specification with NoTimeConversions {
+class EventStoreReplayingActorSpecs extends SpecificationWithJUnit with NoTimeConversions {
   sequential
 
   trait mocks extends AkkaTestkitSupport {

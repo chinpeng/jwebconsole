@@ -11,6 +11,7 @@ import org.jwebconsole.server.util.ErrorMessages
 class ThreadDataViewActor(val dao: ThreadDataDAO) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
 
   def filterFunc: PartialFunction[AppEvent, Boolean] = {
+    case ev: HostDeletedEvent => true
     case ev: HostDataChangedEvent => true
     case _ => false
   }

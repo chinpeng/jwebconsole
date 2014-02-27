@@ -19,6 +19,7 @@ class HostListViewActor(val dao: SimpleHostDAO) extends Actor with ActorLogging 
   implicit val exec = context.system.dispatcher
 
   def filterFunc: PartialFunction[AppEvent, Boolean] = {
+    case ev: HostDataChangedEvent => false
     case ev: HostChangedEvent => true
     case _ => false
   }

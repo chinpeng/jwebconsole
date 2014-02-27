@@ -1,6 +1,6 @@
 package org.jwebconsole.server.context.host
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{SpecificationWithJUnit, Specification}
 import org.specs2.mock.Mockito
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.{InvalidMessage, Invalid, Valid, AkkaTestkitSupport}
@@ -8,7 +8,7 @@ import org.jwebconsole.server.jmx.JMXConnectionChecker
 import akka.actor.Props
 import org.jwebconsole.server.util.ValidationConstants._
 
-class HostCommandValidatorSpecs extends Specification with Mockito with NoTimeConversions {
+class HostCommandValidatorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
 
   sequential
 

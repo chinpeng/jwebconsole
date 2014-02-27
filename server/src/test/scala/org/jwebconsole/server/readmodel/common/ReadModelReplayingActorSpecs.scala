@@ -1,16 +1,15 @@
-package org.jwebconsole.server.readmodel
+package org.jwebconsole.server.readmodel.common
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.AkkaTestkitSupport
 import akka.actor._
-import org.jwebconsole.server.readmodel.common.{ReplayingDAO, ReadModelReplayingActor}
 import org.jwebconsole.server.context.common.{ReplayFinished, AppEvent}
 import org.specs2.mock.Mockito
 import akka.testkit.TestProbe
 import scala.concurrent.duration._
 
-class ReadModelReplayingActorSpecs extends Specification with Mockito with NoTimeConversions {
+class ReadModelReplayingActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
   sequential
 
   trait mocks extends AkkaTestkitSupport {

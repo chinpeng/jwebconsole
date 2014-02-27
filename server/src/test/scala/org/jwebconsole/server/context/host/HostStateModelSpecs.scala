@@ -1,10 +1,10 @@
 package org.jwebconsole.server.context.host
 
 import org.specs2.mock.Mockito
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{SpecificationWithJUnit, Specification}
 import org.specs2.specification.Before
 
-class HostStateModelSpecs extends Specification with Mockito {
+class HostStateModelSpecs extends SpecificationWithJUnit with Mockito {
 
   trait HostData extends Before {
     val testId = "100"

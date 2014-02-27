@@ -7,9 +7,12 @@ import org.jwebconsole.server.context.host.HostData
 import java.util.Date
 
 
-class JMXConnection(private val host: String, private val port: Int, parser: JMXDataParser) {
+class JMXConnection(private val host: String,
+                    private val port: Int,
+                    private val parser: JMXDataParser,
+                    private val util: JMXConnectionUtil = new JMXConnectionUtil()) {
 
-  val log = LoggerFactory.getLogger(classOf[JMXConnection])
+  private val log = LoggerFactory.getLogger(classOf[JMXConnection])
 
   def retrieveHostData: HostData = {
     withConnection {
@@ -24,8 +27,7 @@ class JMXConnection(private val host: String, private val port: Int, parser: JMX
   private def withConnection[T](action: JMXConnector => T): Try[T] = {
     val res = Try {
       val url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"
-      val serviceUrl = new JMXServiceURL(url)
-      val connector = JMXConnectorFactory.connect(serviceUrl, null)
+      val connector = util.connect(url)
       val result = action(connector)
       connector.close()
       result
