@@ -25,6 +25,11 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     val hostId = "test-id"
     val probe = TestProbe()
     val probeRef = probe.ref
+
+    def waitForPersist() {
+      Thread.sleep(100)
+    }
+
   }
 
   "Host List View actor" should {
@@ -89,6 +94,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     "persist HostCreatedEvent" in new mocks {
       val ev = HostCreatedEvent(hostId, "", 0)
       actor ! ev
+      waitForPersist()
       val captor = new ArgumentCapture[SimpleHostView]
       there was one(dao).create(captor.capture)
       captor.value.id mustEqual "test-id"
@@ -99,6 +105,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     "persist replaying HostParametersChangedEvent" in new mocks {
       val ev = HostParametersChangedEvent(hostId, "", 0)
       actor ! ev
+      waitForPersist()
       val captor = new ArgumentCapture[SimpleHostView]
       there was one(dao).updateParameters(captor.capture)
       captor.value.id mustEqual "test-id"
@@ -109,6 +116,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     "persist replaying HostDeletedEvent" in new mocks {
       val ev = HostDeletedEvent(hostId)
       actor ! ev
+      waitForPersist()
       there was one(dao).delete(hostId)
     }
   }
@@ -117,6 +125,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     "persist Host status change replaying event" in new mocks {
       val ev = HostDataChangedEvent(hostId, HostData(connected = true))
       actor ! ev
+      waitForPersist()
       there was one(dao).updateStatus(hostId, true)
     }
   }
