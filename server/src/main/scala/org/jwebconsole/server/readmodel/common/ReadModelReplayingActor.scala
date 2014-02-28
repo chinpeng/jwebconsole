@@ -58,7 +58,7 @@ trait ReadModelReplayingActor {
     context.actorOf(Props(new EventStoreReplayingActor(filterFunc, self)))
   }
 
-  def dao: ReplayingDAO
+  def dao: ReplayingDao
 
   def filterFunc: PartialFunction[AppEvent, Boolean]
 

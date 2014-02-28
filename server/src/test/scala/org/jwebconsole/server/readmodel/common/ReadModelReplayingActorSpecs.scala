@@ -16,7 +16,7 @@ class ReadModelReplayingActorSpecs extends SpecificationWithJUnit with Mockito w
     val defaultFilterFunc: PartialFunction[AppEvent, Boolean] = {
       case _ => true
     }
-    val dao = mock[ReplayingDAO]
+    val dao = mock[ReplayingDao]
     val probe = TestProbe()
     val probeRef = probe.ref
 
@@ -102,7 +102,7 @@ class ReadModelReplayingActorSpecs extends SpecificationWithJUnit with Mockito w
 
 
 
-  class ReplayingActor(req: ActorRef, val filterFunc: PartialFunction[AppEvent, Boolean], val dao: ReplayingDAO) extends Actor with Stash with ActorLogging with ReadModelReplayingActor {
+  class ReplayingActor(req: ActorRef, val filterFunc: PartialFunction[AppEvent, Boolean], val dao: ReplayingDao) extends Actor with Stash with ActorLogging with ReadModelReplayingActor {
 
     override def receive: Receive = {
       case msg => req ! msg

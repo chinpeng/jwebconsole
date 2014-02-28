@@ -2,10 +2,10 @@ package org.jwebconsole.server.readmodel.hostlist
 
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
-import org.jwebconsole.server.readmodel.common.ReplayingDAO
+import org.jwebconsole.server.readmodel.common.ReplayingDao
 import java.sql.SQLException
 
-class SimpleHostDao(val db: Database) extends ReplayingDAO {
+class SimpleHostDao(val db: Database) extends ReplayingDao {
 
   val TableName = "all_hosts"
 
@@ -23,13 +23,13 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def exists: Boolean =
-    db withSession {
+    db withLockedSession  {
       implicit session =>
         !MTable.getTables(TableName).list().isEmpty
     }
 
   def putAll(hosts: List[SimpleHostView]): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         hosts foreach (host => hostQuery +=(host.id, host.name, host.port, host.connected))
@@ -37,7 +37,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def updateParameters(host: SimpleHostView): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         val toUpdate = for (item: HostTable <- hostQuery if item.id === host.id) yield (item.id, item.name, item.port)
@@ -46,7 +46,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def updateStatus(id: String, status: Boolean): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         val toUpdate = for (item: HostTable <- hostQuery if item.id === id) yield item.connected
@@ -55,7 +55,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def create(host: SimpleHostView): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         hostQuery +=(host.id, host.name, host.port, host.connected)
@@ -63,7 +63,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def delete(id: String): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         val toDelete = for (item: HostTable <- hostQuery if item.id === id) yield item
@@ -73,7 +73,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
 
   @throws(classOf[SQLException])
   def getAll: List[SimpleHostView] = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         hostQuery.list().map(record => SimpleHostView(record._1, record._2, record._3, record._4))
@@ -81,7 +81,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def getSingle(hostId: String): SimpleHostView = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         val res = for (item: HostTable <- hostQuery if item.id === hostId) yield item
@@ -90,7 +90,7 @@ class SimpleHostDao(val db: Database) extends ReplayingDAO {
   }
 
   def createTable(): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         val hostQuery = TableQuery[HostTable]
         hostQuery.ddl.create

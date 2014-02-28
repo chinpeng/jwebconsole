@@ -1,11 +1,11 @@
 package org.jwebconsole.server.readmodel.threads.info
 
-import org.jwebconsole.server.readmodel.common.ReplayingDAO
+import org.jwebconsole.server.readmodel.common.ReplayingDao
 import org.jwebconsole.server.context.host.ThreadData
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
 
-class ThreadInfoDao(private val db: Database) extends ReplayingDAO {
+class ThreadInfoDao(private val db: Database) extends ReplayingDao {
 
   val ThreadNameTableName = "thread_name_table"
 
@@ -28,21 +28,21 @@ class ThreadInfoDao(private val db: Database) extends ReplayingDAO {
   val threadNameQuery = TableQuery[ThreadNameTable]
 
   override def exists(): Boolean = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         !MTable.getTables(ThreadNameTableName).list().isEmpty
     }
   }
 
   override def createTable(): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         threadNameQuery.ddl.create
     }
   }
 
   def refreshThreadInfo(hostId: String, threadData: ThreadData): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         deleteThreadInfo(hostId)
         threadData.availableThreads foreach {
@@ -53,14 +53,14 @@ class ThreadInfoDao(private val db: Database) extends ReplayingDAO {
   }
 
   def deleteThreadInfo(hostId: String): Unit = {
-    db withSession {
+    db withLockedSession {
       implicit session => 
       recordsForHostId(hostId).delete
     }
   }
 
   def threadNamesList(hostId: String): List[ThreadNameRow] = {
-    db withSession {
+    db withLockedSession {
       implicit session =>
         recordsForHostId(hostId).list()
     }
