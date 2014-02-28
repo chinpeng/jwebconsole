@@ -2,8 +2,7 @@ package org.jwebconsole.server.jmx.converter
 
 import org.jwebconsole.server.context.host.{AvailableThread, HostData, ThreadData}
 import javax.management.remote.JMXConnector
-import javax.management.ObjectName
-import java.lang.management.{ManagementFactory, ThreadMXBean}
+import java.lang.management.ThreadMXBean
 import org.jwebconsole.server.jmx.JMXConnectionUtil
 
 class ThreadDataConverter(private val utils: JMXConnectionUtil = new JMXConnectionUtil()) extends JMXDataConverter {

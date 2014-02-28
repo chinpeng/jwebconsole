@@ -64,6 +64,6 @@ trait ReadModelReplayingActor {
 
   def afterRecover(): Unit
 
-  def persistReplay(ev: AppEvent)
+  def persistReplay(ev: AppEvent): Unit
 
 }

@@ -7,13 +7,13 @@ import java.sql.Timestamp
 import scala.slick.jdbc.meta.MTable
 import java.util.Date
 
-class ThreadCountDao(val db: Database) extends ReplayingDAO {
+class ThreadCountDao(private val db: Database) extends ReplayingDAO {
 
   val TableName = "thread_data_table"
 
-  case class ThreadDataRow(id: Int, hostId: String, time: Timestamp, threadCount: Int, peakThreadCount: Int)
+  case class ThreadCountRow(id: Int, hostId: String, time: Timestamp, threadCount: Int, peakThreadCount: Int)
 
-  class ThreadDataTable(tag: Tag) extends Table[ThreadDataRow](tag, TableName) {
+  class ThreadCountTable(tag: Tag) extends Table[ThreadCountRow](tag, TableName) {
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
@@ -25,16 +25,16 @@ class ThreadCountDao(val db: Database) extends ReplayingDAO {
 
     def peakThreadCount = column[Int]("peakThreadCount")
 
-    def * = (id, hostId, time, threadCount, peakThreadCount) <>(ThreadDataRow.tupled, ThreadDataRow.unapply)
+    def * = (id, hostId, time, threadCount, peakThreadCount) <>(ThreadCountRow.tupled, ThreadCountRow.unapply)
   }
 
-  val threadDataQuery = TableQuery[ThreadDataTable]
+  val threadCountQuery = TableQuery[ThreadCountTable]
 
 
   def createTable(): Unit = {
     db withSession {
       implicit session =>
-        threadDataQuery.ddl.create
+        threadCountQuery.ddl.create
     }
   }
 
@@ -45,26 +45,26 @@ class ThreadCountDao(val db: Database) extends ReplayingDAO {
     }
   }
 
-  def addThreadDataRecord(hostId: String, threadData: ThreadData, time: Date): Unit = {
+  def addThreadCountRecord(hostId: String, threadData: ThreadData, time: Date): Unit = {
     db withSession {
       implicit session =>
-        val row = ThreadDataRow(0, hostId, new Timestamp(time.getTime), threadData.threadCount, threadData.peakThreadCount)
-        threadDataQuery += row
+        val row = ThreadCountRow(0, hostId, new Timestamp(time.getTime), threadData.threadCount, threadData.peakThreadCount)
+        threadCountQuery += row
     }
   }
 
-  def getAllForHost(hostId: String): List[ThreadDataRow] = {
+  def getAllForHost(hostId: String): List[ThreadCountRow] = {
     db withSession {
       implicit session =>
-        val res = for (row <- threadDataQuery if row.hostId === hostId) yield row
+        val res = for (row <- threadCountQuery if row.hostId === hostId) yield row
         res.list()
     }
   }
 
-  def getLastNumberOfEntities(hostId: String, bound: Int): List[ThreadDataRow] = {
+  def getLastNumberOfEntities(hostId: String, bound: Int): List[ThreadCountRow] = {
     db withSession {
       implicit session =>
-        threadDataQuery
+        threadCountQuery
           .filter(_.hostId === hostId)
           .sortBy(_.time.desc.nullsFirst)
           .take(bound)
@@ -76,7 +76,7 @@ class ThreadCountDao(val db: Database) extends ReplayingDAO {
   def deleteHostRecord(hostId: String): Unit = {
     db withSession {
       implicit session =>
-        threadDataQuery
+        threadCountQuery
           .filter(_.hostId === hostId)
           .delete
     }

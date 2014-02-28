@@ -17,7 +17,7 @@ class ThreadCountViewActor(val dao: ThreadCountDao) extends Actor with ActorLogg
 
   def persistReplay(event: AppEvent): Unit = event match {
     case ev: HostDataChangedEvent =>
-      dao.addThreadDataRecord(ev.id, ev.data.threadData, ev.data.time)
+      dao.addThreadCountRecord(ev.id, ev.data.threadData, ev.data.time)
     case HostDeletedEvent(hostId: String) =>
       dao.deleteHostRecord(hostId)
   }
