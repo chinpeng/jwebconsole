@@ -8,7 +8,8 @@ import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
 import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
-import org.jwebconsole.server.servlet.{ThreadDataServlet, HostServlet}
+import org.jwebconsole.server.servlet.HostServlet
+import org.jwebconsole.server.servlet.thread.ThreadCountServlet
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle
 import scala.slick.driver.H2Driver.simple._
@@ -35,7 +36,7 @@ class ScalatraBootstrap extends LifeCycle {
     system.eventStream.subscribe(eventStore, classOf[AppEvent])
     system.eventStream.subscribe(readModel, classOf[HostChangedEvent])
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
-    context.mount(new ThreadDataServlet(system, threadDataView), "/thread/*")
+    context.mount(new ThreadCountServlet(system, threadDataView), "/thread/count/*")
   }
 
   def initThreadReadModel(system: ActorSystem): ActorRef = {

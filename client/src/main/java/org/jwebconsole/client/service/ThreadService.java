@@ -16,8 +16,8 @@ import javax.ws.rs.core.MediaType;
 public interface ThreadService extends RestService {
 
     @GET
-    @Path("/{id}/all")
-    void getThreadInfo(@PathParam("id") String hostId, MethodCallback<ThreadCountListResponse> callback);
+    @Path("/all/{hostId}")
+    void getThreadInfo(@PathParam("hostId") String hostId, MethodCallback<ThreadCountListResponse> callback);
 
     @GET
     @Path("/last/{number}/{hostId}")
