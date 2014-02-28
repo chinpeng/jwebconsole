@@ -8,7 +8,6 @@ import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
 import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
-import org.jwebconsole.server.readmodel.threads.ThreadDataViewActor
 import org.jwebconsole.server.servlet.{ThreadDataServlet, HostServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.LifeCycle
