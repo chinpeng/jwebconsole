@@ -3,7 +3,6 @@
              xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <row:SimpleContainer ui:field="chartPanel">

@@ -2,14 +2,11 @@ package org.jwebconsole.client.application.main;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.bundle.AppResources;
-import org.jwebconsole.client.bundle.AppStyles;
 
 import javax.inject.Inject;
 
@@ -22,7 +19,7 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     @UiField
     SimpleContainer leftPanel;
     @UiField
-    ContentPanel contentPanel;
+    SimpleContainer contentPanel;
 
 
     public interface Binder extends UiBinder<Widget, ApplicationView> {

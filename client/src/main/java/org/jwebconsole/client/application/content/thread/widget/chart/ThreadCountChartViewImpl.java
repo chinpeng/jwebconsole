@@ -16,6 +16,7 @@ import com.sencha.gxt.chart.client.draw.sprite.Sprite;
 import com.sencha.gxt.chart.client.draw.sprite.TextSprite;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.DateAxisConstants;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.NumberAxisConstants;
@@ -36,6 +37,7 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     private AppResources appResources;
     private ListStore<ThreadCountEntity> store;
     private Chart<ThreadCountEntity> chart;
+    private Integer autoIncrementId = 0;
 
     @UiField
     SimpleContainer chartPanel;
@@ -103,7 +105,7 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
     private void init() {
         chart = new Chart<ThreadCountEntity>();
         chart.setShadowChart(true);
-        store = new ListStore<ThreadCountEntity>(accessor.nameKey());
+        store = new ListStore<ThreadCountEntity>(createKeyProvider());
         chart.setStore(store);
         chart.addAxis(createNumericAxis());
         chart.addAxis(createDateAxis());
@@ -114,6 +116,20 @@ public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChar
         chart.hide();
         chart.setDefaultInsets(DEFAULT_INSETS);
         chartPanel.add(chart);
+    }
+
+    private ModelKeyProvider<ThreadCountEntity> createKeyProvider() {
+        return new ModelKeyProvider<ThreadCountEntity>() {
+            @Override
+            public String getKey(ThreadCountEntity threadCountEntity) {
+                return incrementAndGetGeneratedId();
+            }
+        };
+    }
+
+    private String incrementAndGetGeneratedId() {
+        autoIncrementId++;
+        return autoIncrementId.toString();
     }
 
     private Legend<ThreadCountEntity> createLegend() {

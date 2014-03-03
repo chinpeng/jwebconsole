@@ -1,59 +1,72 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
-             xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="verticalLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
-    <gxt:Window ui:field="window" pixelSize="300, 240" modal="true" blinkModal="true" headingText="{messages.newHostWindowTitle}"
-                resizable="false">
-        <g:HTMLPanel addStyleNames="{res.connectionWindow.contentMargin}">
-            <form:FieldSet headingText="{messages.hostInfoFieldSetHeading}" collapsible="false">
-                <container:VerticalLayoutContainer>
+    <ui:style>
+        .window_padding {
+            padding: 10px;
+        }
+    </ui:style>
 
-                    <container:child>
-                        <form:FieldLabel text="{messages.hostNameLabel}">
-                            <form:widget>
-                                <form:TextField ui:field="hostName" allowBlank="false"/>
-                            </form:widget>
-                        </form:FieldLabel>
-                    </container:child>
+    <gxt:Window ui:field="window" modal="true" blinkModal="true"
+                headingText="{messages.newHostWindowTitle}"
+                resizable="false" width="400" buttonAlign="END" bodyStyle="{style.window_padding}">
+        <form:FieldSet headingText="{messages.hostInfoFieldSetHeading}" collapsible="false">
+            <container:VerticalLayoutContainer>
 
-                    <container:child>
-                        <form:FieldLabel text="{messages.hostPortLabel}">
-                            <form:widget>
-                                <form:NumberField ui:field="port" allowBlank="false" />
-                            </form:widget>
-                        </form:FieldLabel>
-                    </container:child>
+                <container:child layoutData="{verticalLayoutData}">
+                    <form:FieldLabel text="{messages.hostNameLabel}">
+                        <form:widget>
+                            <form:TextField ui:field="hostName" allowBlank="false"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
 
-                    <container:child>
-                        <form:FieldLabel text="{messages.loginLabel}">
-                            <form:widget>
-                                <form:TextField ui:field="login"/>
-                            </form:widget>
-                        </form:FieldLabel>
-                    </container:child>
+                <container:child layoutData="{verticalLayoutData}">
+                    <form:FieldLabel text="{messages.hostPortLabel}">
+                        <form:widget>
+                            <form:NumberField ui:field="port" allowBlank="false"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
 
-                    <container:child>
-                        <form:FieldLabel text="{messages.passwordLabel}">
-                            <form:widget>
-                                <form:PasswordField ui:field="password"/>
-                            </form:widget>
-                        </form:FieldLabel>
-                    </container:child>
-                </container:VerticalLayoutContainer>
-            </form:FieldSet>
-            <g:HTMLPanel addStyleNames="{res.connectionWindow.buttonsAlign}">
-                <button:TextButton text="{messages.cancelButtonText}" ui:field="cancelButton"/>
-                <button:TextButton text="{messages.connectButtonText}" ui:field="connectButton"/>
-            </g:HTMLPanel>
-        </g:HTMLPanel>
+                <container:child layoutData="{verticalLayoutData}">
+                    <form:FieldLabel text="{messages.loginLabel}">
+                        <form:widget>
+                            <form:TextField ui:field="login"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child layoutData="{verticalLayoutData}">
+                    <form:FieldLabel text="{messages.passwordLabel}">
+                        <form:widget>
+                            <form:PasswordField ui:field="password"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+            </container:VerticalLayoutContainer>
+        </form:FieldSet>
+
+        <gxt:button>
+            <button:TextButton text="{messages.cancelButtonText}" ui:field="cancelButton"/>
+        </gxt:button>
+        <gxt:button>
+            <button:TextButton text="{messages.connectButtonText}" ui:field="connectButton"/>
+        </gxt:button>
+
+
     </gxt:Window>
 
 </ui:UiBinder>

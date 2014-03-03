@@ -3,7 +3,6 @@
              xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
     <ui:with field="icons" type="org.jwebconsole.client.bundle.AppIcons"/>
 

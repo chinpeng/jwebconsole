@@ -15,6 +15,7 @@ import com.sencha.gxt.data.shared.IconProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
+import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.host.HostConnection;
@@ -38,7 +39,7 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     @UiField
     Tree<HostConnection, String> tree;
     @UiField
-    ContentPanel panel;
+    FramedPanel panel;
 
     @Inject
     AvailableHostsViewImpl(Binder uiBinder, AppResources appResources) {

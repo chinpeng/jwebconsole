@@ -5,17 +5,16 @@
              xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
              xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container">
 
-    <ui:with field="res" type="org.jwebconsole.client.bundle.AppStyles"/>
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store"/>
     <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider"/>
 
 
-    <gxt:ContentPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true">
+    <gxt:FramedPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true">
         <row:FlowLayoutContainer scrollMode="AUTOY">
             <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" deferHeight="true"/>
         </row:FlowLayoutContainer>
-    </gxt:ContentPanel>
+    </gxt:FramedPanel>
 
 </ui:UiBinder>
