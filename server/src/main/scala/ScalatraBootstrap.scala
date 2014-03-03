@@ -8,10 +8,11 @@ import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
 import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
+import org.jwebconsole.server.readmodel.threads.info.{ThreadInfoViewActor, ThreadInfoDao}
 import org.jwebconsole.server.servlet.HostServlet
-import org.jwebconsole.server.servlet.thread.ThreadCountServlet
+import org.jwebconsole.server.servlet.thread.{ThreadInfoServlet, ThreadCountServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
-import org.scalatra.LifeCycle
+import org.scalatra.{Handler, LifeCycle}
 import scala.slick.driver.H2Driver.simple._
 
 class ScalatraBootstrap extends LifeCycle {
@@ -37,22 +38,32 @@ class ScalatraBootstrap extends LifeCycle {
     system.eventStream.subscribe(readModel, classOf[HostChangedEvent])
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
     context.mount(new ThreadCountServlet(system, threadDataView), "/thread/count/*")
+    context.mount(createThreadInfoServlet(system), "/thread/info/*")
   }
 
-  def initThreadReadModel(system: ActorSystem): ActorRef = {
+  private def initThreadReadModel(system: ActorSystem): ActorRef = {
     val dao = new ThreadCountDao(db)
     val threadDataView = system.actorOf(Props(new ThreadCountViewActor(dao)))
     system.eventStream.subscribe(threadDataView, classOf[HostDataChangedEvent])
     threadDataView
   }
 
-  def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef): ActorRef = {
+  private def createWorkerProducer(system: ActorSystem, hostCommandHandler: ActorRef): ActorRef = {
     val hostWorkerProducer = system.actorOf(Props(new HostWorkerProducerActor(hostCommandHandler, new JMXConnectionFactory())))
     system.eventStream.subscribe(hostWorkerProducer, classOf[AvailableHostsList])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostParametersChangedEvent])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostDeletedEvent])
     system.eventStream.subscribe(hostWorkerProducer, classOf[HostCreatedEvent])
     hostWorkerProducer
+  }
+
+  private def createThreadInfoServlet(system: ActorSystem): Handler = {
+    val dao = new ThreadInfoDao(db)
+    val threadInfoViewActor = system.actorOf(Props(new ThreadInfoViewActor(dao)))
+    system.eventStream.subscribe(threadInfoViewActor, classOf[HostDeletedEvent])
+    system.eventStream.subscribe(threadInfoViewActor, classOf[HostDataChangedEvent])
+    val servlet = new ThreadInfoServlet(system, threadInfoViewActor)
+    servlet
   }
 
 }

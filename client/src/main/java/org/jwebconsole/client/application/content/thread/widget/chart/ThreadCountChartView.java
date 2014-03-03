@@ -2,10 +2,9 @@ package org.jwebconsole.client.application.content.thread.widget.chart;
 
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 
 import java.util.Date;
-import java.util.List;
 
 public interface ThreadCountChartView extends View, HasUiHandlers<ThreadCountChartUiHandlers> {
 

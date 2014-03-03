@@ -7,8 +7,8 @@ import org.jwebconsole.client.application.content.thread.widget.chart.util.AxisB
 import org.jwebconsole.client.application.content.thread.widget.chart.util.DateAxisBoundCounter;
 import org.jwebconsole.client.application.content.thread.widget.chart.util.DefaultValuesFiller;
 import org.jwebconsole.client.bundle.AppResources;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
-import org.jwebconsole.client.model.thread.ThreadCountListResponse;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountListResponse;
 import org.jwebconsole.client.service.AppCallback;
 import org.jwebconsole.client.service.ServiceFactory;
 import org.jwebconsole.client.service.SuccessCallback;
@@ -44,7 +44,7 @@ public class ThreadCountChartPresenterFacade {
     }
 
     public void getLastFifteenThreadInfoRows(String hostId, MethodCallback<ThreadCountListResponse> callback) {
-        serviceFactory.getThreadService().getLastNumberOfThreadInfo(DEFAULT_QUERY_ROW_COUNT, hostId, callback);
+        serviceFactory.getThreadService().getLastNumberOfThreadCount(DEFAULT_QUERY_ROW_COUNT, hostId, callback);
     }
 
     public String getLoadingMessage() {
@@ -63,7 +63,7 @@ public class ThreadCountChartPresenterFacade {
         this.timer = new Timer() {
             @Override
             public void run() {
-                serviceFactory.getThreadService().getLastNumberOfThreadInfo(ONE_QUERY_ROW_COUNT, hostId, new AppCallback<ThreadCountListResponse>() {
+                serviceFactory.getThreadService().getLastNumberOfThreadCount(ONE_QUERY_ROW_COUNT, hostId, new AppCallback<ThreadCountListResponse>() {
                     @Override
                     public void onSuccess(ThreadCountListResponse response) {
                         if (response.getBody() != null && !response.getBody().isEmpty()) {

@@ -2,8 +2,7 @@ package org.jwebconsole.client.application.content.thread.widget.chart.model;
 
 import com.google.gwt.editor.client.Editor;
 import org.junit.Test;
-import org.jwebconsole.client.application.content.thread.widget.chart.model.ThreadCountEntityPropertyAccessor;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 import org.mockito.Mockito;
 
 import java.lang.annotation.Annotation;

@@ -1,7 +1,7 @@
 package org.jwebconsole.client.application.content.thread.widget.chart.util;
 
 import org.junit.Test;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;

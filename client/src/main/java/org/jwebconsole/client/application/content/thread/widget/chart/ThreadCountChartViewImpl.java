@@ -1,28 +1,21 @@
 package org.jwebconsole.client.application.content.thread.widget.chart;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.chart.client.chart.Chart;
 import com.sencha.gxt.chart.client.chart.Legend;
-import com.sencha.gxt.chart.client.chart.axis.CategoryAxis;
 import com.sencha.gxt.chart.client.chart.axis.NumericAxis;
 import com.sencha.gxt.chart.client.chart.axis.TimeAxis;
 import com.sencha.gxt.chart.client.chart.series.LineSeries;
-import com.sencha.gxt.chart.client.draw.Color;
 import com.sencha.gxt.chart.client.draw.path.PathSprite;
 import com.sencha.gxt.chart.client.draw.sprite.Sprite;
 import com.sencha.gxt.chart.client.draw.sprite.TextSprite;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.DateAxisConstants;
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.NumberAxisConstants;
@@ -30,11 +23,10 @@ import org.jwebconsole.client.application.content.thread.widget.chart.constants.
 import org.jwebconsole.client.application.content.thread.widget.chart.constants.ThreadCountLineConstants;
 import org.jwebconsole.client.application.content.thread.widget.chart.model.ThreadCountEntityPropertyAccessor;
 import org.jwebconsole.client.bundle.AppResources;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 
 import javax.inject.Inject;
 import java.util.Date;
-import java.util.List;
 
 public class ThreadCountChartViewImpl extends ViewWithUiHandlers<ThreadCountChartUiHandlers> implements ThreadCountChartView {
 

@@ -1,4 +1,4 @@
-package org.jwebconsole.client.model.thread;
+package org.jwebconsole.client.model.thread.count;
 
 import org.jwebconsole.client.model.base.BaseResponse;
 

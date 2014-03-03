@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import org.jwebconsole.client.model.host.HostConnection;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
-import org.jwebconsole.client.model.thread.ThreadCountListResponse;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountListResponse;
 import org.jwebconsole.client.service.AppCallback;
 import org.jwebconsole.client.service.SuccessCallback;
 

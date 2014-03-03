@@ -8,13 +8,20 @@ public class ServiceFactory {
     private HostService hostService;
 
     @Inject
-    private ThreadService threadService;
+    private ThreadCountService threadService;
+
+    @Inject
+    private ThreadInfoService threadInfoService;
 
     public HostService getHostService() {
         return hostService;
     }
 
-    public ThreadService getThreadService() {
+    public ThreadCountService getThreadService() {
         return threadService;
+    }
+
+    public ThreadInfoService getThreadInfoService() {
+        return threadInfoService;
     }
 }

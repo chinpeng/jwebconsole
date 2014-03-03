@@ -4,7 +4,7 @@ import com.google.gwt.editor.client.Editor;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 
 import java.util.Date;
 

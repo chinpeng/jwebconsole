@@ -1,6 +1,6 @@
 package org.jwebconsole.client.application.content.thread.widget.chart.util;
 
-import org.jwebconsole.client.model.thread.ThreadCountEntity;
+import org.jwebconsole.client.model.thread.count.ThreadCountEntity;
 
 import java.util.Date;
 import java.util.List;
