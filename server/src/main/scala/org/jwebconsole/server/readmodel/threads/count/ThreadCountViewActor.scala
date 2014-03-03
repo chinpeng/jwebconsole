@@ -22,7 +22,7 @@ class ThreadCountViewActor(val dao: ThreadCountDao) extends Actor with ActorLogg
       dao.deleteHostRecord(hostId)
   }
 
-  def persistAsync(event: HostDataChangedEvent): Unit = {
+  def persistAsync(event: AppEvent): Unit = {
     futurePersist(persistReplay(event))
   }
 
@@ -40,11 +40,12 @@ class ThreadCountViewActor(val dao: ThreadCountDao) extends Actor with ActorLogg
   def receive: Receive = {
     case ev: HostDataChangedEvent =>
       persistAsync(ev)
+    case ev: HostDeletedEvent =>
+      persistAsync(ev)
     case ThreadDataRequest(hostId) =>
       makeResponse(dao.getAllForHost(hostId))
     case ThreadDataLastNrRequest(hostId, number) =>
       makeResponse(dao.getLastNumberOfEntities(hostId, number))
-
   }
 
 }
