@@ -11,10 +11,9 @@
 
     <!-- GXT Theme -->
     <!-- <inherits name='com.sencha.gxt.theme.blue.Blue'/> -->
-    <inherits name='com.sencha.gxt.theme.gray.Gray' />
+    <inherits name='com.sencha.gxt.theme.neptune.Theme' />
 
     <!-- GWTP -->
-    <inherits name='com.gwtplatform.dispatch.Dispatch' />
     <inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
     <inherits name="com.sencha.gxt.chart.Chart"/>
