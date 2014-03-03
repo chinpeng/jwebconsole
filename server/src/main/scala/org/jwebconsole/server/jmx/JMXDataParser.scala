@@ -4,8 +4,12 @@ import org.jwebconsole.server.context.host.{ThreadData, HostData}
 import javax.management.remote.JMXConnector
 import org.jwebconsole.server.jmx.converter.ThreadDataConverter
 import java.util.Date
+import scala.util.Try
+import org.slf4j.LoggerFactory
 
 class JMXDataParser {
+
+  private val log = LoggerFactory.getLogger(classOf[JMXConnection])
 
   val converters = List(
     new ThreadDataConverter()
@@ -15,7 +19,9 @@ class JMXDataParser {
     var hostData = HostData(connected = true)
     converters.foreach {
       conv =>
-        hostData = conv.fromConnection(connection, hostData)
+        val converted = Try(conv.fromConnection(connection, hostData))
+        converted.map(hostData = _)
+        converted.failed.map(err => log.error("Unable to parse data", err))
     }
     hostData
   }

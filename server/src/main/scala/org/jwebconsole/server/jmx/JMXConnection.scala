@@ -32,8 +32,7 @@ class JMXConnection(private val host: String,
       connector.close()
       result
     }
-    if (res.isFailure)
-      log.debug("Unable to connect to host: $host:$port")
+    res.failed.map { ex=> log.error("Unable to get data", ex) }
     res
   }
 }
