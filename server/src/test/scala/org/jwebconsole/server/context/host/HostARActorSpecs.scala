@@ -131,8 +131,11 @@ class HostARActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeCo
     "publish host data changed event" in new mocks {
       system.eventStream.subscribe(eventProbeRef, classOf[HostDataChangedEvent])
       processor ! WithSender(probeRef, CreateHostCommand(id, name, port))
-      processor ! ChangeHostDataCommand(id, HostData())
-      eventProbe.expectMsg(HostDataChangedEvent(id, HostData()))
+      val data = HostData()
+      processor ! ChangeHostDataCommand(id, data)
+      eventProbe.expectMsgPF() {
+        case HostDataChangedEvent(resId, resHostData) if resId == id && resHostData == data => true
+      }
     }
   }
 

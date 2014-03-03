@@ -67,7 +67,7 @@ class ThreadInfoDao(private val db: Database) extends ReplayingDao {
   }
 
 
-  def recordsForHostId(hostId: String): Query[ThreadNameTable, ThreadNameRow] = {
+  private def recordsForHostId(hostId: String): Query[ThreadNameTable, ThreadNameRow] = {
     for (record <- threadNameQuery if record.hostId === hostId) yield record
   }
 }
