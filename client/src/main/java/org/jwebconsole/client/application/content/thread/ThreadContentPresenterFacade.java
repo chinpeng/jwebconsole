@@ -10,6 +10,7 @@ import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.event.info.PrintInfoEvent;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
+import org.jwebconsole.client.model.summary.SummaryResponse;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.ServiceFactory;
@@ -47,6 +48,10 @@ public class ThreadContentPresenterFacade {
 
     public void makeThreadInfoRequest(String hostId, MethodCallback<ThreadInfoListResponse> callback) {
         serviceFactory.getThreadInfoService().getThreadInfo(hostId, callback);
+    }
+
+    public void makeSummaryRequest(String hostId, MethodCallback<SummaryResponse> callback) {
+        serviceFactory.getSummaryService().getSummary(hostId, callback);
     }
 
 }

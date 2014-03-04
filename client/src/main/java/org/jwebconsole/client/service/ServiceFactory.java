@@ -13,6 +13,9 @@ public class ServiceFactory {
     @Inject
     private ThreadInfoService threadInfoService;
 
+    @Inject
+    private SummaryService summaryService;
+
     public HostService getHostService() {
         return hostService;
     }
@@ -23,5 +26,9 @@ public class ServiceFactory {
 
     public ThreadInfoService getThreadInfoService() {
         return threadInfoService;
+    }
+
+    public SummaryService getSummaryService() {
+        return summaryService;
     }
 }

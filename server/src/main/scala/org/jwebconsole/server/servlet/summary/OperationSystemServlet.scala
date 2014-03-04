@@ -11,7 +11,7 @@ import org.jwebconsole.server.readmodel.summary.os.OperationSystemInfoRequest
  * Time: 18:12
  */
 class OperationSystemServlet(val system: ActorSystem, operationSystemInfoActor: ActorRef) extends BaseServlet {
-  get("/all/:hostId") {
+  get("/get/:hostId") {
     val hostId = params("hostId")
     val req = OperationSystemInfoRequest(hostId)
     executeAsync(operationSystemInfoActor ? req)

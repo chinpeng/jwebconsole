@@ -14,12 +14,12 @@ class OperationSystemDao(private val db: Database) extends ReplayingDao {
 
   val operationSystemTableName = "operating_system_table"
 
-  case class OperationSystemRow(id: Int = -1, architecture: String, availableProcessors: Int,
+  case class OperationSystemRow(hostId: String, architecture: String, availableProcessors: Int,
                                 systemLoadAverage: Double, name: String, version: String)
 
   case class OperationSystemTable(tag: Tag) extends Table[OperationSystemRow](tag, operationSystemTableName) {
 
-    def hostId = column[Int]("hostId", O.PrimaryKey, O.AutoInc)
+    def hostId = column[String]("hostId", O.PrimaryKey)
 
     def architecture = column[String]("architecture")
 
@@ -57,7 +57,7 @@ class OperationSystemDao(private val db: Database) extends ReplayingDao {
     }
   }
 
-  def refreshOperrationSystemInfo(hostId: String, data: OperationSystemData): Unit = {
+  def refreshOperationSystemInfo(hostId: String, data: OperationSystemData): Unit = {
     db withLockedSession {
       implicit session =>
         deleteOperationSystemInfo(hostId)

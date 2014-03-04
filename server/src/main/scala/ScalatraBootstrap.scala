@@ -41,6 +41,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
     context.mount(new ThreadCountServlet(system, threadDataView), "/thread/count/*")
     context.mount(createThreadInfoServlet(system), "/thread/info/*")
+    context.mount(createOperationSystemInfoServlet(system), "/summary/*")
   }
 
   private def initThreadReadModel(system: ActorSystem): ActorRef = {
@@ -71,9 +72,8 @@ class ScalatraBootstrap extends LifeCycle {
   private def createOperationSystemInfoServlet(system: ActorSystem): Handler = {
     val dao = new OperationSystemDao(db)
     val operationSystemViewActor = system.actorOf(Props(new OperationSystemViewActor(dao)))
-    system.eventStream.subscribe(operationSystemViewActor, classOf[HostCreatedEvent])
+    system.eventStream.subscribe(operationSystemViewActor, classOf[HostDataChangedEvent])
     system.eventStream.subscribe(operationSystemViewActor, classOf[HostDeletedEvent])
-    system.eventStream.subscribe(operationSystemViewActor, classOf[HostParametersChangedEvent])
     val servlet = new OperationSystemServlet(system, operationSystemViewActor)
     servlet
   }
