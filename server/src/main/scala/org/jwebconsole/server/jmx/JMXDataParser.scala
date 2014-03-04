@@ -29,7 +29,7 @@ object JMXDataParser {
 
   val converters = List(
     new ThreadDataConverter(),
-    new OperationSystemDataConverter()
+    new OperatingSystemDataConverter()
   )
 
   def apply(): JMXDataParser = {

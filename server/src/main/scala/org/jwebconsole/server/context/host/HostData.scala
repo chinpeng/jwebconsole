@@ -6,7 +6,7 @@ case class HostData(
                      connected: Boolean = false,
                      time: Date = new Date(),
                      threadData: ThreadData = ThreadData(),
-                     osData: OperationSystemData = OperationSystemData()) {}
+                     osData: OperatingSystemData = OperatingSystemData()) {}
 
 case class ThreadData(threadCount: Int = 0,
                       peakThreadCount: Int = 0,
@@ -19,7 +19,7 @@ case class AvailableThread(id: Long = 0,
                            totalWaited: Long = 0,
                            stackTrace: List[String] = List())
 
-case class OperationSystemData(architecture: String = "",
+case class OperatingSystemData(architecture: String = "",
                                availableProcessors: Int = 0,
                                systemLoadAverage: Double = 0,
                                name: String = "",

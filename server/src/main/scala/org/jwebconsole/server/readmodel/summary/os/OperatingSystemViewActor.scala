@@ -13,7 +13,7 @@ import org.jwebconsole.server.util.ErrorMessages
  * Date: 04.03.14
  * Time: 11:50
  */
-class OperationSystemViewActor(val dao: OperationSystemDao) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
+class OperatingSystemViewActor(val dao: OperatingSystemDao) extends Actor with ActorLogging with Stash with ReadModelReplayingActor {
   def filterFunc: PartialFunction[AppEvent, Boolean] = {
     case ev: HostDataChangedEvent => true
     case ev: HostDeletedEvent => true
@@ -21,18 +21,18 @@ class OperationSystemViewActor(val dao: OperationSystemDao) extends Actor with A
   }
 
   def afterRecover(): Unit = {
-    log.info("OperationSystemView recovered")
+    log.info("OperatingSystemView recovered")
   }
 
   def persistReplay(ev: AppEvent): Unit = ev match {
-    case ev: HostDataChangedEvent => dao.refreshOperationSystemInfo(ev.id, ev.data.osData)
-    case ev: HostDeletedEvent => dao.deleteOperationSystemInfo(ev.id)
+    case ev: HostDataChangedEvent => dao.refreshOperatingSystemInfo(ev.id, ev.data.osData)
+    case ev: HostDeletedEvent => dao.deleteOperatingSystemInfo(ev.id)
   }
 
   def receive: Receive = {
     case ev: HostDataChangedEvent => futurePersist(persistReplay(ev))
     case ev: HostDeletedEvent => futurePersist(persistReplay(ev))
-    case req: OperationSystemInfoRequest => makeResponse(dao.getOperationSystemInfo(req.hostId))
+    case req: OperatingSystemInfoRequest => makeResponse(dao.getOperatingSystemInfo(req.hostId))
   }
 
   def makeResponse[T](daoAction: => T): Unit = {
@@ -48,4 +48,4 @@ class OperationSystemViewActor(val dao: OperationSystemDao) extends Actor with A
 
 }
 
-case class OperationSystemInfoRequest(hostId: String)
+case class OperatingSystemInfoRequest(hostId: String)

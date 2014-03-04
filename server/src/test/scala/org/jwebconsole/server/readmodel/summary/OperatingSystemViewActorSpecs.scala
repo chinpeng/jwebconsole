@@ -6,7 +6,7 @@ import org.specs2.time.NoTimeConversions
 import org.jwebconsole.server.util.{ErrorMessages, AkkaTestkitSupport}
 import akka.testkit.{TestActorRef, TestProbe}
 import akka.actor.Props
-import org.jwebconsole.server.readmodel.summary.os.{OperationSystemInfoRequest, OperationSystemViewActor, OperationSystemDao}
+import org.jwebconsole.server.readmodel.summary.os.{OperatingSystemInfoRequest, OperatingSystemViewActor, OperatingSystemDao}
 import org.jwebconsole.server.context.host._
 import org.jwebconsole.server.context.host.HostDataChangedEvent
 import org.jwebconsole.server.context.host.HostParametersChangedEvent
@@ -19,15 +19,15 @@ import org.jwebconsole.server.context.common.ResponseMessage
  * Date: 04.03.14
  * Time: 20:12
  */
-class OperationSystemViewActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
+class OperatingSystemViewActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
   sequential
 
   trait mocks extends AkkaTestkitSupport {
-    val dao = mock[OperationSystemDao]
+    val dao = mock[OperatingSystemDao]
     val probe = TestProbe()
     val probeRef = probe.ref
     dao.exists returns true
-    val actor: TestActorRef[OperationSystemViewActor] = TestActorRef(Props(new OperationSystemViewActor(dao)))
+    val actor: TestActorRef[OperatingSystemViewActor] = TestActorRef(Props(new OperatingSystemViewActor(dao)))
     val source = actor.underlyingActor
     val hostId = "test-id"
     val hostName = "localhost"
@@ -38,53 +38,53 @@ class OperationSystemViewActorSpecs extends SpecificationWithJUnit with Mockito 
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "replay Host deleted Event" in new mocks {
       source.filterFunc(HostDeletedEvent(hostId)) must beTrue
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "replay Data changed Event" in new mocks {
       source.filterFunc(HostDataChangedEvent(hostId, HostData())) must beTrue
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "not replay unknown events" in new mocks {
       source.filterFunc(HostParametersChangedEvent(hostId, hostName, hostPort)) must beFalse
       source.filterFunc(HostCreatedEvent(hostId, hostName, hostPort)) must beFalse
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "fail silently on DAO error" in new mocks {
-      dao.deleteOperationSystemInfo(anyString) throws new RuntimeException()
+      dao.deleteOperatingSystemInfo(anyString) throws new RuntimeException()
       actor ! HostDeletedEvent(hostId)
       success
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "persist host deleted event" in new mocks {
       actor ! HostDeletedEvent(hostId)
       waitForFutureToComplete()
-      there was one(dao).deleteOperationSystemInfo(anyString)
+      there was one(dao).deleteOperatingSystemInfo(anyString)
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "persist host data changed event" in new mocks {
       actor ! HostDataChangedEvent(hostId, HostData())
       waitForFutureToComplete()
-      there was one(dao).refreshOperationSystemInfo(anyString, any[OperationSystemData])
+      there was one(dao).refreshOperatingSystemInfo(anyString, any[OperatingSystemData])
     }
   }
 
-  "Operation System View actor" should {
+  "Operating System View actor" should {
     "respond with error when DAO fails" in new mocks {
-      val req = OperationSystemInfoRequest(hostId)
-      dao.getOperationSystemInfo(hostId) throws new RuntimeException()
+      val req = OperatingSystemInfoRequest(hostId)
+      dao.getOperatingSystemInfo(hostId) throws new RuntimeException()
       actor ! req
       waitForFutureToComplete()
       expectMsg(ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage)))

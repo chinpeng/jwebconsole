@@ -7,11 +7,11 @@ import org.jwebconsole.server.context.host.HostParametersChangedEvent
 import org.jwebconsole.server.context.common.{AppEvent, GlobalEventStore}
 import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
-import org.jwebconsole.server.readmodel.summary.os.{OperationSystemViewActor, OperationSystemDao}
+import org.jwebconsole.server.readmodel.summary.os.{OperatingSystemViewActor, OperatingSystemDao}
 import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
 import org.jwebconsole.server.readmodel.threads.info.{ThreadInfoViewActor, ThreadInfoDao}
 import org.jwebconsole.server.servlet.HostServlet
-import org.jwebconsole.server.servlet.summary.OperationSystemServlet
+import org.jwebconsole.server.servlet.summary.OperatingSystemServlet
 import org.jwebconsole.server.servlet.thread.{ThreadInfoServlet, ThreadCountServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.{Handler, LifeCycle}
@@ -41,7 +41,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new HostServlet(system, readModel, hostCommandHandler), "/hosts/*")
     context.mount(new ThreadCountServlet(system, threadDataView), "/thread/count/*")
     context.mount(createThreadInfoServlet(system), "/thread/info/*")
-    context.mount(createOperationSystemInfoServlet(system), "/summary/*")
+    context.mount(createOperatingSystemInfoServlet(system), "/summary/*")
   }
 
   private def initThreadReadModel(system: ActorSystem): ActorRef = {
@@ -69,12 +69,12 @@ class ScalatraBootstrap extends LifeCycle {
     servlet
   }
 
-  private def createOperationSystemInfoServlet(system: ActorSystem): Handler = {
-    val dao = new OperationSystemDao(db)
-    val operationSystemViewActor = system.actorOf(Props(new OperationSystemViewActor(dao)))
-    system.eventStream.subscribe(operationSystemViewActor, classOf[HostDataChangedEvent])
-    system.eventStream.subscribe(operationSystemViewActor, classOf[HostDeletedEvent])
-    val servlet = new OperationSystemServlet(system, operationSystemViewActor)
+  private def createOperatingSystemInfoServlet(system: ActorSystem): Handler = {
+    val dao = new OperatingSystemDao(db)
+    val operatingSystemViewActor = system.actorOf(Props(new OperatingSystemViewActor(dao)))
+    system.eventStream.subscribe(operatingSystemViewActor, classOf[HostDataChangedEvent])
+    system.eventStream.subscribe(operatingSystemViewActor, classOf[HostDeletedEvent])
+    val servlet = new OperatingSystemServlet(system, operatingSystemViewActor)
     servlet
   }
 

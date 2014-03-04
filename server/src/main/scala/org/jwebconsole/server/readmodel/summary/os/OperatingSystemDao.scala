@@ -3,21 +3,21 @@ package org.jwebconsole.server.readmodel.summary.os
 import org.jwebconsole.server.readmodel.common.ReplayingDao
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
-import org.jwebconsole.server.context.host.OperationSystemData
+import org.jwebconsole.server.context.host.OperatingSystemData
 
 /**
  * Created by amednikov
  * Date: 04.03.14
  * Time: 11:50
  */
-class OperationSystemDao(private val db: Database) extends ReplayingDao {
+class OperatingSystemDao(private val db: Database) extends ReplayingDao {
 
-  val operationSystemTableName = "operating_system_table"
+  val operatingSystemTableName = "operating_system_table"
 
-  case class OperationSystemRow(hostId: String, architecture: String, availableProcessors: Int,
+  case class OperatingSystemRow(hostId: String, architecture: String, availableProcessors: Int,
                                 systemLoadAverage: Double, name: String, version: String)
 
-  case class OperationSystemTable(tag: Tag) extends Table[OperationSystemRow](tag, operationSystemTableName) {
+  case class OperatingSystemTable(tag: Tag) extends Table[OperatingSystemRow](tag, operatingSystemTableName) {
 
     def hostId = column[String]("hostId", O.PrimaryKey)
 
@@ -31,37 +31,37 @@ class OperationSystemDao(private val db: Database) extends ReplayingDao {
 
     def version = column[String]("version")
 
-    def * = (hostId, architecture, availableProcessors, systemLoadAverage, name, version) <> (OperationSystemRow.tupled, OperationSystemRow.unapply)
+    def * = (hostId, architecture, availableProcessors, systemLoadAverage, name, version) <> (OperatingSystemRow.tupled, OperatingSystemRow.unapply)
 
   }
 
-  val operationSystemQuery = TableQuery[OperationSystemTable]
+  val operatingSystemQuery = TableQuery[OperatingSystemTable]
 
   def createTable(): Unit = {
     db withLockedSession {
       implicit session =>
-        operationSystemQuery.ddl.create
+        operatingSystemQuery.ddl.create
     }
   }
 
   override def exists(): Boolean = {
     db withLockedSession {
       implicit session =>
-        !MTable.getTables(operationSystemTableName).list().isEmpty
+        !MTable.getTables(operatingSystemTableName).list().isEmpty
     }
   }
 
-  def deleteOperationSystemInfo(hostId: String): Unit = {
+  def deleteOperatingSystemInfo(hostId: String): Unit = {
     db withLockedSession {
       implicit session => recordsForHost(hostId).delete
     }
   }
 
-  def refreshOperationSystemInfo(hostId: String, data: OperationSystemData): Unit = {
+  def refreshOperatingSystemInfo(hostId: String, data: OperatingSystemData): Unit = {
     db withLockedSession {
       implicit session =>
-        deleteOperationSystemInfo(hostId)
-        operationSystemQuery += OperationSystemRow(hostId = hostId,
+        deleteOperatingSystemInfo(hostId)
+        operatingSystemQuery += OperatingSystemRow(hostId = hostId,
                                                    architecture = data.architecture,
                                                    systemLoadAverage = data.systemLoadAverage,
                                                    availableProcessors = data.availableProcessors,
@@ -70,13 +70,13 @@ class OperationSystemDao(private val db: Database) extends ReplayingDao {
     }
   }
 
-  def getOperationSystemInfo(hostId: String): OperationSystemRow = {
+  def getOperatingSystemInfo(hostId: String): OperatingSystemRow = {
     db withLockedSession {
       implicit session => recordsForHost(hostId).list().headOption.get
     }
   }
 
-  private def recordsForHost(hostId: String): Query[OperationSystemTable, OperationSystemRow] = {
-    for (record <- operationSystemQuery; if record.hostId === hostId) yield record
+  private def recordsForHost(hostId: String): Query[OperatingSystemTable, OperatingSystemRow] = {
+    for (record <- operatingSystemQuery; if record.hostId === hostId) yield record
   }
 }
