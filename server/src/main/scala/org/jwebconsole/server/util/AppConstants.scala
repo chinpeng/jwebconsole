@@ -5,6 +5,7 @@ import scala.concurrent.duration._
 object AppConstants {
 
   lazy val DefaultTimeout = 4.seconds
-  val GlobalEventStoreProcessorId = "global-event-store"
+  lazy val GlobalEventStoreProcessorId = "global-event-store"
+  lazy val HostWorkerPollingInterval = 20.seconds
 
 }

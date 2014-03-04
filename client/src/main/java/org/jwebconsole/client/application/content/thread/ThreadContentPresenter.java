@@ -1,6 +1,5 @@
 package org.jwebconsole.client.application.content.thread;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -48,7 +47,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
         facade.makeThreadInfoRequest(connection.getId(), new AppCallback<ThreadInfoListResponse>() {
             @Override
             public void onSuccess(ThreadInfoListResponse response) {
-
+                getView().fillThreads(response.getBody());
             }
         });
     }

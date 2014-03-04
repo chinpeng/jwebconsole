@@ -2,18 +2,14 @@ package org.jwebconsole.server.jmx
 
 import org.jwebconsole.server.context.host.{ThreadData, HostData}
 import javax.management.remote.JMXConnector
-import org.jwebconsole.server.jmx.converter.ThreadDataConverter
+import org.jwebconsole.server.jmx.converter.{JMXDataConverter, ThreadDataConverter}
 import java.util.Date
 import scala.util.Try
 import org.slf4j.LoggerFactory
 
-class JMXDataParser {
+class JMXDataParser(val converters: List[JMXDataConverter]) {
 
-  private val log = LoggerFactory.getLogger(classOf[JMXConnection])
-
-  val converters = List(
-    new ThreadDataConverter()
-  )
+  private val log = LoggerFactory.getLogger(classOf[JMXDataParser])
 
   def parse(connection: JMXConnector): HostData = {
     var hostData = HostData(connected = true)
@@ -31,8 +27,12 @@ class JMXDataParser {
 
 object JMXDataParser {
 
+  val converters = List(
+    new ThreadDataConverter()
+  )
+
   def apply(): JMXDataParser = {
-    new JMXDataParser()
+    new JMXDataParser(converters)
   }
 
 }

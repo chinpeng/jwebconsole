@@ -3,17 +3,14 @@ package org.jwebconsole.server.readmodel.common
 import akka.actor._
 import org.jwebconsole.server.context.common.{ReplayFinished, AppEvent, EventStoreReplayingActor}
 import scala.concurrent.Future
-import scala.util.{Try, Failure, Success}
+import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
-import scala.Some
 
 trait ReadModelReplayingActor {
   this: Actor with ActorLogging with Stash =>
 
   implicit val executor = context.system.dispatcher
-
-  var eventStoreActor:Option[ActorRef] = None
 
   override def preStart() {
     Try(tryRecover()) match {
@@ -25,7 +22,7 @@ trait ReadModelReplayingActor {
   }
 
 
-  def tryRecover():Unit = {
+  def tryRecover(): Unit = {
     if (!dao.exists()) {
       context.become(replayingState)
       dao.createTable()
@@ -43,7 +40,6 @@ trait ReadModelReplayingActor {
       }
     case ReplayFinished =>
       context.unbecome()
-      eventStoreActor.map(context.stop)
       unstashAll()
       afterRecover()
       log.debug("Finished replaying state, back to normal")
@@ -61,8 +57,7 @@ trait ReadModelReplayingActor {
   }
 
   def makeReplay(): Unit = {
-    val actor = context.actorOf(Props(new EventStoreReplayingActor(filterFunc, self)))
-    eventStoreActor = Some(actor)
+    context.actorOf(Props(new EventStoreReplayingActor(filterFunc, self)))
   }
 
   def dao: ReplayingDao

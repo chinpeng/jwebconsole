@@ -24,14 +24,15 @@ class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], recei
 
   def receiveCommand: Receive = {
     case CheckReplayStatus if !cancel.isCancelled =>
-      if (recoveryFinished) {
+      if (!recoveryRunning) {
         receiver ! ReplayFinished
         cancel.cancel()
+        context.stop(self)
       }
     case CheckReplayStatus if cancel.isCancelled =>
       log.info("Trying to cancel already cancelled timer")
-    case _ =>
-      log.warning("Received unhandled message for Event Store Replaying actor")
+    case other =>
+      log.warning("Received unhandled message for Event Store Replaying actor: " + other)
   }
 
   case object CheckReplayStatus

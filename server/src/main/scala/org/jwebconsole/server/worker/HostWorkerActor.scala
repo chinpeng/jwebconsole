@@ -8,11 +8,13 @@ import scala.util.{Failure, Success, Try}
 import scala.concurrent.Future
 import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 import java.util.Date
+import org.jwebconsole.server.util.AppConstants
 
 class HostWorkerActor(@volatile var host: SimpleHostView,
                       commandHandler: ActorRef,
                       connectionFactory: JMXConnectionFactory,
-                      val delay: FiniteDuration = 10.seconds) extends Actor with ActorLogging {
+                      val delay: FiniteDuration = AppConstants.HostWorkerPollingInterval)
+  extends Actor with ActorLogging {
 
   implicit val executor = context.system.dispatcher
 

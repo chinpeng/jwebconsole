@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
@@ -11,7 +12,15 @@
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
              field="chartPanelLayoutData">
-        <ui:attributes width="1" height=".5" margins="{chartPanelMargins}"/>
+        <ui:attributes width="1" height=".48" margins="{chartPanelMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.data.shared.ListStore" field="store"/>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel" field="columnModel"/>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.GridView" field="gridView">
+        <ui:attributes stripeRows="true"></ui:attributes>
     </ui:with>
 
     <row:VerticalLayoutContainer>
@@ -19,6 +28,13 @@
             <gxt:FramedPanel headingText="{messages.threadCountChartHeading}" ui:field="chartPanel" collapsible="true">
 
             </gxt:FramedPanel>
+        </row:child>
+        <row:child layoutData="{chartPanelLayoutData}">
+            <gxt:ContentPanel headingText="{messages.threadInfoHeadingText}">
+                <grid:Grid ui:field="grid" store="{store}" cm="{columnModel}" view="{gridView}" borders="false"
+                           columnReordering="true"
+                           stateful="true"/>
+            </gxt:ContentPanel>
         </row:child>
     </row:VerticalLayoutContainer>
 

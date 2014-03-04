@@ -17,7 +17,7 @@ class ThreadDataConverter(private val utils: JMXConnectionUtil = new JMXConnecti
 
   private def availableThreads(threadBean: ThreadMXBean): List[AvailableThread] = {
     val ids = threadBean.getAllThreadIds
-    threadBean.getThreadInfo(ids).toList.map {
+    threadBean.getThreadInfo(ids).toList.filter(_ != null).map {
       info =>
         val id = info.getThreadId
         val name = info.getThreadName
