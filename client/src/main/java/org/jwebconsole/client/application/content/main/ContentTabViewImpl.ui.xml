@@ -1,7 +1,27 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
 
-    <g:Label text="Other" />
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="threadsConfig">
+        <ui:attributes text="Threads"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="vmSummaryConfig">
+        <ui:attributes text="VM Summary"/>
+    </ui:with>
+
+    <tabs:PlainTabPanel>
+        <tabs:child config="{threadsConfig}">
+            <container:SimpleContainer ui:field="threadPanel">
+
+            </container:SimpleContainer>
+        </tabs:child>
+
+        <tabs:child config="{vmSummaryConfig}">
+            <g:Label text="VM Summary"/>
+        </tabs:child>
+    </tabs:PlainTabPanel>
 
 </ui:UiBinder>

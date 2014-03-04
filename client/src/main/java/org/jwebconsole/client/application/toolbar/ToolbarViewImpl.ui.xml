@@ -7,9 +7,9 @@
     <ui:with field="icons" type="org.jwebconsole.client.bundle.AppIcons"/>
 
     <toolbar:ToolBar ui:field="toolbar">
-        <button:TextButton text="{messages.createConnectionToolbarButtonText}" ui:field="createConnectionButton" icon="{icons.iconAdd}"/>
-        <button:TextButton text="{messages.editConnectionToolbarButtonText}" ui:field="editConnectionButton" icon="{icons.iconEdit}"/>
-        <button:TextButton text="{messages.deleteConnectionToolbarButtonText}" ui:field="deleteConnectionButton" icon="{icons.iconDelete}"/>
+        <button:TextButton ui:field="createConnectionButton" icon="{icons.iconAdd}"/>
+        <button:TextButton ui:field="editConnectionButton" icon="{icons.iconEdit}"/>
+        <button:TextButton ui:field="deleteConnectionButton" icon="{icons.iconDelete}"/>
     </toolbar:ToolBar>
 
 </ui:UiBinder>

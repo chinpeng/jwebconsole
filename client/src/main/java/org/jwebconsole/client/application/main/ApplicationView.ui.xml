@@ -34,21 +34,28 @@
         <ui:attributes width=".15" height="1" margins="{sideMargins}"/>
     </ui:with>
 
+    <ui:with field="sideContentLayoutData" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes height="1" width="1" />
+    </ui:with>
 
     <row:Viewport>
         <gxt:FramedPanel headingText="{messages.mainWindowTitle}">
             <row:VerticalLayoutContainer borders="true">
-                <row:child layoutData="{toolBarRowData}">
-                    <row:SimpleContainer ui:field="toolbar">
-
-                    </row:SimpleContainer>
-                </row:child>
                 <row:child layoutData="{contentLayoutData}">
                     <row:HorizontalLayoutContainer>
                         <row:child layoutData="{sideLayoutData}">
-                            <row:SimpleContainer ui:field="leftPanel">
+                            <row:VerticalLayoutContainer>
+                                <row:child layoutData="{toolBarRowData}">
+                                    <row:SimpleContainer ui:field="toolbar">
 
-                            </row:SimpleContainer>
+                                    </row:SimpleContainer>
+                                </row:child>
+                                <row:child layoutData="{sideContentLayoutData}">
+                                    <row:SimpleContainer ui:field="leftPanel">
+
+                                    </row:SimpleContainer>
+                                </row:child>
+                            </row:VerticalLayoutContainer>
                         </row:child>
                         <row:child layoutData="{centerLayoutData}">
                             <row:SimpleContainer ui:field="contentPanel">

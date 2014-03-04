@@ -10,6 +10,8 @@ public class NameTokens {
 
     public static final String thread = "thread";
 
+    public static final String other = "other";
+
     public static String getHome() {
         return home;
     }
@@ -24,5 +26,9 @@ public class NameTokens {
 
     public static String getThread() {
         return thread;
+    }
+
+    public static String getOther() {
+        return other;
     }
 }

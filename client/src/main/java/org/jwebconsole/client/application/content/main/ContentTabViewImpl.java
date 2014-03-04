@@ -1,14 +1,20 @@
 package org.jwebconsole.client.application.content.main;
 
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 import javax.inject.Inject;
 
 
-public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers> implements ContentTabPresenter.MyView {
+public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers> implements ContentTabView {
+
+    @UiField
+    SimpleContainer threadPanel;
+
     interface Binder extends UiBinder<Widget, ContentTabViewImpl> {
     }
 
@@ -20,6 +26,9 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
 
     @Override
     public void setInSlot(Object slot, IsWidget content) {
-
+        if (slot == ContentTabPresenter.SLOT_THREADS) {
+            threadPanel.clear();
+            threadPanel.add(content);
+        }
     }
 }

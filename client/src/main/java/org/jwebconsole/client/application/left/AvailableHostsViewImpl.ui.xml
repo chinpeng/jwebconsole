@@ -10,7 +10,6 @@
     <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store"/>
     <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider"/>
 
-
     <gxt:FramedPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true">
         <row:FlowLayoutContainer scrollMode="AUTOY">
             <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" deferHeight="true"/>

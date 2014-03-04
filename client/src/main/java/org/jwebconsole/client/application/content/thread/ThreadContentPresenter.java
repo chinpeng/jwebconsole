@@ -6,6 +6,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
@@ -23,7 +24,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     @Inject
     public ThreadContentPresenter(EventBus eventBus, ThreadContentView view, ThreadContentProxy proxy, ThreadContentPresenterFacade facade) {
-        super(eventBus, view, proxy, ApplicationPresenter.SLOT_CONTENT_PANEL);
+        super(eventBus, view, proxy, ContentTabPresenter.SLOT_THREADS);
         this.facade = facade;
         init();
     }
