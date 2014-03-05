@@ -11,7 +11,6 @@ import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.model.host.HostConnection;
-import org.jwebconsole.client.model.summary.SummaryResponse;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.AppCallback;
@@ -40,19 +39,9 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
         if (event.getConnection() != null) {
             facade.revealThreadCountChartPresenter(this, event.getConnection());
             makeRequest(event.getConnection());
-            makeSummaryRequest(event.getConnection());
         } else {
             facade.disableChart();
         }
-    }
-
-    private void makeSummaryRequest(HostConnection connection) {
-        facade.makeSummaryRequest(connection.getId(), new AppCallback<SummaryResponse>() {
-            @Override
-            public void onSuccess(SummaryResponse response) {
-                Window.alert(response.getBody().toString());
-            }
-        });
     }
 
     private void makeRequest(HostConnection connection) {
