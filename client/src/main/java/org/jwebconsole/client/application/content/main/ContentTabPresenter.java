@@ -25,6 +25,9 @@ public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPre
     @ContentSlot
     public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_MEMORY = new GwtEvent.Type<RevealContentHandler<?>>();
 
+    @ContentSlot
+    public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_SUMMARY = new GwtEvent.Type<RevealContentHandler<?>>();
+
     private final PlaceManager placeManager;
 
     @ProxyStandard
