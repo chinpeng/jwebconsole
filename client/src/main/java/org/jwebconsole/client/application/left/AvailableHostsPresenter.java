@@ -154,7 +154,11 @@ public class AvailableHostsPresenter
 
     @Override
     public void onTreeItemSelected(HostConnection connection) {
-        facade.revealThreadContentPlace(connection.getId());
+        if (facade.isTabNameToken()) {
+            facade.revealCurrentPlaceWithHostId(connection.getId());
+        } else {
+            facade.revealThreadContentPlace(connection.getId());
+        }
     }
 
     @Override

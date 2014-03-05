@@ -4,24 +4,38 @@
              xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
 
+
+    <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
+
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="threadsConfig">
-        <ui:attributes text="Threads"/>
+        <ui:attributes text="{messages.tabThreadsHeaderText}"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="vmSummaryConfig">
-        <ui:attributes text="VM Summary"/>
+        <ui:attributes text="{messages.tabSummaryHeaderText}"/>
     </ui:with>
 
-    <tabs:TabPanel bodyBorder="true">
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="memoryConfig">
+        <ui:attributes text="{messages.tabMemoryHeaderText}"/>
+    </ui:with>
+
+    <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
+        <tabs:child config="{vmSummaryConfig}">
+            <g:Label text="{messages.tabSummaryHeaderText}"/>
+        </tabs:child>
+
+        <tabs:child config="{memoryConfig}">
+            <container:SimpleContainer ui:field="memoryPanel">
+
+            </container:SimpleContainer>
+        </tabs:child>
+
         <tabs:child config="{threadsConfig}">
             <container:SimpleContainer ui:field="threadPanel">
 
             </container:SimpleContainer>
         </tabs:child>
 
-        <tabs:child config="{vmSummaryConfig}">
-            <g:Label text="VM Summary"/>
-        </tabs:child>
     </tabs:TabPanel>
 
 </ui:UiBinder>

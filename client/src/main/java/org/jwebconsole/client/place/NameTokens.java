@@ -12,6 +12,8 @@ public class NameTokens {
 
     public static final String other = "other";
 
+    public static final String memory = "memory";
+
     public static String getHome() {
         return home;
     }
@@ -31,4 +33,11 @@ public class NameTokens {
     public static String getOther() {
         return other;
     }
+
+    public static String getMemory() {
+        return memory;
+    }
+
+
+
 }

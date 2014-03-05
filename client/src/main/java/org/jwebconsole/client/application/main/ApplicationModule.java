@@ -3,6 +3,7 @@ package org.jwebconsole.client.application.main;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import org.jwebconsole.client.application.content.home.HomeModule;
 import org.jwebconsole.client.application.content.main.ContentTabModule;
+import org.jwebconsole.client.application.content.memory.MemoryModule;
 import org.jwebconsole.client.application.content.thread.ThreadContentModule;
 import org.jwebconsole.client.application.left.AvailableHostsModule;
 import org.jwebconsole.client.application.popup.connection.ConnectionWindowModule;
@@ -18,5 +19,6 @@ public class ApplicationModule extends AbstractPresenterModule {
         install(new AvailableHostsModule());
         install(new ThreadContentModule());
         install(new ContentTabModule());
+        install(new MemoryModule());
     }
 }

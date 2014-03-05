@@ -126,7 +126,6 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     }
 
     @ProxyCodeSplit
-    @NameToken(NameTokens.newConnection)
     public interface ConnectionWindowProxy extends Proxy<ConnectionWindowPresenter> {
 
     }
