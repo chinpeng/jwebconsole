@@ -12,7 +12,7 @@
         <ui:attributes text="VM Summary"/>
     </ui:with>
 
-    <tabs:PlainTabPanel>
+    <tabs:TabPanel bodyBorder="true">
         <tabs:child config="{threadsConfig}">
             <container:SimpleContainer ui:field="threadPanel">
 
@@ -22,6 +22,6 @@
         <tabs:child config="{vmSummaryConfig}">
             <g:Label text="VM Summary"/>
         </tabs:child>
-    </tabs:PlainTabPanel>
+    </tabs:TabPanel>
 
 </ui:UiBinder>

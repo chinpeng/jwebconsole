@@ -15,8 +15,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     private final AppResources appResources;
 
     @UiField
-    SimpleContainer toolbar;
-    @UiField
     SimpleContainer leftPanel;
     @UiField
     SimpleContainer contentPanel;
@@ -34,10 +32,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         super.setInSlot(slot, content);
-        if (slot == ApplicationPresenter.SLOT_TOOLBAR) {
-            toolbar.clear();
-            toolbar.add(content);
-        }
         if (slot == ApplicationPresenter.SLOT_LEFT_PANEL) {
             leftPanel.clear();
             leftPanel.add(content);

@@ -30,9 +30,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
     }
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> SLOT_TOOLBAR = new Type<RevealContentHandler<?>>();
-
-    @ContentSlot
     public static final Type<RevealContentHandler<?>> SLOT_LEFT_PANEL = new Type<RevealContentHandler<?>>();
 
     @ContentSlot

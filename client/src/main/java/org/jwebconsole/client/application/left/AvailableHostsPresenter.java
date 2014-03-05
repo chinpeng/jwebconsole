@@ -3,12 +3,15 @@
 
 package org.jwebconsole.client.application.left;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
@@ -34,6 +37,9 @@ public class AvailableHostsPresenter
         HostDeletionStartedEventHandler,
         HostChangedEventHandler,
         HostCreatedEventHandler {
+
+    @ContentSlot
+    public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_TOOLBAR = new GwtEvent.Type<RevealContentHandler<?>>();
 
     private static final int SCHEDULE_TIME = 10000;
 

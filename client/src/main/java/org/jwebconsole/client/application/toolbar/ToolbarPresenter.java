@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.fusesource.restygwt.client.Method;
+import org.jwebconsole.client.application.left.AvailableHostsPresenter;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
@@ -40,7 +41,7 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Inject
     public ToolbarPresenter(EventBus eventBus, ToolbarView view, ToolbarProxy proxy, ToolbarPresenterFacade facade) {
-        super(eventBus, view, proxy, ApplicationPresenter.SLOT_TOOLBAR);
+        super(eventBus, view, proxy, AvailableHostsPresenter.SLOT_TOOLBAR);
         this.facade = facade;
         init();
 

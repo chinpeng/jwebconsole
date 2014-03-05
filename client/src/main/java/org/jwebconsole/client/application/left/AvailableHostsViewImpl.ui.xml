@@ -3,17 +3,39 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
-             xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container">
+             xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container">
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store"/>
     <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider"/>
 
-    <gxt:FramedPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true">
-        <row:FlowLayoutContainer scrollMode="AUTOY">
-            <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" deferHeight="true"/>
-        </row:FlowLayoutContainer>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="toolBarRowData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+
+    <ui:with field="contentLayoutData"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes height="1" width="1"/>
+    </ui:with>
+
+    <gxt:FramedPanel headingText="{messages.availableConnectionsHeader}" ui:field="panel" deferHeight="true" >
+        <container:VerticalLayoutContainer>
+            <row:child layoutData="{toolBarRowData}">
+                <row:SimpleContainer ui:field="toolbar">
+
+                </row:SimpleContainer>
+            </row:child>
+            <row:child layoutData="{contentLayoutData}">
+
+                <row:FlowLayoutContainer scrollMode="AUTOY">
+                    <tree:Tree ui:field="tree" valueProvider="{valueProvider}" store="{store}" deferHeight="true"/>
+                </row:FlowLayoutContainer>
+            </row:child>
+        </container:VerticalLayoutContainer>
     </gxt:FramedPanel>
+
 
 </ui:UiBinder>

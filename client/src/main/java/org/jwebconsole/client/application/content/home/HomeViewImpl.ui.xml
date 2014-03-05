@@ -1,6 +1,36 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
-        <g:Label text="Home View" />
-    </g:HTMLPanel>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
+
+    <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
+    <ui:with field="icons" type="org.jwebconsole.client.bundle.AppIcons"/>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData"
+             field="layoutData">
+        <ui:attributes width=".5" height="1"/>
+    </ui:with>
+
+    <gxt:FramedPanel headingText="{messages.homePanelHeadingText}">
+
+        <container:CenterLayoutContainer>
+            <gxt:ContentPanel headerVisible="false">
+                <container:HBoxLayoutContainer hBoxLayoutAlign="MIDDLE">
+                    <row:child>
+                <g:Label text="{messages.homePanelButtonClickText} "/>
+                    </row:child>
+                    <row:child>
+                <button:TextButton ui:field="createConnectionButton"
+                                   text="{messages.createConnectionToolbarButtonText}" icon="{icons.iconAdd}"/>
+                    </row:child>
+                    <row:child>
+                <g:Label text=" {messages.homePanelStartMonitoringText}"/>
+                    </row:child>
+                </container:HBoxLayoutContainer>
+            </gxt:ContentPanel>
+        </container:CenterLayoutContainer>
+
+    </gxt:FramedPanel>
 </ui:UiBinder>

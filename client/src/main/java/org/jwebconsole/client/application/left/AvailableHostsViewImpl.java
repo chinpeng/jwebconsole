@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -16,6 +17,7 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.host.HostConnection;
@@ -40,6 +42,8 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     Tree<HostConnection, String> tree;
     @UiField
     FramedPanel panel;
+    @UiField
+    SimpleContainer toolbar;
 
     @Inject
     AvailableHostsViewImpl(Binder uiBinder, AppResources appResources) {
@@ -160,7 +164,14 @@ public class AvailableHostsViewImpl extends ViewWithUiHandlers<AvailableHostsUiH
     @Override
     public void setSelection(HostConnection connection) {
         tree.getSelectionModel().select(connection, false);
-        //Window.alert(connection.toString());
+    }
+
+    @Override
+    public void setInSlot(Object slot, IsWidget content) {
+        if (slot == AvailableHostsPresenter.SLOT_TOOLBAR) {
+            toolbar.clear();
+            toolbar.add(content);
+        }
     }
 
     private static abstract class CancellableSelectionHandler<T> implements SelectionHandler<T> {

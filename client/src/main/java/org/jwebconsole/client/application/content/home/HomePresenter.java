@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
+import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.place.NameTokens;
 
 public class HomePresenter extends Presenter<HomeView, HomePresenter.HomeProxy> implements HomeUiHandlers {
@@ -19,6 +20,11 @@ public class HomePresenter extends Presenter<HomeView, HomePresenter.HomeProxy> 
 
     private void init() {
         getView().setUiHandlers(this);
+    }
+
+    @Override
+    public void onCreateConnectionButtonClicked() {
+        getEventBus().fireEvent(new RevealAddConnectionPopupEvent());
     }
 
     @ProxyCodeSplit

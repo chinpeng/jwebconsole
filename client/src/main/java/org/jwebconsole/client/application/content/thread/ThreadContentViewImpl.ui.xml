@@ -7,7 +7,7 @@
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="chartPanelMargins">
-        <ui:attributes top="0" right="20" bottom="10" left="20"/>
+        <ui:attributes top="10" right="0" bottom="10" left="0"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
