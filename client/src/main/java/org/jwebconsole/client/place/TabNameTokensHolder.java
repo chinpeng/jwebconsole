@@ -8,8 +8,9 @@ public class TabNameTokensHolder {
     private List<String> tabNameTokens = new ArrayList<String>();
 
     public TabNameTokensHolder() {
-        tabNameTokens.add(NameTokens.getThread());
-        tabNameTokens.add(NameTokens.getMemory());
+        for (ContentTabs tab : ContentTabs.values()) {
+            tabNameTokens.add(tab.getNameToken());
+        }
     }
 
 

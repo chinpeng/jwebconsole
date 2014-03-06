@@ -11,6 +11,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
+import org.jwebconsole.client.place.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.util.PlaceRequestUtils;
 
@@ -25,12 +26,6 @@ public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPre
     public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_MEMORY = new GwtEvent.Type<RevealContentHandler<?>>();
 
     private final PlaceManager placeManager;
-
-    @Override
-    public void onActiveTabSelected(String token) {
-        PlaceRequest request = PlaceRequestUtils.getPlaceRequestWithReplacedToken(placeManager.getCurrentPlaceRequest(), token);
-        placeManager.revealPlace(request);
-    }
 
     @ProxyStandard
     public interface ContentTabProxy extends Proxy<ContentTabPresenter> {
@@ -49,9 +44,15 @@ public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPre
         initViewTabsWithNameTokens();
     }
 
+    @Override
+    public void onActiveTabSelected(String token) {
+        PlaceRequest request = PlaceRequestUtils.getPlaceRequestWithReplacedToken(placeManager.getCurrentPlaceRequest(), token);
+        placeManager.revealPlace(request);
+    }
+
     private void initViewTabsWithNameTokens() {
-        getView().setMemoryNameToken(NameTokens.memory);
-        getView().setThreadsNameToken(NameTokens.thread);
+        getView().setMemoryNameToken(ContentTabs.MEMORY_TAB.getNameToken());
+        getView().setThreadsNameToken(ContentTabs.THREAD_TAB.getNameToken());
     }
 
     @Override

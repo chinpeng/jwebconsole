@@ -49,6 +49,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     public void shouldRevealHostPlaceWhenHostWasSelected() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
         presenter.onTreeItemSelected(new HostConnection());
+        when(facade.isTabNameToken()).thenReturn(false);
         verify(facade).revealThreadContentPlace(anyString());
     }
 
@@ -201,6 +202,14 @@ public class AvailableHostsPresenterTests extends Mockito {
         verify(facade).rescheduleTimer();
     }
 
+    @Test
+    public void shouldRevealCurrentPlaceIfNameTokenIsTabToken() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        when(facade.isTabNameToken()).thenReturn(true);
+        presenter.onTreeItemSelected(new HostConnection());
+        verify(facade).revealCurrentPlaceWithHostId(anyString());
+    }
+
     private HostConnectionListResponse createConnectionsResponse() {
         HostConnectionListResponse response = new HostConnectionListResponse();
         List<HostConnection> result = new ArrayList<HostConnection>();
@@ -208,7 +217,5 @@ public class AvailableHostsPresenterTests extends Mockito {
         response.setBody(result);
         return response;
     }
-
-
 
 }
