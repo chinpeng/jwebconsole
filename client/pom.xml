@@ -104,8 +104,6 @@
                 <configuration>
                     <draftCompile>true</draftCompile>
                     <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
-                    <strict>true</strict>
-
                     <testTimeOut>180</testTimeOut>
                     <includes>**/*GwtTestSuite.java</includes>
                     <excludes>**/*GwtTest.java</excludes>
@@ -117,7 +115,8 @@
                     <copyWebapp>true</copyWebapp>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <i18nMessagesBundles>
-                        <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ValidationMessages</i18nMessagesBundle>
+                        <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ValidationMessages
+                        </i18nMessagesBundle>
                         <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.Messages</i18nMessagesBundle>
                         <i18nMessagesBundle>org.jwebconsole.client.bundle.messages.ErrorMessages</i18nMessagesBundle>
                     </i18nMessagesBundles>
