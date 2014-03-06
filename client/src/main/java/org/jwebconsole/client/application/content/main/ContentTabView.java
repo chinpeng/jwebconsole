@@ -5,6 +5,8 @@ import com.gwtplatform.mvp.client.View;
 
 public interface ContentTabView extends View, HasUiHandlers<ContentTabUiHandlers> {
 
+    void setSummaryNameToken(String token);
+
     void setMemoryNameToken(String token);
 
     void setThreadsNameToken(String token);

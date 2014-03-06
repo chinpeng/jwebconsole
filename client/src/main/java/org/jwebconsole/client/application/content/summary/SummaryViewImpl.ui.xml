@@ -1,7 +1,7 @@
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <g:SimplePanel ui:field="main">
-        <g:Label>Test4OS</g:Label>
-    </g:SimplePanel>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client">
+<gxt:FramedPanel>
+    <g:Label>Test4OS Fuck Yeah!</g:Label>
+</gxt:FramedPanel>
 </ui:UiBinder>

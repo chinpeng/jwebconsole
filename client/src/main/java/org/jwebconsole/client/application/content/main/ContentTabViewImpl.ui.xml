@@ -21,7 +21,9 @@
 
     <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
         <tabs:child config="{vmSummaryConfig}">
-            <g:Label text="{messages.tabSummaryHeaderText}"/>
+            <container:SimpleContainer ui:field="summaryPanel">
+
+            </container:SimpleContainer>
         </tabs:child>
 
         <tabs:child config="{memoryConfig}">

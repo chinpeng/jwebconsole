@@ -30,6 +30,9 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
     SimpleContainer memoryPanel;
 
     @UiField
+    SimpleContainer summaryPanel;
+
+    @UiField
     TabPanel tabPanel;
 
     private List<Component> panelWidgets = new ArrayList<Component>();
@@ -48,6 +51,7 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
     private void initTabList() {
         panelWidgets.add(threadPanel);
         panelWidgets.add(memoryPanel);
+        panelWidgets.add(summaryPanel);
     }
 
     private void initHandlers() {
@@ -63,16 +67,20 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
 
     @Override
     public void setInSlot(Object slot, IsWidget content) {
-        if (slot == ContentTabPresenter.SLOT_THREADS) {
-            threadPanel.clear();
-            threadPanel.add(content);
-            threadPanel.forceLayout();
-        }
-        if (slot == ContentTabPresenter.SLOT_MEMORY) {
-            memoryPanel.clear();
-            memoryPanel.add(content);
-            memoryPanel.forceLayout();
-        }
+        if (slot == ContentTabPresenter.SLOT_THREADS) fillSlot(threadPanel, content);
+        if (slot == ContentTabPresenter.SLOT_MEMORY) fillSlot(memoryPanel, content);
+        if (slot == ContentTabPresenter.SLOT_SUMMARY) fillSlot(summaryPanel, content);
+    }
+
+    private void fillSlot(SimpleContainer slot, IsWidget content){
+        slot.clear();
+        slot.add(content);
+        slot.forceLayout();
+    }
+
+    @Override
+    public void setSummaryNameToken(String token) {
+        this.summaryPanel.setData(NAME_TOKEN_ATTRIBUTE, token);
     }
 
     @Override

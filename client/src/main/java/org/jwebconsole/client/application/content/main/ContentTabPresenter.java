@@ -56,6 +56,7 @@ public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPre
     private void initViewTabsWithNameTokens() {
         getView().setMemoryNameToken(ContentTabs.MEMORY_TAB.getNameToken());
         getView().setThreadsNameToken(ContentTabs.THREAD_TAB.getNameToken());
+        getView().setSummaryNameToken(ContentTabs.SUMMARY_TAB.getNameToken());
     }
 
     @Override

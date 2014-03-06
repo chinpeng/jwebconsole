@@ -3,7 +3,8 @@ package org.jwebconsole.client.place;
 public enum ContentTabs {
 
     MEMORY_TAB(NameTokens.memory),
-    THREAD_TAB(NameTokens.thread);
+    THREAD_TAB(NameTokens.thread),
+    SUMMARY_TAB(NameTokens.summary);
 
     private String nameToken;
 
