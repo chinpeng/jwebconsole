@@ -6,9 +6,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.sencha.gxt.core.client.ValueProvider;
+import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.event.CollapseEvent;
+import com.sencha.gxt.widget.core.client.event.ExpandEvent;
 import com.sencha.gxt.widget.core.client.grid.*;
 import org.jwebconsole.client.application.content.thread.model.ThreadInfoPropertyAccessor;
 import org.jwebconsole.client.bundle.AppResources;
@@ -34,6 +37,11 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     GridView gridView;
     @UiField
     Grid grid;
+    @UiField
+    VerticalLayoutContainer.VerticalLayoutData gridLayoutData;
+    @UiField
+    VerticalLayoutContainer mainContainer;
+    ;
 
     interface Binder extends UiBinder<Widget, ThreadContentViewImpl> {
     }
@@ -41,9 +49,29 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     @Inject
     ThreadContentViewImpl(Binder uiBinder, AppResources appResources) {
         this.appResources = appResources;
-        init();
+        initGrid();
         initWidget(uiBinder.createAndBindUi(this));
+        initLayoutData();
         initView();
+
+    }
+
+    private void initLayoutData() {
+        chartPanel.addCollapseHandler(new CollapseEvent.CollapseHandler() {
+            @Override
+            public void onCollapse(CollapseEvent event) {
+                gridLayoutData.setHeight(.94d);
+                mainContainer.forceLayout();
+
+            }
+        });
+        chartPanel.addExpandHandler(new ExpandEvent.ExpandHandler() {
+            @Override
+            public void onExpand(ExpandEvent event) {
+                gridLayoutData.setHeight(.5d);
+                mainContainer.forceLayout();
+            }
+        });
     }
 
     private void initView() {
@@ -51,7 +79,7 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
         gridView.setForceFit(true);
     }
 
-    private void init() {
+    private void initGrid() {
         ColumnConfig<ThreadInfoEntity, String> nameColumn = new ColumnConfig<ThreadInfoEntity, String>(accessor.name(), 50, appResources.getMessages().threadNameColumnHeader());
         List<ColumnConfig<ThreadInfoEntity, ?>> columns = new ArrayList<ColumnConfig<ThreadInfoEntity, ?>>();
         columns.add(nameColumn);

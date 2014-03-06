@@ -1,19 +1,40 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="chartPanelMargins">
-        <ui:attributes top="10" right="0" bottom="10" left="0"/>
+        <ui:attributes top="10" right="0" bottom="0" left="0"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="gridMargins">
+        <ui:attributes top="0" right="1" bottom="0" left="0"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
              field="chartPanelLayoutData">
         <ui:attributes width="1" height=".48" margins="{chartPanelMargins}"/>
     </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="gridLayoutData">
+        <ui:attributes width="1" height=".48" margins="{chartPanelMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData"
+             field="threadGridLayoutData">
+        <ui:attributes split="true" size=".3" collapsible="true" margins="{gridMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData"
+             field="threadInfoLayoutData">
+        <ui:attributes split="true" size=".7" collapsible="true" />
+    </ui:with>
+
 
     <ui:with type="com.sencha.gxt.data.shared.ListStore" field="store"/>
 
@@ -23,18 +44,27 @@
         <ui:attributes stripeRows="true"></ui:attributes>
     </ui:with>
 
-    <row:VerticalLayoutContainer>
+    <row:VerticalLayoutContainer ui:field="mainContainer">
         <row:child layoutData="{chartPanelLayoutData}">
             <gxt:FramedPanel headingText="{messages.threadCountChartHeading}" ui:field="chartPanel" collapsible="true">
 
             </gxt:FramedPanel>
         </row:child>
-        <row:child layoutData="{chartPanelLayoutData}">
-            <gxt:ContentPanel headingText="{messages.threadInfoHeadingText}">
-                <grid:Grid ui:field="grid" store="{store}" cm="{columnModel}" view="{gridView}" borders="false"
-                           columnReordering="true"
-                           stateful="true"/>
-            </gxt:ContentPanel>
+        <row:child layoutData="{gridLayoutData}">
+            <container:BorderLayoutContainer borders="true">
+                <container:west layoutData="{threadGridLayoutData}">
+                    <gxt:ContentPanel>
+                        <grid:Grid ui:field="grid" store="{store}" cm="{columnModel}" view="{gridView}"
+                                   columnReordering="true"
+                                   stateful="true"/>
+                    </gxt:ContentPanel>
+                </container:west>
+                <container:center layoutData="{threadInfoLayoutData}">
+                    <gxt:ContentPanel headerVisible="true">
+                        <g:Label text="test"/>
+                    </gxt:ContentPanel>
+                </container:center>
+            </container:BorderLayoutContainer>
         </row:child>
     </row:VerticalLayoutContainer>
 
