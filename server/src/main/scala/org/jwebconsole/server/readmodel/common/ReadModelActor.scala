@@ -14,7 +14,8 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
 
   override def preStart() {
     Try(tryRecover()) match {
-      case Success(_) => log.debug("Successful recover")
+      case Success(_) =>
+        log.debug("Successful recover")
       case Failure(e) =>
         log.error(e, "Unable to recover")
         context.unbecome()
@@ -23,8 +24,8 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
 
   private def tryRecover(): Unit = {
     if (!dao.exists()) {
-      context.become(replayingState)
       dao.createTable()
+      context.become(replayingState)
       makeReplay()
     } else {
       afterRecover()
@@ -33,18 +34,34 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
 
   private val replayingState: Receive = {
     case ev: AppEvent =>
-      Try(persistEvent(ev)) match {
-        case Success(_) => log.debug("Persisted replaying event:" + ev)
-        case Failure(ex) => log.error(ex, "Unable to persist event: " + ev)
-      }
+      tryPersistEvent(ev)
     case ReplayFinished =>
-      context.unbecome()
-      unstashAll()
-      afterRecover()
-      log.debug("Finished replaying state, back to normal")
-    case _ =>
-      log.debug("Stashing event")
+      finishReplay()
+    case other =>
+      log.debug("Stashing event" + other)
       stash()
+  }
+
+  override def receive: Receive = {
+    case ev: AppEvent =>
+      persistEvent.applyOrElse(ev, handleUnknownEvent)
+    case req: ReadModelRequest =>
+      if (processRequest.isDefinedAt(req)) makeAsyncResponse(req)
+      else processUnhandledRequest(req)
+    case other =>
+      log.warning("Received unknown message: " + other)
+  }
+
+  private def finishReplay(): Unit = {
+    context.unbecome()
+    unstashAll()
+    afterRecover()
+    log.debug("Finished replaying state, back to normal")
+  }
+
+  private def tryPersistEvent(ev: AppEvent) = Try(persistEvent(ev)) match {
+    case Success(_) => log.debug("Persisted replaying event:" + ev)
+    case Failure(ex) => log.error(ex, "Unable to persist event: " + ev)
   }
 
   private def handleUnknownEvent(event: AppEvent): Unit = {
@@ -58,18 +75,8 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
     case ev => persistEvent.isDefinedAt(ev)
   }
 
-  def processUnhandledRequest(request: ReadModelRequest): Unit = {
+  private def processUnhandledRequest(request: ReadModelRequest): Unit = {
     sender() ! ResponseMessage(error = Some(ErrorMessages.UnknownRequestMessage))
-  }
-
-  override def receive: Receive = {
-    case ev: AppEvent =>
-      persistEvent.applyOrElse(ev, handleUnknownEvent)
-    case req: ReadModelRequest =>
-      if (processRequest.isDefinedAt(req)) makeAsyncResponse(req)
-      else processUnhandledRequest(req)
-    case other =>
-      log.warning("Received unknown message: " + other)
   }
 
   private def makeAsyncResponse(request: ReadModelRequest): Unit = {
