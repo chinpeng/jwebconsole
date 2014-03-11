@@ -12,6 +12,10 @@ import java.text.SimpleDateFormat
 
 trait BaseServlet extends ScalatraServlet with ScalateSupport with JacksonJsonSupport with FutureSupport with CorsSupport {
 
+  before() {
+    contentType = formats("json")
+  }
+
   options("/*") {
     response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))
   }

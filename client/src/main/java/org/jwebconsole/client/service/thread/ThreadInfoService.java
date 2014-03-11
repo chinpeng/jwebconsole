@@ -1,8 +1,9 @@
-package org.jwebconsole.client.service;
+package org.jwebconsole.client.service.thread;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
+import org.jwebconsole.client.service.ServiceConstants;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

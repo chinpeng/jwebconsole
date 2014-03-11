@@ -12,11 +12,6 @@ import org.jwebconsole.server.readmodel.hostlist.{SimpleHostViewRequest, SimpleH
 
 class HostServlet(override val system: ActorSystem, readModelActor: ActorRef, hostCommandHandler: ActorRef) extends BaseServlet {
 
-
-  before() {
-    contentType = formats("json")
-  }
-
   get("/all") {
     executeAsync(readModelActor ? SimpleHostViewListRequest)
   }

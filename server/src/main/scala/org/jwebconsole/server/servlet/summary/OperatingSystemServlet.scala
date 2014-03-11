@@ -11,9 +11,11 @@ import org.jwebconsole.server.readmodel.summary.os.OperatingSystemInfoRequest
  * Time: 18:12
  */
 class OperatingSystemServlet(val system: ActorSystem, operatingSystemInfoActor: ActorRef) extends BaseServlet {
+
   get("/get/:hostId") {
     val hostId = params("hostId")
     val req = OperatingSystemInfoRequest(hostId)
     executeAsync(operatingSystemInfoActor ? req)
   }
+
 }

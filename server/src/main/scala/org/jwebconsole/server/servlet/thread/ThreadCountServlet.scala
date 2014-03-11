@@ -7,10 +7,6 @@ import org.jwebconsole.server.servlet.BaseServlet
 
 class ThreadCountServlet(val system: ActorSystem, threadCountView: ActorRef) extends BaseServlet {
 
-  before() {
-    contentType = formats("json")
-  }
-
   get("/all/:hostId") {
     val id = params("hostId")
     val req = ThreadDataRequest(id)

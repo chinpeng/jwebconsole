@@ -9,10 +9,11 @@ import org.jwebconsole.server.jmx.{JMXConnectionFactory, JMXConnectionChecker}
 import org.jwebconsole.server.readmodel.hostlist.{SimpleHostDao, HostListViewActor, AvailableHostsList}
 import org.jwebconsole.server.readmodel.summary.os.{OperatingSystemViewActor, OperatingSystemDao}
 import org.jwebconsole.server.readmodel.threads.count.{ThreadCountViewActor, ThreadCountDao}
+import org.jwebconsole.server.readmodel.threads.details.{ThreadDetailsViewActor, ThreadDetailsDao}
 import org.jwebconsole.server.readmodel.threads.info.{ThreadInfoViewActor, ThreadInfoDao}
 import org.jwebconsole.server.servlet.HostServlet
 import org.jwebconsole.server.servlet.summary.OperatingSystemServlet
-import org.jwebconsole.server.servlet.thread.{ThreadInfoServlet, ThreadCountServlet}
+import org.jwebconsole.server.servlet.thread.{ThreadDetailsServlet, ThreadInfoServlet, ThreadCountServlet}
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.{Handler, LifeCycle}
 import scala.slick.driver.H2Driver.simple._
@@ -42,6 +43,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new ThreadCountServlet(system, threadDataView), "/thread/count/*")
     context.mount(createThreadInfoServlet(system), "/thread/info/*")
     context.mount(createOperatingSystemInfoServlet(system), "/summary/*")
+    context.mount(createThreadDetailsServlet(system), "/thread/details/*")
   }
 
   private def initThreadReadModel(system: ActorSystem): ActorRef = {
@@ -75,6 +77,15 @@ class ScalatraBootstrap extends LifeCycle {
     system.eventStream.subscribe(operatingSystemViewActor, classOf[HostDataChangedEvent])
     system.eventStream.subscribe(operatingSystemViewActor, classOf[HostDeletedEvent])
     val servlet = new OperatingSystemServlet(system, operatingSystemViewActor)
+    servlet
+  }
+
+  private def createThreadDetailsServlet(system: ActorSystem):Handler = {
+    val dao = new ThreadDetailsDao(db)
+    val viewActor = system.actorOf(Props(new ThreadDetailsViewActor(dao)))
+    system.eventStream.subscribe(viewActor, classOf[HostDataChangedEvent])
+    system.eventStream.subscribe(viewActor, classOf[HostDeletedEvent])
+    val servlet = new ThreadDetailsServlet(system, viewActor)
     servlet
   }
 

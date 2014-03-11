@@ -1,4 +1,4 @@
-package org.jwebconsole.client.service;
+package org.jwebconsole.client.service.host;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -6,6 +6,7 @@ import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
+import org.jwebconsole.client.service.ServiceConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
