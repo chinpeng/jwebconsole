@@ -1,7 +1,28 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client">
-<gxt:FramedPanel>
-    <g:Label>Test4OS Fuck Yeah!</g:Label>
+<gxt:FramedPanel headingText="Operating System Info">
+    <g:VerticalPanel>
+        <g:HorizontalPanel>
+            <g:Label>Operating System: </g:Label>
+            <g:Label ui:field="nameLabel"/>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+            <g:Label>Version: </g:Label>
+            <g:Label ui:field="versionLabel"/>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+            <g:Label>Architecture: </g:Label>
+            <g:Label ui:field="architectureLabel"/>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+            <g:Label>System Load Average: </g:Label>
+            <g:Label ui:field="systemLoadAverageLabel"/>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+            <g:Label>Available Processors: </g:Label>
+            <g:Label ui:field="availableProcessorsLabel"/>
+        </g:HorizontalPanel>
+    </g:VerticalPanel>
 </gxt:FramedPanel>
 </ui:UiBinder>

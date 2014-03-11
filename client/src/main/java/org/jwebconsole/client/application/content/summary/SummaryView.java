@@ -9,4 +9,9 @@ import com.gwtplatform.mvp.client.View;
  * Time: 22:21
  */
 public interface SummaryView extends View, HasUiHandlers<SummaryUiHandlers> {
+    public void setName(String name);
+    public void setVersion(String version);
+    public void setArchitecture(String architecture);
+    public void setSystemLoadAverage(Double systemLoadAverage);
+    public void setAvailableProcessors(Integer availableProcessors);
 }
