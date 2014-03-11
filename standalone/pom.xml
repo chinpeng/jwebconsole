@@ -9,8 +9,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>jwebconsole-bundle</artifactId>
-    <name>JWebConsole Bundle</name>
+    <artifactId>jwebconsole-standalone</artifactId>
+    <name>JWebConsole Standalone</name>
 
     <properties>
 
