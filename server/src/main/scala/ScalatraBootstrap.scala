@@ -1,5 +1,6 @@
 import akka.actor.{ActorRef, Props, ActorSystem}
 import com.mchange.v2.c3p0.ComboPooledDataSource
+import com.typesafe.config.ConfigFactory
 import javax.servlet.ServletContext
 import org.jwebconsole.server.context.host._
 import org.jwebconsole.server.context.host.HostDeletedEvent
@@ -23,7 +24,9 @@ class ScalatraBootstrap extends LifeCycle {
   val db = {
     val ds = new ComboPooledDataSource
     ds.setDriverClass("org.h2.Driver")
-    ds.setJdbcUrl("jdbc:h2:mem:test1")
+    val config = ConfigFactory.load()
+    val url = config.getString("h2.connection")
+    ds.setJdbcUrl(url)
     Database.forDataSource(ds)
   }
 
