@@ -42,9 +42,16 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
       stash()
   }
 
+  def futurePersistEvent(ev: AppEvent): Unit = Future {
+    persistEvent.applyOrElse(ev, handleUnknownEvent)
+  } onComplete {
+    case Success(_) => log.debug("Persisted event: " + ev)
+    case Failure(e) => log.error(e, "Unable to persist event: " + ev)
+  }
+
   override def receive: Receive = {
     case ev: AppEvent =>
-      persistEvent.applyOrElse(ev, handleUnknownEvent)
+      futurePersistEvent(ev)
     case req: ReadModelRequest =>
       if (processRequest.isDefinedAt(req)) makeAsyncResponse(req)
       else processUnhandledRequest(req)
@@ -85,7 +92,7 @@ trait ReadModelActor extends Actor with ActorLogging with Stash {
       case Success(v) =>
         currentSender ! ResponseMessage(body = Some(v))
       case Failure(e) =>
-        handleFailure(request, e)
+        currentSender ! ResponseMessage(error = Some(handleFailure(request, e)))
     }
   }
 

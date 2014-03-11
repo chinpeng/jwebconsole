@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import akka.util.Timeout
 import org.jwebconsole.server.util.AppConstants
 
-class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], receiver: ActorRef, interval: FiniteDuration = 5.second) extends EventsourcedProcessor with ActorLogging {
+class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], receiver: ActorRef, interval: FiniteDuration = 1.second) extends EventsourcedProcessor with ActorLogging {
 
   implicit val timeout = Timeout(AppConstants.DefaultTimeout)
   implicit val exec = context.system.dispatcher
@@ -25,6 +25,7 @@ class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], recei
   def receiveCommand: Receive = {
     case CheckReplayStatus if !cancel.isCancelled =>
       if (!recoveryRunning) {
+        log.debug("Firing replay Finished")
         receiver ! ReplayFinished
         cancel.cancel()
         context.stop(self)
