@@ -40,20 +40,24 @@ class OperatingSystemViewActorSpecs extends SpecificationWithJUnit with Mockito 
 
   "Operating System View actor" should {
     "replay Host deleted Event" in new mocks {
-      source.filterFunc(HostDeletedEvent(hostId)) must beTrue
+      val ev = HostDeletedEvent(hostId)
+      source.persistEvent isDefinedAt ev must beTrue
     }
   }
 
   "Operating System View actor" should {
     "replay Data changed Event" in new mocks {
-      source.filterFunc(HostDataChangedEvent(hostId, HostData())) must beTrue
+      val ev = HostDataChangedEvent(hostId, HostData())
+      source.persistEvent isDefinedAt ev must beTrue
     }
   }
 
   "Operating System View actor" should {
     "not replay unknown events" in new mocks {
-      source.filterFunc(HostParametersChangedEvent(hostId, hostName, hostPort)) must beFalse
-      source.filterFunc(HostCreatedEvent(hostId, hostName, hostPort)) must beFalse
+      val changeEv = HostParametersChangedEvent(hostId, hostName, hostPort)
+      val createEv = HostCreatedEvent(hostId, hostName, hostPort)
+      source.persistEvent isDefinedAt changeEv must beFalse
+      source.persistEvent isDefinedAt createEv must beFalse
     }
   }
 
@@ -87,7 +91,7 @@ class OperatingSystemViewActorSpecs extends SpecificationWithJUnit with Mockito 
       dao.getOperatingSystemInfo(hostId) throws new RuntimeException()
       actor ! req
       waitForFutureToComplete()
-      expectMsg(ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage)))
+      expectMsg(ResponseMessage(error = Some(ErrorMessages.UnknownErrorMessage)))
     }
   }
 

@@ -34,21 +34,21 @@ class ThreadInfoViewActorSpecs extends SpecificationWithJUnit with Mockito with 
   "Thread Info View actor" should {
     "replay Host deleted Event" in new mocks {
       val ev = HostDeletedEvent("test-id")
-      source.filterFunc(ev) must beTrue
+      source.persistEvent isDefinedAt ev must beTrue
     }
   }
 
   "Thread Info View actor" should {
     "replay Data changed Event" in new mocks {
       val ev = HostDataChangedEvent("test-id", HostData())
-      source.filterFunc(ev) must beTrue
+      source.persistEvent isDefinedAt ev must beTrue
     }
   }
 
   "Thread Info View actor" should {
     "not replay unknown events" in new mocks {
       val ev = HostParametersChangedEvent(hostId, "localhost", 8080)
-      source.filterFunc(ev) must beFalse
+      source.persistEvent isDefinedAt ev must beFalse
     }
   }
 

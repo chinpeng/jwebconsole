@@ -33,14 +33,16 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   }
 
   "Host List View actor" should {
-    "not replay Host Data Change Events" in new mocks {
-      source.filterFunc(HostDataChangedEvent(hostId, HostData())) must beFalse
+    "replay Host Data Change Events" in new mocks {
+      val ev = HostDataChangedEvent(hostId, HostData())
+      source.persistEvent isDefinedAt(ev) must beTrue
     }
   }
 
   "Host List View actor" should {
     "replay host changed events" in new mocks {
-      source.filterFunc(HostDeletedEvent(hostId)) must beTrue
+      val ev = HostDeletedEvent(hostId)
+      source.persistEvent isDefinedAt(ev) must beTrue
     }
   }
 
@@ -57,7 +59,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   "Host ListView actor" should {
     "persist replaying HostCreatedEvent" in new mocks {
       val ev = HostCreatedEvent(hostId, "", 0)
-      source.persistReplay(ev)
+      source.persistEvent(ev)
       val captor = new ArgumentCapture[SimpleHostView]
       there was one(dao).create(captor.capture)
       captor.value.id mustEqual "test-id"
@@ -67,7 +69,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   "Host ListView actor" should {
     "persist replaying HostParametersChangedEvent" in new mocks {
       val ev = HostParametersChangedEvent(hostId, "", 0)
-      source.persistReplay(ev)
+      source.persistEvent(ev)
       val captor = new ArgumentCapture[SimpleHostView]
       there was one(dao).updateParameters(captor.capture)
       captor.value.id mustEqual "test-id"
@@ -77,7 +79,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   "Host ListView actor" should {
     "persist replaying HostDeletedEvent" in new mocks {
       val ev = HostDeletedEvent(hostId)
-      source.persistReplay(ev)
+      source.persistEvent(ev)
       there was one(dao).delete(hostId)
     }
   }
@@ -85,7 +87,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   "Host ListView actor" should {
     "persist Host status change replaying event" in new mocks {
       val ev = HostDataChangedEvent(hostId, HostData(connected = true))
-      source.persistReplay(ev)
+      source.persistEvent(ev)
       there was one(dao).updateStatus(hostId, true)
     }
   }

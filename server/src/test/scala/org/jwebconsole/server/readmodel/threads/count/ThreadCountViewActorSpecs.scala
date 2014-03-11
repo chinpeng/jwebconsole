@@ -37,21 +37,21 @@ class ThreadCountViewActorSpecs extends SpecificationWithJUnit with Mockito with
     "Thread Count View actor" should {
       "replay Host deleted Event" in new mocks {
         val ev = HostDeletedEvent("test-id")
-        source.filterFunc(ev) must beTrue
+        source.persistEvent isDefinedAt ev must beTrue
       }
     }
 
     "Thread Count View actor" should {
       "replay Data changed Event" in new mocks {
         val ev = HostDataChangedEvent("test-id", HostData())
-        source.filterFunc(ev) must beTrue
+        source.persistEvent isDefinedAt ev must beTrue
       }
     }
 
     "Thread Count View actor" should {
       "not replay unknown events" in new mocks {
         val ev = HostParametersChangedEvent(hostId, "localhost", 8080)
-        source.filterFunc(ev) must beFalse
+        source.persistEvent isDefinedAt ev must beFalse
       }
     }
 
@@ -101,7 +101,7 @@ class ThreadCountViewActorSpecs extends SpecificationWithJUnit with Mockito with
       dao.getAllForHost(hostId) throws new RuntimeException()
       actor ! ev
       waitForFutureToComplete()
-      expectMsg(ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage)))
+      expectMsg(ResponseMessage(error = Some(ErrorMessages.UnknownErrorMessage)))
     }
   }
 
@@ -120,7 +120,7 @@ class ThreadCountViewActorSpecs extends SpecificationWithJUnit with Mockito with
       val ev = ThreadDataLastNrRequest(hostId, 15)
       dao.getLastNumberOfEntities(hostId, 15) throws new RuntimeException()
       actor ! ev
-      expectMsg(ResponseMessage(error = Some(ErrorMessages.DbConnectionFailureMessage)))
+      expectMsg(ResponseMessage(error = Some(ErrorMessages.UnknownErrorMessage)))
     }
   }
 
