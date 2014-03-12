@@ -1,4 +1,4 @@
 JWeb Console
 ===========
 
-Simple JVM monitoring web-app
+Simple JVM monitoring web application.
