@@ -15,23 +15,25 @@ import org.jwebconsole.server.readmodel.threads.info.{ThreadInfoViewActor, Threa
 import org.jwebconsole.server.servlet.HostServlet
 import org.jwebconsole.server.servlet.summary.OperatingSystemServlet
 import org.jwebconsole.server.servlet.thread.{ThreadDetailsServlet, ThreadInfoServlet, ThreadCountServlet}
+import org.jwebconsole.server.util.ConfigUtil
 import org.jwebconsole.server.worker.HostWorkerProducerActor
 import org.scalatra.{Handler, LifeCycle}
 import scala.slick.driver.H2Driver.simple._
 
 class ScalatraBootstrap extends LifeCycle {
 
+  val config = ConfigUtil.config
+
   val db = {
     val ds = new ComboPooledDataSource
     ds.setDriverClass("org.h2.Driver")
-    val config = ConfigFactory.load()
     val url = config.getString("h2.connection")
     ds.setJdbcUrl(url)
     Database.forDataSource(ds)
   }
 
   override def init(context: ServletContext) {
-    val system = ActorSystem("app-system")
+    val system = ActorSystem("app-system", config)
     val eventStore = system.actorOf(Props(new GlobalEventStore))
     val dao = new SimpleHostDao(db)
     val connectionChecker = new JMXConnectionChecker()
