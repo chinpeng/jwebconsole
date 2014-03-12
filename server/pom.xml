@@ -202,19 +202,6 @@
             <version>${h2.version}</version>
         </dependency>
 
-        <!-- Jetty -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>8.1.14.v20131031</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>8.1.14.v20131031</version>
-        </dependency>
-
-
     </dependencies>
 
 </project>

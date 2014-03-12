@@ -161,17 +161,20 @@
             <groupId>com.sencha.gxt</groupId>
             <artifactId>gxt</artifactId>
             <version>${gxt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sencha.gxt</groupId>
             <artifactId>gxt-chart</artifactId>
             <version>${gxt.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sencha.gxt</groupId>
             <artifactId>gxt-theme-neptune</artifactId>
             <version>${gxt.version}</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -180,6 +183,7 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- GWT-Platform -->
@@ -187,6 +191,7 @@
             <groupId>com.gwtplatform</groupId>
             <artifactId>gwtp-mvp-client</artifactId>
             <version>${gwtp.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- DI -->
@@ -194,6 +199,7 @@
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test -->
@@ -223,6 +229,7 @@
             <groupId>org.fusesource.restygwt</groupId>
             <artifactId>restygwt</artifactId>
             <version>1.3.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -235,27 +242,9 @@
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>8.1.8.v20121106</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
 
-    <profiles>
-        <!-- run with 'mvn integration-test -P selenium-local' -->
-        <profile>
-            <id>selenium-local</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <configuration>
-                            <mode>selenium</mode>
-                            <productionMode>true</productionMode>
-                            <selenium>localhost:4444/*firefox,localhost:4444/*opera</selenium>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
