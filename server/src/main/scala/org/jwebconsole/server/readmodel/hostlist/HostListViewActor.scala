@@ -11,9 +11,13 @@ class HostListViewActor(val dao: SimpleHostDao) extends ReadModelActor {
 
   override def processRequest: PartialFunction[ReadModelRequest, Any] = {
     case SimpleHostViewListRequest =>
-      dao.getAll
+      dao.getAll.map(withoutCredentials)
     case SimpleHostViewRequest(id) =>
-      dao.getSingle(id)
+      withoutCredentials(dao.getSingle(id))
+  }
+
+  private def withoutCredentials(host: SimpleHostView): SimpleHostView = {
+    host.copy(login = "", password = "")
   }
 
   override def persistEvent: PartialFunction[AppEvent, Unit] = {

@@ -25,6 +25,7 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     val hostId = "test-id"
     val probe = TestProbe()
     val probeRef = probe.ref
+    val host = SimpleHostView(hostId, "localhost", 8080, "test-login", "test-password")
 
     def waitForPersist() {
       Thread.sleep(100)
@@ -35,14 +36,14 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   "Host List View actor" should {
     "replay Host Data Change Events" in new mocks {
       val ev = HostDataChangedEvent(hostId, HostData())
-      source.persistEvent isDefinedAt(ev) must beTrue
+      source.persistEvent isDefinedAt (ev) must beTrue
     }
   }
 
   "Host List View actor" should {
     "replay host changed events" in new mocks {
       val ev = HostDeletedEvent(hostId)
-      source.persistEvent isDefinedAt(ev) must beTrue
+      source.persistEvent isDefinedAt (ev) must beTrue
     }
   }
 
@@ -162,12 +163,28 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
   }
 
   "Host ListView actor" should {
-    "respond with error on any unknow exception" in new mocks {
+    "respond with error on any unknown exception" in new mocks {
       dao.getSingle(anyString) throws new RuntimeException
       actor ! SimpleHostViewRequest(hostId)
       expectMsgPF() {
         case msg: ResponseMessage if msg.error == Some(ErrorMessages.UnknownErrorMessage) => true
       }
+    }
+  }
+
+  "Host ListView actor" should {
+    "should respond without login and password on single host request" in new mocks {
+      dao.getSingle(hostId) returns host
+      actor ! SimpleHostViewRequest(hostId)
+      expectMsg(ResponseMessage(body = Some(host.copy(login = "", password = ""))))
+    }
+  }
+
+  "Host ListView actor" should {
+    "should respond without login and password" in new mocks {
+      dao.getAll returns List(host)
+      actor ! SimpleHostViewListRequest
+      expectMsg(ResponseMessage(body = Some(List(host.copy(login = "", password = "")))))
     }
   }
 

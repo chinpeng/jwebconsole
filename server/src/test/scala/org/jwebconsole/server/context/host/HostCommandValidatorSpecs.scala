@@ -57,7 +57,7 @@ class HostCommandValidatorSpecs extends SpecificationWithJUnit with Mockito with
 
   "Host validator" should {
     "validate host when it's unreachable" in new mocks {
-      checker.checkConnection(anyString, anyInt) throws new RuntimeException
+      checker.checkConnection(anyString, anyInt, anyString, anyString) throws new RuntimeException
       validator ! ValidateHost(model, ChangeHostCommand("test-id", "test", 10))
       expectFailure(UnableToConnectMessage)
     }

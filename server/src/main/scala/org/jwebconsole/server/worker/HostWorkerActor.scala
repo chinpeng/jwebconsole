@@ -20,7 +20,7 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
 
   var timer: Option[Cancellable] = None
 
-  @volatile var connection: JMXConnection = connectionFactory.createConnection(host.name, host.port)
+  @volatile var connection: JMXConnection = connectionFactory.createConnection(host)
 
   override def receive: Receive = {
     case StopWork() =>
@@ -50,8 +50,8 @@ class HostWorkerActor(@volatile var host: SimpleHostView,
   }
 
   def changeHostParams(ev: HostParametersChangedEvent): Unit = {
-    host = host.copy(name = ev.name, port = ev.port)
-    connection = connectionFactory.createConnection(host.name, host.port)
+    host = host.copy(name = ev.name, port = ev.port, login = ev.user, password = ev.password)
+    connection = connectionFactory.createConnection(host)
   }
 
 }

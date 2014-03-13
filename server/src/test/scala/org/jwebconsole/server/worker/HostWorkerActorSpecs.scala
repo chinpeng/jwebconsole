@@ -18,7 +18,7 @@ class HostWorkerActorSpecs extends SpecificationWithJUnit with Mockito with NoTi
   trait mocks extends AkkaTestkitSupport {
     val connectionFactory = mock[JMXConnectionFactory]
     val connection = mock[JMXConnection]
-    connectionFactory.createConnection(anyString, anyInt) returns connection
+    connectionFactory.createConnection(any[SimpleHostView]) returns connection
     val commandHandler = TestProbe()
     val handlerRef = commandHandler.ref
     val probe = TestProbe()
@@ -77,7 +77,7 @@ class HostWorkerActorSpecs extends SpecificationWithJUnit with Mockito with NoTi
   "Host worker" should {
     "create new connection on change event" in new mocks {
       val anotherConnection = mock[JMXConnection]
-      connectionFactory.createConnection(anyString, anyInt) returns anotherConnection
+      connectionFactory.createConnection(any[SimpleHostView]) returns anotherConnection
       worker ! StartWork()
       worker ! HostParametersChangedEvent("test-id", "localhost", 8080)
       worker ! MakeConnectionPolling

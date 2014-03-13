@@ -1,8 +1,10 @@
 package org.jwebconsole.server.jmx
 
+import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
+
 
 class JMXConnectionFactory {
 
-  def createConnection(hostName: String, port: Int): JMXConnection = new JMXConnection(hostName, port, JMXDataParser())
+  def createConnection(host: SimpleHostView): JMXConnection = new JMXConnection(host, JMXDataParser())
 
 }

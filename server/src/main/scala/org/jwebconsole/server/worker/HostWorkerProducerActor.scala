@@ -44,7 +44,7 @@ class HostWorkerProducerActor(private val hostCommandHandler: ActorRef,
   }
 
   def createHost(event: HostCreatedEvent): Unit = {
-    val view = SimpleHostView(event.id, event.name, event.port)
+    val view = SimpleHostView(event.id, event.name, event.port, event.user, event.password)
     workers.get(event.id).map(ref => ref ! StopWork())
     val worker = createWorker(view)
     workers += (event.id -> worker)

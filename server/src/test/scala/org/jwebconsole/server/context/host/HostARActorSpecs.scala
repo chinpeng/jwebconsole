@@ -9,6 +9,7 @@ import org.jwebconsole.server.context.common.ResponseMessage
 import org.specs2.mock.Mockito
 import org.jwebconsole.server.jmx.JMXConnectionChecker
 import scala.concurrent.duration._
+import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 
 class HostARActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeConversions {
   sequential
@@ -136,6 +137,13 @@ class HostARActorSpecs extends SpecificationWithJUnit with Mockito with NoTimeCo
       eventProbe.expectMsgPF() {
         case HostDataChangedEvent(resId, resHostData) if resId == id && resHostData == data => true
       }
+    }
+  }
+
+  "host AR actor" should {
+    "respond with host without credentials" in new mocks {
+      processor ! WithSender(probeRef, new CreateHostCommand(id, name, port, "login", "password"))
+      probe.expectMsg(ResponseMessage(body = Some(SimpleHostView(id, name, port))))
     }
   }
 

@@ -4,10 +4,10 @@ import javax.management.remote.JMXConnector
 import scala.util.{Success, Failure, Try}
 import org.slf4j.LoggerFactory
 import org.jwebconsole.server.context.host.HostData
+import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
+import org.jwebconsole.server.util.Converters._
 
-
-class JMXConnection(private val host: String,
-                    private val port: Int,
+class JMXConnection(private val host: SimpleHostView,
                     private val parser: JMXDataParser,
                     private val util: JMXConnectionUtil = new JMXConnectionUtil()) {
 
@@ -26,11 +26,22 @@ class JMXConnection(private val host: String,
   }
 
   private def withConnection[T](action: JMXConnector => T): Try[T] = Try {
-    val url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"
-    val connector = util.connect(url)
+    val url = "service:jmx:rmi:///jndi/rmi://" + host.name + ":" + host.port + "/jmxrmi"
+    val connector = util.connect(url, createCredentialsMap())
     val result = action(connector)
     connector.close()
     result
   }
+
+  private def createCredentialsMap(): Map[String, _] = {
+    var result = Map.empty[String, Any]
+    host.login.emptyToOption().foreach {
+      login =>
+        val credentials = Array(login, host.password)
+        result += ("jmx.remote.credentials" -> credentials)
+    }
+    result
+  }
+
 
 }

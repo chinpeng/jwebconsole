@@ -1,13 +1,14 @@
 package org.jwebconsole.server.jmx
 
+import scala.collection.JavaConverters._
 import javax.management.remote.{JMXConnectorFactory, JMXServiceURL, JMXConnector}
 import java.lang.management.{OperatingSystemMXBean, ThreadMXBean, ManagementFactory}
 
 class JMXConnectionUtil {
 
-  def connect(url: String): JMXConnector = {
+  def connect(url: String, params: Map[String, Any]): JMXConnector = {
     val serviceUrl = new JMXServiceURL(url)
-    JMXConnectorFactory.connect(serviceUrl, null)
+    JMXConnectorFactory.newJMXConnector(serviceUrl, params.asJava)
   }
 
   def getThreadBean(connection: JMXConnector): ThreadMXBean = {
