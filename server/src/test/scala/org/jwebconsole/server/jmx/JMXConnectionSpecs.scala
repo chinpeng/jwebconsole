@@ -18,7 +18,7 @@ class JMXConnectionSpecs extends SpecificationWithJUnit with Mockito with NoTime
     val host = SimpleHostView("tes-id", hostName, port)
 
     def before: Unit = {
-      util.connect(anyString, any[Map[String, Any]]) returns connector
+      util.connect(anyString, any[java.util.Map[String, Any]]) returns connector
     }
 
   }

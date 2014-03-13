@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.jwebconsole.server.context.host.HostData
 import org.jwebconsole.server.readmodel.hostlist.SimpleHostView
 import org.jwebconsole.server.util.Converters._
+import java.util
 
 class JMXConnection(private val host: SimpleHostView,
                     private val parser: JMXDataParser,
@@ -33,13 +34,14 @@ class JMXConnection(private val host: SimpleHostView,
     result
   }
 
-  private def createCredentialsMap(): Map[String, _] = {
-    var result = Map.empty[String, Any]
-    host.login.emptyToOption().foreach {
-      login =>
-        val credentials = Array(login, host.password)
-        result += ("jmx.remote.credentials" -> credentials)
-    }
+  private def createCredentialsMap(): java.util.Map[String, Any] = {
+      var result: java.util.Map[String, Any] = null
+      host.login.emptyToOption().foreach {
+        login =>
+          result = new java.util.HashMap[String, Any]()
+          val credentials = Array(login, host.password)
+          result.put("jmx.remote.credentials", credentials)
+      }
     result
   }
 
