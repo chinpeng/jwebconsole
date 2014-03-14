@@ -54,6 +54,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
+                    <jvmArgs>-Xmx1024m -XX:MaxPermSize=512M</jvmArgs>
                     <jettyXml>src/main/webapp/WEB-INF/jetty-jmx.xml</jettyXml>
                     <webAppConfig>
                         <contextPath>/${webapp.name}</contextPath>

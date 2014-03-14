@@ -1,1 +1,1 @@
-kill -KILL $(cat process.pid)
+kill -9 $(cat process.pid)
