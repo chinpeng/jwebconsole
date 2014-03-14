@@ -12,7 +12,7 @@
     <container:PortalLayoutContainer numColumns="2" ui:field="portal">
 
         <container:portlet column="0">
-            <client:Portlet headingText="{messages.tabMemoryHeaderText}" height="320" collapsible="true" animCollapse="false" ui:field="threadChartPortlet">
+            <client:Portlet headingText="{messages.tabMemoryHeaderText}" height="320" collapsible="true" animCollapse="false">
 
             </client:Portlet>
         </container:portlet>
