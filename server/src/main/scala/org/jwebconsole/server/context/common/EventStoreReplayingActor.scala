@@ -26,8 +26,8 @@ class EventStoreReplayingActor(filter: PartialFunction[AppEvent, Boolean], recei
     case CheckReplayStatus if !cancel.isCancelled =>
       if (!recoveryRunning) {
         log.debug("Firing replay Finished")
-        receiver ! ReplayFinished
         cancel.cancel()
+        receiver ! ReplayFinished
         context.stop(self)
       }
     case CheckReplayStatus if cancel.isCancelled =>
