@@ -2,6 +2,7 @@ package org.jwebconsole.server.jmx
 
 import javax.management.remote.{JMXConnectorFactory, JMXServiceURL, JMXConnector}
 import java.lang.management.{OperatingSystemMXBean, ThreadMXBean, ManagementFactory}
+import javax.management.ObjectName
 
 class JMXConnectionUtil {
 
@@ -17,5 +18,8 @@ class JMXConnectionUtil {
   def getOperatingSystemBean(connection: JMXConnector): OperatingSystemMXBean = {
     ManagementFactory.newPlatformMXBeanProxy(connection.getMBeanServerConnection, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, classOf[OperatingSystemMXBean])
   }
+
+  def getObjectAttribute(key: String, attr: String, connection: JMXConnector) =
+    connection.getMBeanServerConnection.getAttribute(new ObjectName(key), attr)
 
 }

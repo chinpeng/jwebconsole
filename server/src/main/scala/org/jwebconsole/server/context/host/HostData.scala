@@ -23,4 +23,11 @@ case class OperatingSystemData(architecture: String = "",
                                availableProcessors: Int = 0,
                                systemLoadAverage: Double = 0,
                                name: String = "",
-                               version: String = "")
+                               version: String = "",
+                               processCPUTime: Long = 0,
+                               committedVirtualMemorySize: Long = 0,
+                               totalPhysicalMemorySize: Long = 0,
+                               freePhysicalMemorySize: Long = 0,
+                               totalSwapSpaceSize: Long = 0,
+                               freeSwapSpaceSize: Long = 0)
+

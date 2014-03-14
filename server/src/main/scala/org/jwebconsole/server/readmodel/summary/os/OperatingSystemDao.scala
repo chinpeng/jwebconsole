@@ -14,24 +14,37 @@ class OperatingSystemDao(private val db: Database) extends ReplayingDao {
 
   val operatingSystemTableName = "operating_system_table"
 
-  case class OperatingSystemRow(hostId: String, architecture: String, availableProcessors: Int,
-                                systemLoadAverage: Double, name: String, version: String)
+  case class OperatingSystemRow(hostId: String,
+                                architecture: String,
+                                availableProcessors: Int,
+                                systemLoadAverage: Double,
+                                name: String,
+                                version: String,
+                                processCPUTime: Long,
+                                committedVirtualMemorySize: Long,
+                                totalPhysicalMemorySize: Long,
+                                freePhysicalMemorySize: Long,
+                                totalSwapSpaceSize: Long,
+                                freeSwapSpaceSize: Long)
 
   case class OperatingSystemTable(tag: Tag) extends Table[OperatingSystemRow](tag, operatingSystemTableName) {
 
     def hostId = column[String]("hostId", O.PrimaryKey)
-
     def architecture = column[String]("architecture")
-
     def availableProcessors = column[Int]("availableProcessors")
-
     def systemLoadAverage = column[Double]("systemLoadAverage")
-
     def name = column[String]("name")
-
     def version = column[String]("version")
+    def processCpuTime = column[Long]("processCpuTime")
+    def committedVirtualMemorySize = column[Long]("committedVirtualMemorySize")
+    def totalPhysicalMemorySize = column[Long]("totalPhysicalMemorySize")
+    def freePhysicalMemorySize = column[Long]("freePhysicalMemorySize")
+    def totalSwapSpaceSize = column[Long]("totalSwapSpaceSize")
+    def freeSwapSpaceSize = column[Long]("freeSwapSpaceSize")
 
-    def * = (hostId, architecture, availableProcessors, systemLoadAverage, name, version) <> (OperatingSystemRow.tupled, OperatingSystemRow.unapply)
+    def * = (hostId, architecture, availableProcessors, systemLoadAverage,name, version, processCpuTime,
+             committedVirtualMemorySize, totalPhysicalMemorySize, freePhysicalMemorySize, totalSwapSpaceSize, freeSwapSpaceSize) <>
+      (OperatingSystemRow.tupled, OperatingSystemRow.unapply)
 
   }
 
@@ -66,7 +79,13 @@ class OperatingSystemDao(private val db: Database) extends ReplayingDao {
                                                    systemLoadAverage = data.systemLoadAverage,
                                                    availableProcessors = data.availableProcessors,
                                                    name = data.name,
-                                                   version = data.version)
+                                                   version = data.version,
+                                                   processCPUTime = data.processCPUTime,
+                                                   committedVirtualMemorySize = data.committedVirtualMemorySize,
+                                                   totalPhysicalMemorySize = data.totalPhysicalMemorySize,
+                                                   freePhysicalMemorySize = data.freePhysicalMemorySize,
+                                                   totalSwapSpaceSize = data.totalSwapSpaceSize,
+                                                   freeSwapSpaceSize = data.freeSwapSpaceSize)
     }
   }
 
