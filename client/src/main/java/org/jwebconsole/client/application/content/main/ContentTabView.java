@@ -12,5 +12,7 @@ public interface ContentTabView extends View, HasUiHandlers<ContentTabUiHandlers
     void setThreadsNameToken(String token);
 
     void applySelectionByNameToken(String token);
+
+    void setOverviewNameToken(String nameToken);
 }
 

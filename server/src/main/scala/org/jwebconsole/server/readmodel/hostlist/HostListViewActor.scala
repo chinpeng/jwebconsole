@@ -11,7 +11,7 @@ class HostListViewActor(val dao: SimpleHostDao) extends ReadModelActor {
 
   override def processRequest: PartialFunction[ReadModelRequest, Any] = {
     case SimpleHostViewListRequest =>
-      dao.getAll.map(withoutCredentials)
+      dao.getAll.map(withoutCredentials).sortBy(_.id)
     case SimpleHostViewRequest(id) =>
       withoutCredentials(dao.getSingle(id))
   }

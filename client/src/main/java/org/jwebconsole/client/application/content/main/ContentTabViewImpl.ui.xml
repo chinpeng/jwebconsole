@@ -7,6 +7,11 @@
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="overviewConfig">
+        <ui:attributes text="{messages.tabOverviewHeaderText}"/>
+    </ui:with>
+
+
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="threadsConfig">
         <ui:attributes text="{messages.tabThreadsHeaderText}"/>
     </ui:with>
@@ -20,6 +25,11 @@
     </ui:with>
 
     <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
+        <tabs:child config="{overviewConfig}">
+            <container:SimpleContainer ui:field="overviewPanel">
+
+            </container:SimpleContainer>
+        </tabs:child>
         <tabs:child config="{vmSummaryConfig}">
             <container:SimpleContainer ui:field="summaryPanel">
 

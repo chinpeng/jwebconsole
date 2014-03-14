@@ -33,9 +33,12 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
     SimpleContainer summaryPanel;
 
     @UiField
+    SimpleContainer overviewPanel;
+
+    @UiField
     TabPanel tabPanel;
 
-    private List<Component> panelWidgets = new ArrayList<Component>();
+    private List<SimpleContainer> panelWidgets = new ArrayList<SimpleContainer>();
 
     interface Binder extends UiBinder<Widget, ContentTabViewImpl> {
     }
@@ -52,6 +55,7 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
         panelWidgets.add(threadPanel);
         panelWidgets.add(memoryPanel);
         panelWidgets.add(summaryPanel);
+        panelWidgets.add(overviewPanel);
     }
 
     private void initHandlers() {
@@ -70,9 +74,10 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
         if (slot == ContentTabPresenter.SLOT_THREADS) fillSlot(threadPanel, content);
         if (slot == ContentTabPresenter.SLOT_MEMORY) fillSlot(memoryPanel, content);
         if (slot == ContentTabPresenter.SLOT_SUMMARY) fillSlot(summaryPanel, content);
+        if (slot == ContentTabPresenter.SLOT_OVERVIEW) fillSlot(overviewPanel, content);
     }
 
-    private void fillSlot(SimpleContainer slot, IsWidget content){
+    private void fillSlot(SimpleContainer slot, IsWidget content) {
         slot.clear();
         slot.add(content);
         slot.forceLayout();
@@ -101,6 +106,11 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
                 tabPanel.setActiveWidget(component);
             }
         }
+    }
+
+    @Override
+    public void setOverviewNameToken(String nameToken) {
+        this.overviewPanel.setData(NAME_TOKEN_ATTRIBUTE, nameToken);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.jwebconsole.client.application.content.thread;
 
+import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasSlots;
@@ -8,6 +9,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.jwebconsole.client.application.content.thread.widget.chart.ThreadCountChartPresenter;
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.model.thread.details.ThreadDetailsListResponse;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
 import org.jwebconsole.client.service.ServiceFactory;
 
@@ -18,6 +20,9 @@ public class ThreadContentPresenterFacade {
     private ServiceFactory serviceFactory;
     private PlaceManager placeManager;
     private ThreadCountChartPresenter threadCountChartPresenter;
+    private Timer timer;
+
+    private static final Integer THREAD_INFO_TIMER_UPDATE_INTERVAL = 20000;
 
     @Inject
     public ThreadContentPresenterFacade(EventBus eventBus,
@@ -42,8 +47,24 @@ public class ThreadContentPresenterFacade {
         threadCountChartPresenter.destroy();
     }
 
-    public void makeThreadInfoRequest(String hostId, MethodCallback<ThreadInfoListResponse> callback) {
-        serviceFactory.getThreadInfoService().getThreadInfo(hostId, callback);
+    public void scheduleThreadInfoRequest(final String hostId, final MethodCallback<ThreadInfoListResponse> callback) {
+        this.timer = new Timer() {
+            @Override
+            public void run() {
+                serviceFactory.getThreadInfoService().getThreadInfo(hostId, callback);
+            }
+        };
+        timer.run();
+        timer.scheduleRepeating(THREAD_INFO_TIMER_UPDATE_INTERVAL);
     }
 
+    public void makeThreadDetailsRequest(String hostId, Long threadId, MethodCallback<ThreadDetailsListResponse> callback) {
+        serviceFactory.getThreadDetailsService().getThreadDetails(hostId, threadId, callback);
+    }
+
+    public void disableThreadInfoTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
 }

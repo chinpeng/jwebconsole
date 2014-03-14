@@ -61,7 +61,9 @@
                 </container:west>
                 <container:center layoutData="{threadInfoLayoutData}">
                     <gxt:ContentPanel headerVisible="true">
-                        <g:Label text="test"/>
+                        <container:VerticalLayoutContainer ui:field="threadDetailsPanel" scrollMode="AUTOY">
+
+                        </container:VerticalLayoutContainer>
                     </gxt:ContentPanel>
                 </container:center>
             </container:BorderLayoutContainer>

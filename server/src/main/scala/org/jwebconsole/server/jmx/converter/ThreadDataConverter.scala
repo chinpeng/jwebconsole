@@ -7,6 +7,8 @@ import org.jwebconsole.server.jmx.JMXConnectionUtil
 
 class ThreadDataConverter(private val utils: JMXConnectionUtil = new JMXConnectionUtil()) extends JMXDataConverter {
 
+  private val StackTraceDepth = 30
+
   def fromConnection(connection: JMXConnector, hostData: HostData): HostData = {
     val threadBean = utils.getThreadBean(connection)
     val threadCount = threadBean.getThreadCount
@@ -17,7 +19,7 @@ class ThreadDataConverter(private val utils: JMXConnectionUtil = new JMXConnecti
 
   private def availableThreads(threadBean: ThreadMXBean): List[AvailableThread] = {
     val ids = threadBean.getAllThreadIds
-    threadBean.getThreadInfo(ids).toList.filter(_ != null).map {
+    threadBean.getThreadInfo(ids, StackTraceDepth).toList.filter(_ != null).map {
       info =>
         val id = info.getThreadId
         val name = info.getThreadName

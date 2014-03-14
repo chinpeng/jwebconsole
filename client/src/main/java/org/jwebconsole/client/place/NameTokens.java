@@ -16,6 +16,8 @@ public class NameTokens {
 
     public static final String summary = "summary";
 
+    public static final String overview = "overview";
+
     public static String getHome() {
         return home;
     }
@@ -42,5 +44,9 @@ public class NameTokens {
 
     public static String getSummary() {
         return summary;
+    }
+
+    public static String getOverview() {
+        return overview;
     }
 }

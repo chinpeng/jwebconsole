@@ -18,6 +18,8 @@ import org.jwebconsole.client.util.PlaceRequestUtils;
 
 public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPresenter.ContentTabProxy> implements ContentTabUiHandlers {
 
+    @ContentSlot
+    public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_OVERVIEW = new GwtEvent.Type<RevealContentHandler<?>>();
 
     @ContentSlot
     public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_THREADS = new GwtEvent.Type<RevealContentHandler<?>>();
@@ -57,6 +59,7 @@ public class ContentTabPresenter extends Presenter<ContentTabView, ContentTabPre
         getView().setMemoryNameToken(ContentTabs.MEMORY_TAB.getNameToken());
         getView().setThreadsNameToken(ContentTabs.THREAD_TAB.getNameToken());
         getView().setSummaryNameToken(ContentTabs.SUMMARY_TAB.getNameToken());
+        getView().setOverviewNameToken(ContentTabs.OVERVIEW_TAB.getNameToken());
     }
 
     @Override

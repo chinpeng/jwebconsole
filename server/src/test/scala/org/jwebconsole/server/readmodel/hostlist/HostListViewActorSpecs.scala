@@ -188,4 +188,15 @@ class HostListViewActorSpecs extends SpecificationWithJUnit with Mockito with No
     }
   }
 
+  "Host ListView actor" should {
+    "should sort by id" in new mocks {
+      dao.getAll returns List(host.copy(id = "2"), host.copy(id = "1"))
+      actor ! SimpleHostViewListRequest
+      expectMsg(ResponseMessage(body = Some(List(
+        host.copy(id = "1", login = "", password = ""),
+        host.copy(id = "2", login = "", password = "")
+      ))))
+    }
+  }
+
 }
