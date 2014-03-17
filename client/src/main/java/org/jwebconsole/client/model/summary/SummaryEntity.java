@@ -12,6 +12,12 @@ public class SummaryEntity {
     private String architecture;
     private Double systemLoadAverage;
     private Integer availableProcessors;
+    private Long processCPUTime;
+    private Long committedVirtualMemorySize;
+    private Long totalPhysicalMemorySize;
+    private Long freePhysicalMemorySize;
+    private Long totalSwapSpaceSize;
+    private Long freeSwapSpaceSize;
 
     public String getHostId() {
         return hostId;
@@ -61,6 +67,54 @@ public class SummaryEntity {
         this.availableProcessors = availableProcessors;
     }
 
+    public Long getProcessCPUTime() {
+        return processCPUTime;
+    }
+
+    public void setProcessCPUTime(Long processCPUTime) {
+        this.processCPUTime = processCPUTime;
+    }
+
+    public Long getCommittedVirtualMemorySize() {
+        return committedVirtualMemorySize;
+    }
+
+    public void setCommittedVirtualMemorySize(Long committedVirtualMemorySize) {
+        this.committedVirtualMemorySize = committedVirtualMemorySize;
+    }
+
+    public Long getTotalPhysicalMemorySize() {
+        return totalPhysicalMemorySize;
+    }
+
+    public void setTotalPhysicalMemorySize(Long totalPhysicalMemorySize) {
+        this.totalPhysicalMemorySize = totalPhysicalMemorySize;
+    }
+
+    public Long getFreePhysicalMemorySize() {
+        return freePhysicalMemorySize;
+    }
+
+    public void setFreePhysicalMemorySize(Long freePhysicalMemorySize) {
+        this.freePhysicalMemorySize = freePhysicalMemorySize;
+    }
+
+    public Long getTotalSwapSpaceSize() {
+        return totalSwapSpaceSize;
+    }
+
+    public void setTotalSwapSpaceSize(Long totalSwapSpaceSize) {
+        this.totalSwapSpaceSize = totalSwapSpaceSize;
+    }
+
+    public Long getFreeSwapSpaceSize() {
+        return freeSwapSpaceSize;
+    }
+
+    public void setFreeSwapSpaceSize(Long freeSwapSpaceSize) {
+        this.freeSwapSpaceSize = freeSwapSpaceSize;
+    }
+
     @Override
     public String toString() {
         return "SummaryEntity{" +
@@ -70,6 +124,12 @@ public class SummaryEntity {
                 ", architecture='" + architecture + '\'' +
                 ", systemLoadAverage=" + systemLoadAverage +
                 ", availableProcessors=" + availableProcessors +
+                ", processCPUTime=" + processCPUTime +
+                ", committedVirtualMemorySize=" + committedVirtualMemorySize +
+                ", totalPhysicalMemorySize=" + totalPhysicalMemorySize +
+                ", freePhysicalMemorySize=" + freePhysicalMemorySize +
+                ", totalSwapSpaceSize=" + totalSwapSpaceSize +
+                ", freeSwapSpaceSize=" + freeSwapSpaceSize +
                 '}';
     }
 }

@@ -29,6 +29,24 @@ public class SummaryViewImpl extends ViewWithUiHandlers<SummaryUiHandlers> imple
     @UiField
     Label availableProcessorsLabel;
 
+    @UiField
+    Label processCPUTimeLabel;
+
+    @UiField
+    Label committedVirtualMemorySizeLabel;
+
+    @UiField
+    Label totalPhysicalMemorySizeLabel;
+
+    @UiField
+    Label freePhysicalMemorySizeLabel;
+
+    @UiField
+    Label totalSwapSpaceSizeLabel;
+
+    @UiField
+    Label freeSwapSpaceSizeLabel;
+
     interface Binder extends UiBinder<Widget, SummaryViewImpl> {
     }
 
@@ -61,5 +79,35 @@ public class SummaryViewImpl extends ViewWithUiHandlers<SummaryUiHandlers> imple
     @Override
     public void setVersion(String version) {
         versionLabel.setText(version);
+    }
+
+    @Override
+    public void setProcessCPUTime(Long processCPUTime) {
+        processCPUTimeLabel.setText(processCPUTime.toString());
+    }
+
+    @Override
+    public void setCommittedVirtualMemorySize(Long committedVirtualMemorySize) {
+        committedVirtualMemorySizeLabel.setText(committedVirtualMemorySize.toString());
+    }
+
+    @Override
+    public void setTotalPhysicalMemorySize(Long totalPhysicalMemorySize) {
+        totalPhysicalMemorySizeLabel.setText(totalPhysicalMemorySize.toString());
+    }
+
+    @Override
+    public void setFreePhysicalMemorySize(Long freePhysicalMemorySize) {
+        freePhysicalMemorySizeLabel.setText(freePhysicalMemorySize.toString());
+    }
+
+    @Override
+    public void setTotalSwapSpaceSize(Long totalSwapSpaceSize) {
+        totalSwapSpaceSizeLabel.setText(totalSwapSpaceSize.toString());
+    }
+
+    @Override
+    public void setFreeSwapSpaceSize(Long freeSwapSpaceSize) {
+        freeSwapSpaceSizeLabel.setText(freeSwapSpaceSize.toString());
     }
 }
