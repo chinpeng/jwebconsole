@@ -11,6 +11,7 @@ import com.sencha.gxt.widget.core.client.Component;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.application.content.main.widget.ExtTabPanelWrapperWidget;
+import org.jwebconsole.client.util.ContainerUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -39,9 +40,7 @@ public class ContentTabViewImpl extends ViewWithUiHandlers<ContentTabUiHandlers>
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         if (slot == ContentTabPresenter.TYPE_SET_TAB_CONTENT) {
-            contentPanel.clear();
-            contentPanel.add(content);
-            contentPanel.forceLayout();
+            ContainerUtils.clearAndPut(contentPanel, content);
         }
     }
 

@@ -11,6 +11,8 @@ import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
+import org.jwebconsole.client.bundle.AppResources;
+import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.place.NameTokens;
 
 public class MemoryPresenter extends Presenter<MemoryView, MemoryPresenter.MemoryProxy> implements MemoryUiHandlers {
@@ -29,8 +31,8 @@ public class MemoryPresenter extends Presenter<MemoryView, MemoryPresenter.Memor
     }
 
     @TabInfo(container = ContentTabPresenter.class)
-    static TabData getTabLabel() {
-        return new TabDataBasic("Memory", 0);
+    static TabData getTabLabel(Messages messages) {
+        return new TabDataBasic(messages.tabMemoryHeaderText(), 0);
     }
 
     @ProxyCodeSplit

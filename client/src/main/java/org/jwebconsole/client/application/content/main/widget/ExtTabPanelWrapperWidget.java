@@ -2,6 +2,7 @@ package org.jwebconsole.client.application.content.main.widget;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.Tab;
 import com.gwtplatform.mvp.client.TabData;
@@ -35,7 +36,9 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
 
     private void redirectToToken(Widget selectedItem) {
         ExtTabWrapper selectedTab = findByWidget(selectedItem);
-        handlers.redirect(selectedTab.getHistoryToken());
+        if (selectedTab != null) {
+            handlers.redirect(selectedTab.getHistoryToken());
+        }
     }
 
     private ExtTabWrapper findByWidget(Widget selectedItem) {
@@ -49,15 +52,15 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
 
     @Override
     public Tab addTab(TabData tabData, String historyToken) {
-        ExtTabWrapper tab = new ExtTabWrapper(extTabPanel);
-        tab.setTargetHistoryToken(historyToken);
-        tab.setText(tabData.getLabel());
-        return tab;
+        ExtTabWrapper result = new ExtTabWrapper(extTabPanel, tabData.getLabel(), historyToken);
+        tabs.add(result);
+        return result;
     }
 
     @Override
     public void removeTab(Tab tab) {
         extTabPanel.remove(tab.asWidget());
+        tabs.remove(tab);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
         for (ExtTabWrapper tab : tabs) {
             extTabPanel.remove(tab.asWidget());
         }
+        tabs.clear();
     }
 
     @Override

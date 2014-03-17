@@ -15,6 +15,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import org.jwebconsole.client.application.content.main.event.TabRevealedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.place.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
@@ -31,25 +32,29 @@ public class ContentTabPresenter extends TabContainerPresenter<ContentTabView, C
 
     @ContentSlot
     public static final GwtEvent.Type<RevealContentHandler<?>> TYPE_SET_TAB_CONTENT = new GwtEvent.Type<RevealContentHandler<?>>();
-
-    @Override
-    public void redirect(String nameToken) {
-
-    }
+    private PlaceManager placeManager;
 
     @ProxyStandard
     public interface ContentTabProxy extends Proxy<ContentTabPresenter> {
     }
 
     @Inject
-    public ContentTabPresenter(EventBus eventBus, ContentTabView view, ContentTabProxy proxy) {
+    public ContentTabPresenter(EventBus eventBus, ContentTabView view, ContentTabProxy proxy, PlaceManager placeManager) {
         super(eventBus, view, proxy, TYPE_SET_TAB_CONTENT, TYPE_REQUEST_TABS, TYPE_CHANGE_TAB, ApplicationPresenter.SLOT_CONTENT_PANEL);
+        this.placeManager = placeManager;
         getView().setUiHandlers(this);
+    }
+
+    @Override
+    public void redirect(String nameToken) {
+        PlaceRequest request = PlaceRequestUtils.getPlaceRequestWithReplacedToken(placeManager.getCurrentPlaceRequest(), nameToken);
+        placeManager.revealPlace(request);
     }
 
     @Override
     protected void onBind() {
         super.onBind();
+        getEventBus().fireEvent(new TabRevealedEvent());
     }
 
 }

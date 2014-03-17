@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.jwebconsole.client.bundle.AppResources;
+import org.jwebconsole.client.util.ContainerUtils;
 
 import javax.inject.Inject;
 
@@ -33,14 +34,10 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     public void setInSlot(Object slot, IsWidget content) {
         super.setInSlot(slot, content);
         if (slot == ApplicationPresenter.SLOT_LEFT_PANEL) {
-            leftPanel.clear();
-            leftPanel.add(content);
-            leftPanel.forceLayout();
+            ContainerUtils.clearAndPut(leftPanel, content);
         }
         if (slot == ApplicationPresenter.SLOT_CONTENT_PANEL) {
-            contentPanel.clear();
-            contentPanel.add(content);
-            contentPanel.forceLayout();
+            ContainerUtils.clearAndPut(contentPanel, content);
         }
     }
 

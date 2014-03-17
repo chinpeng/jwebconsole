@@ -21,6 +21,7 @@ import org.jwebconsole.client.application.content.thread.model.ThreadInfoPropert
 import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.thread.details.ThreadDetailsEntity;
 import org.jwebconsole.client.model.thread.info.ThreadInfoEntity;
+import org.jwebconsole.client.util.ContainerUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     VerticalLayoutContainer mainContainer;
     @UiField
     VerticalLayoutContainer threadDetailsPanel;
+    @UiField
+    VerticalLayoutContainer.VerticalLayoutData chartPanelLayoutData;
 
     interface Binder extends UiBinder<Widget, ThreadContentViewImpl> {
     }
@@ -76,7 +79,8 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
         chartPanel.addCollapseHandler(new CollapseEvent.CollapseHandler() {
             @Override
             public void onCollapse(CollapseEvent event) {
-                gridLayoutData.setHeight(.94d);
+                chartPanelLayoutData.setHeight(-1);
+                gridLayoutData.setHeight(1);
                 mainContainer.forceLayout();
 
             }
@@ -84,7 +88,8 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
         chartPanel.addExpandHandler(new ExpandEvent.ExpandHandler() {
             @Override
             public void onExpand(ExpandEvent event) {
-                gridLayoutData.setHeight(.5d);
+                chartPanelLayoutData.setHeight(0.5);
+                gridLayoutData.setHeight(0.5);
                 mainContainer.forceLayout();
             }
         });
@@ -126,9 +131,7 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         if (slot == ThreadContentPresenter.THREAD_CHART_WIDGET_SLOT) {
-            chartPanel.clear();
-            chartPanel.add(content);
-            chartPanel.forceLayout();
+            ContainerUtils.clearAndPut(chartPanel, content);
         }
     }
 

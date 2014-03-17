@@ -13,9 +13,10 @@ public class ExtTabWrapper implements Tab {
     private String historyToken;
     private TabPanel tabPanel;
 
-    public ExtTabWrapper(TabPanel tabPanel) {
-        this.tabPanel = tabPanel;
-        this.config = new TabItemConfig();
+    public ExtTabWrapper(TabPanel extTabPanel, String label, String historyToken) {
+        this.tabPanel = extTabPanel;
+        this.config = new TabItemConfig(label);
+        this.historyToken = historyToken;
         tabPanel.add(widget, config);
     }
 

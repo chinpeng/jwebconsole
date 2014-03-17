@@ -7,30 +7,29 @@
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
-    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="overviewConfig">
-        <ui:attributes text="{messages.tabOverviewHeaderText}"/>
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="tabMargins">
+        <ui:attributes top="0" right="0" bottom="10" left="0"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="tabLayoutData">
+        <ui:attributes width="1" height="-1" margins="{tabMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="contentLayoutData">
+        <ui:attributes width="1" height="1"/>
     </ui:with>
 
 
-    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="threadsConfig">
-        <ui:attributes text="{messages.tabThreadsHeaderText}"/>
-    </ui:with>
-
-    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="vmSummaryConfig">
-        <ui:attributes text="{messages.tabSummaryHeaderText}"/>
-    </ui:with>
-
-    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="memoryConfig">
-        <ui:attributes text="{messages.tabMemoryHeaderText}"/>
-    </ui:with>
 
     <container:VerticalLayoutContainer>
-        <container:child>
+        <container:child layoutData="{tabLayoutData}">
             <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
 
             </tabs:TabPanel>
         </container:child>
-        <container:child>
+        <container:child layoutData="{contentLayoutData}">
             <container:SimpleContainer ui:field="contentPanel">
 
             </container:SimpleContainer>

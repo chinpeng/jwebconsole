@@ -12,6 +12,10 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import org.jwebconsole.client.application.content.main.event.TabRevealedEvent;
+import org.jwebconsole.client.application.content.main.event.TabRevealedEventHandler;
+import org.jwebconsole.client.application.content.main.event.TabUnbindEvent;
+import org.jwebconsole.client.application.content.main.event.TabUnbindEventHandler;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
@@ -36,7 +40,9 @@ public class AvailableHostsPresenter
         HostDeletionSuccessEventHandler,
         HostDeletionStartedEventHandler,
         HostChangedEventHandler,
-        HostCreatedEventHandler {
+        HostCreatedEventHandler,
+        TabRevealedEventHandler,
+        TabUnbindEventHandler {
 
     @ContentSlot
     public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_TOOLBAR = new GwtEvent.Type<RevealContentHandler<?>>();
@@ -45,6 +51,7 @@ public class AvailableHostsPresenter
 
     private AvailableHostsPresenterFacade facade;
 
+    private boolean tabRevealed = false;
 
     @Inject
     public AvailableHostsPresenter(EventBus eventBus, AvailableHostsView view, AvailableHostsProxy proxy, AvailableHostsPresenterFacade facade) {
@@ -60,6 +67,8 @@ public class AvailableHostsPresenter
         getEventBus().addHandler(HostDeletionFailedEvent.TYPE, this);
         getEventBus().addHandler(HostChangedEvent.TYPE, this);
         getEventBus().addHandler(HostCreatedEvent.TYPE, this);
+        getEventBus().addHandler(TabRevealedEvent.TYPE, this);
+        getEventBus().addHandler(TabUnbindEvent.TYPE, this);
     }
 
     public void onBind() {
@@ -154,7 +163,7 @@ public class AvailableHostsPresenter
 
     @Override
     public void onTreeItemSelected(HostConnection connection) {
-        if (facade.isTabNameToken()) {
+        if (tabRevealed) {
             facade.revealCurrentPlaceWithHostId(connection.getId());
         } else {
             facade.revealThreadContentPlace(connection.getId());
@@ -191,6 +200,16 @@ public class AvailableHostsPresenter
     public void onHostCreated(HostCreatedEvent event) {
         facade.rescheduleTimer();
         getView().addHost(event.getConnection());
+    }
+
+    @Override
+    public void onTabRevealed(TabRevealedEvent event) {
+        tabRevealed = true;
+    }
+
+    @Override
+    public void onTabUnbind(TabUnbindEvent event) {
+        tabRevealed = false;
     }
 
     @ProxyCodeSplit

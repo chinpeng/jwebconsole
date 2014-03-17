@@ -1,19 +1,29 @@
 package org.jwebconsole.client.place;
 
+import com.gwtplatform.mvp.client.TabData;
+import com.gwtplatform.mvp.client.TabDataBasic;
+
 public enum ContentTabs {
 
-    MEMORY_TAB(NameTokens.memory),
-    THREAD_TAB(NameTokens.thread),
-    SUMMARY_TAB(NameTokens.summary),
-    OVERVIEW_TAB(NameTokens.overview);
+    OVERVIEW_TAB(1),
+    MEMORY_TAB(2),
+    SUMMARY_TAB(3),
+    THREAD_TAB(4);
 
-    private String nameToken;
 
-    private ContentTabs(String nameToken) {
-        this.nameToken = nameToken;
+    private Integer priority;
+
+    ContentTabs(Integer priority) {
+        this.priority = priority;
     }
 
-    public String getNameToken() {
-        return nameToken;
+    public Integer getPriority() {
+        return priority;
     }
+
+    public TabData toTabData(String label) {
+        return new TabDataBasic(label, priority);
+    }
+
+
 }

@@ -17,12 +17,12 @@
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
              field="chartPanelLayoutData">
-        <ui:attributes width="1" height=".48" margins="{chartPanelMargins}"/>
+        <ui:attributes width="1" height=".5"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
              field="gridLayoutData">
-        <ui:attributes width="1" height=".48" margins="{chartPanelMargins}"/>
+        <ui:attributes width="1" height=".5" margins="{chartPanelMargins}"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData"
