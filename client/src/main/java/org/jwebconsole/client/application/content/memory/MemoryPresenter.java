@@ -3,9 +3,13 @@ package org.jwebconsole.client.application.content.memory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.TabData;
+import com.gwtplatform.mvp.client.TabDataBasic;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.place.NameTokens;
 
@@ -15,7 +19,7 @@ public class MemoryPresenter extends Presenter<MemoryView, MemoryPresenter.Memor
 
     @Inject
     public MemoryPresenter(EventBus eventBus, MemoryView view, MemoryProxy proxy, MemoryPresenterFacade facade) {
-        super(eventBus, view, proxy, ContentTabPresenter.SLOT_MEMORY);
+        super(eventBus, view, proxy, ContentTabPresenter.TYPE_SET_TAB_CONTENT);
         this.facade = facade;
         init();
     }
@@ -24,11 +28,14 @@ public class MemoryPresenter extends Presenter<MemoryView, MemoryPresenter.Memor
         getView().setUiHandlers(this);
     }
 
-
+    @TabInfo(container = ContentTabPresenter.class)
+    static TabData getTabLabel() {
+        return new TabDataBasic("Memory", 0);
+    }
 
     @ProxyCodeSplit
     @NameToken(NameTokens.memory)
-    public interface MemoryProxy extends ProxyPlace<MemoryPresenter> {
+    public interface MemoryProxy extends TabContentProxyPlace<MemoryPresenter> {
     }
 
     @Override

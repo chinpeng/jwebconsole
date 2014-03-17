@@ -24,30 +24,17 @@
         <ui:attributes text="{messages.tabMemoryHeaderText}"/>
     </ui:with>
 
-    <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
-        <tabs:child config="{overviewConfig}">
-            <container:SimpleContainer ui:field="overviewPanel">
+    <container:VerticalLayoutContainer>
+        <container:child>
+            <tabs:TabPanel bodyBorder="true" ui:field="tabPanel">
+
+            </tabs:TabPanel>
+        </container:child>
+        <container:child>
+            <container:SimpleContainer ui:field="contentPanel">
 
             </container:SimpleContainer>
-        </tabs:child>
-        <tabs:child config="{vmSummaryConfig}">
-            <container:SimpleContainer ui:field="summaryPanel">
-
-            </container:SimpleContainer>
-        </tabs:child>
-
-        <tabs:child config="{memoryConfig}">
-            <container:SimpleContainer ui:field="memoryPanel">
-
-            </container:SimpleContainer>
-        </tabs:child>
-
-        <tabs:child config="{threadsConfig}">
-            <container:SimpleContainer ui:field="threadPanel">
-
-            </container:SimpleContainer>
-        </tabs:child>
-
-    </tabs:TabPanel>
+        </container:child>
+    </container:VerticalLayoutContainer>
 
 </ui:UiBinder>

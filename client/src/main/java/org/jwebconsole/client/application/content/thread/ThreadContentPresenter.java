@@ -3,9 +3,14 @@ package org.jwebconsole.client.application.content.thread;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.TabData;
+import com.gwtplatform.mvp.client.TabDataBasic;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.TabContentProxy;
+import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
@@ -26,7 +31,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     @Inject
     public ThreadContentPresenter(EventBus eventBus, ThreadContentView view, ThreadContentProxy proxy, ThreadContentPresenterFacade facade) {
-        super(eventBus, view, proxy, ContentTabPresenter.SLOT_THREADS);
+        super(eventBus, view, proxy, ContentTabPresenter.TYPE_SET_TAB_CONTENT);
         this.facade = facade;
         init();
     }
@@ -63,6 +68,11 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
         });
     }
 
+    @TabInfo(container = ContentTabPresenter.class)
+    static TabData getTabLabel() {
+        return new TabDataBasic("Thread", 0);
+    }
+
     @Override
     public void onThreadSelected(ThreadInfoEntity thread) {
         if (connection != null) {
@@ -77,7 +87,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     @ProxyCodeSplit
     @NameToken(NameTokens.thread)
-    public interface ThreadContentProxy extends ProxyPlace<ThreadContentPresenter> {
+    public interface ThreadContentProxy extends TabContentProxyPlace<ThreadContentPresenter> {
 
     }
 

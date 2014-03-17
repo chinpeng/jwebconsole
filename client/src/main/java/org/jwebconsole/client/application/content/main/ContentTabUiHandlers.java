@@ -4,6 +4,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface ContentTabUiHandlers extends UiHandlers {
 
-    void onActiveTabSelected(String token);
+    public void redirect(String nameToken);
 
 }
