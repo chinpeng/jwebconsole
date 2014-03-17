@@ -4,7 +4,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ChangeTabHandler;
-import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.RequestTabsHandler;
 import com.gwtplatform.mvp.client.TabContainerPresenter;
 import com.gwtplatform.mvp.client.annotations.ChangeTab;
@@ -15,10 +14,9 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import org.jwebconsole.client.application.content.main.event.TabHiddenEvent;
 import org.jwebconsole.client.application.content.main.event.TabRevealedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
-import org.jwebconsole.client.place.ContentTabs;
-import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.util.PlaceRequestUtils;
 
 
@@ -52,9 +50,14 @@ public class ContentTabPresenter extends TabContainerPresenter<ContentTabView, C
     }
 
     @Override
-    protected void onBind() {
-        super.onBind();
+    public void onReset() {
+        super.onReset();
         getEventBus().fireEvent(new TabRevealedEvent());
     }
 
+    @Override
+    public void onHide() {
+        super.onHide();
+        getEventBus().fireEvent(new TabHiddenEvent());
+    }
 }

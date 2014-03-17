@@ -15,8 +15,8 @@ import java.util.List;
 public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartView> {
 
     private ThreadCountChartPresenterFacade facade;
-    private HostConnection selectedConnection;
     private LinkedList<ThreadCountEntity> entities = new LinkedList<ThreadCountEntity>();
+    private String connectionId;
 
     @Inject
     public ThreadCountChartPresenter(EventBus eventBus, ThreadCountChartView view, ThreadCountChartPresenterFacade facade) {
@@ -24,16 +24,16 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
         this.facade = facade;
     }
 
-    public void init(HostConnection selectedConnection) {
+    public void init(String connectionId) {
         facade.destroyTimer();
-        this.selectedConnection = selectedConnection;
+        this.connectionId = connectionId;
         makeServerRequest();
         startChartUpdating();
     }
 
     private void makeServerRequest() {
         getView().mask(facade.getLoadingMessage());
-        facade.getLastFifteenThreadInfoRows(selectedConnection.getId(), new AppCallback<ThreadCountListResponse>() {
+        facade.getLastFifteenThreadInfoRows(connectionId, new AppCallback<ThreadCountListResponse>() {
 
             @Override
             public void beforeResponse() {
@@ -48,7 +48,7 @@ public class ThreadCountChartPresenter extends PresenterWidget<ThreadCountChartV
     }
 
     private void startChartUpdating() {
-        facade.scheduleUpdateTimer(selectedConnection.getId(), new SuccessCallback<ThreadCountEntity>() {
+        facade.scheduleUpdateTimer(connectionId, new SuccessCallback<ThreadCountEntity>() {
             @Override
             public void onSuccess(ThreadCountEntity body) {
                 entities.add(body);

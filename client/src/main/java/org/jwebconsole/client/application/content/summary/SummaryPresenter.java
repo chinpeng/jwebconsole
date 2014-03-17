@@ -12,13 +12,15 @@ import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
+import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.model.summary.SummaryEntity;
 import org.jwebconsole.client.model.summary.SummaryResponse;
+import org.jwebconsole.client.place.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.AppCallback;
 
 
-public class SummaryPresenter extends Presenter<SummaryView, SummaryPresenter.SummaryProxy> implements HostSelectedEventHandler, SummaryUiHandlers {
+public class SummaryPresenter extends Presenter<SummaryView, SummaryPresenter.SummaryProxy> implements SummaryUiHandlers {
 
     private final SummaryFacade facade;
 
@@ -34,20 +36,28 @@ public class SummaryPresenter extends Presenter<SummaryView, SummaryPresenter.Su
         init();
     }
 
+    @SuppressWarnings("unused")
     @TabInfo(container = ContentTabPresenter.class)
-    static TabData getTabLabel() {
-        return new TabDataBasic("Summary", 0);
+    static TabData getTabLabel(Messages messages) {
+        return ContentTabs.SUMMARY_TAB.toTabData(messages.tabSummaryHeaderText());
     }
 
 
     private void init(){
         getView().setUiHandlers(this);
-        getEventBus().addHandler(HostSelectedEvent.TYPE, this);
     }
 
     @Override
-    public void onHostSelected(HostSelectedEvent event) {
-        facade.makeSummaryRequest(event.getConnection().getId(), new AppCallback<SummaryResponse>() {
+    protected void onReset() {
+        super.onReset();
+        String connectionId = facade.getCurrentConnectionId();
+        if (connectionId != null) {
+            makeSummaryRequest(connectionId);
+        }
+    }
+
+    private void makeSummaryRequest(String connectionId) {
+        facade.makeSummaryRequest(connectionId, new AppCallback<SummaryResponse>() {
             @Override
             public void onSuccess(SummaryResponse response) {
                 processResponse(response.getBody());

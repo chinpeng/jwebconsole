@@ -1,7 +1,6 @@
 
 
 
-
 package org.jwebconsole.client.application.content.overview;
 
 import com.google.inject.Inject;
@@ -18,15 +17,17 @@ import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.application.content.thread.widget.chart.ThreadCountChartPresenter;
 import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
+import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.model.host.HostConnection;
+import org.jwebconsole.client.place.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 
 public class OverviewPresenter extends Presenter<OverviewView, OverviewPresenter.OverviewProxy>
-        implements OverviewUiHandlers,HostSelectedEventHandler {
+        implements OverviewUiHandlers {
 
     public static final Object THREAD_CHART_WIDGET_SLOT = new Object();
 
-    private ThreadCountChartPresenter threadCountChartPresenter;
+    private OverviewPresenterFacade facade;
 
     @NameToken(NameTokens.overview)
     @ProxyCodeSplit
@@ -34,33 +35,29 @@ public class OverviewPresenter extends Presenter<OverviewView, OverviewPresenter
     }
 
     @Inject
-    public OverviewPresenter(EventBus eventBus, OverviewView view, OverviewProxy proxy, ThreadCountChartPresenter threadCountChartPresenter) {
+    public OverviewPresenter(EventBus eventBus, OverviewView view, OverviewProxy proxy, OverviewPresenterFacade facade) {
         super(eventBus, view, proxy, ContentTabPresenter.TYPE_SET_TAB_CONTENT);
-        this.threadCountChartPresenter = threadCountChartPresenter;
+        this.facade = facade;
         getView().setUiHandlers(this);
-        getEventBus().addHandler(HostSelectedEvent.TYPE, this);
     }
 
+    @SuppressWarnings("unused")
     @TabInfo(container = ContentTabPresenter.class)
-    static TabData getTabLabel() {
-        return new TabDataBasic("Overview", 0);
+    static TabData getTabLabel(Messages messages) {
+        return ContentTabs.OVERVIEW_TAB.toTabData(messages.tabOverviewHeaderText());
     }
 
     @Override
-    public void onHostSelected(HostSelectedEvent event) {
-        if (event.getConnection() != null) {
-            revealThreadCountChartPresenter(this, event.getConnection());
+    protected void onReset() {
+        super.onReset();
+        initChart();
+    }
+
+    private void initChart() {
+        String connectionId = facade.getConnectionId();
+        if (connectionId != null) {
+            facade.revealThreadCountChartPresenter(this, connectionId);
         }
-    }
-
-    @Override
-    protected void onBind() {
-        super.onBind();
-    }
-
-    public void revealThreadCountChartPresenter(HasSlots parent, HostConnection connection) {
-        threadCountChartPresenter.init(connection);
-        parent.setInSlot(THREAD_CHART_WIDGET_SLOT, threadCountChartPresenter);
     }
 
 

@@ -28,7 +28,6 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @Test
     public void shouldDestroyTimerOnInit() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
     }
 
 }

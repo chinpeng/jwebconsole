@@ -23,7 +23,7 @@
 
     <!-- Default GIN Module -->
     <set-configuration-property name="gin.ginjector.modules" value="org.jwebconsole.client.gin.ClientModule" />
-
+    <set-configuration-property name="gin.ginjector.extensions" value="org.jwebconsole.client.gin.GinjectorExtension"/>
 
     <!-- Super Dev Mode On -->
     <add-linker name="xsiframe"/>

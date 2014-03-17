@@ -11,6 +11,7 @@ import org.jwebconsole.client.bundle.AppResources;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.thread.details.ThreadDetailsListResponse;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
+import org.jwebconsole.client.place.AppParams;
 import org.jwebconsole.client.service.ServiceFactory;
 
 public class ThreadContentPresenterFacade {
@@ -38,8 +39,8 @@ public class ThreadContentPresenterFacade {
     }
 
 
-    public void revealThreadCountChartPresenter(HasSlots parent, HostConnection connection) {
-        threadCountChartPresenter.init(connection);
+    public void revealThreadCountChartPresenter(HasSlots parent, String connectionId) {
+        threadCountChartPresenter.init(connectionId);
         parent.setInSlot(ThreadContentPresenter.THREAD_CHART_WIDGET_SLOT, threadCountChartPresenter);
     }
 
@@ -60,6 +61,10 @@ public class ThreadContentPresenterFacade {
 
     public void makeThreadDetailsRequest(String hostId, Long threadId, MethodCallback<ThreadDetailsListResponse> callback) {
         serviceFactory.getThreadDetailsService().getThreadDetails(hostId, threadId, callback);
+    }
+
+    public String getCurrentConnectionId() {
+        return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
     }
 
     public void disableThreadInfoTimer() {
