@@ -57,14 +57,14 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @Test
     public void shouldDestroyTimerOnInit() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         verify(facade).destroyTimer();
     }
 
     @Test
     public void shouldMaskOnInit() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         verify(view).mask(anyString());
     }
 
@@ -72,7 +72,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldUnmaskOnFailure() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onFailure(null, new RuntimeException());
@@ -83,7 +83,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldUnmaskOnError() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         ThreadCountListResponse errorResponse = new ThreadCountListResponse();
@@ -96,7 +96,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldUnmaskOnSuccess() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -107,7 +107,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldAppendBodyWithDefaultValues() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -118,7 +118,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldSetDateAxisBounds() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -130,7 +130,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldSetNumberAxisBounds() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -142,7 +142,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldClearChartOnInit() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -153,7 +153,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldPopulateChartWithEntities() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -164,7 +164,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldShowChart() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
         verify(facade).getLastFifteenThreadInfoRows(anyString(), captor.capture());
         captor.getValue().onSuccess(null, response);
@@ -176,7 +176,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldRefreshChartOnTimerUpdate() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<SuccessCallback> captor = ArgumentCaptor.forClass(SuccessCallback.class);
         verify(facade).scheduleUpdateTimer(anyString(), captor.capture());
         captor.getValue().onSuccess(entity);
@@ -187,7 +187,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldProvideChartAxisBoundsOnTimerUpdate() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<SuccessCallback> captor = ArgumentCaptor.forClass(SuccessCallback.class);
         verify(facade).scheduleUpdateTimer(anyString(), captor.capture());
         captor.getValue().onSuccess(entity);
@@ -201,7 +201,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldClearChartOnTimerUpdate() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<SuccessCallback> captor = ArgumentCaptor.forClass(SuccessCallback.class);
         verify(facade).scheduleUpdateTimer(anyString(), captor.capture());
         captor.getValue().onSuccess(entity);
@@ -212,7 +212,7 @@ public class ThreadCountChartPresenterTests extends Mockito {
     @SuppressWarnings("unchecked")
     public void shouldRemoveLastEntityOnTimerUpdate() {
         ThreadCountChartPresenter presenter = new ThreadCountChartPresenter(eventBus, view, facade);
-        presenter.init(connection);
+        presenter.init(connection.getId());
         ArgumentCaptor<SuccessCallback> captor = ArgumentCaptor.forClass(SuccessCallback.class);
         verify(facade).scheduleUpdateTimer(anyString(), captor.capture());
         captor.getValue().onSuccess(entity);

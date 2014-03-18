@@ -44,4 +44,9 @@ public class ToolbarPresenterFacade {
     public void redirectToHome() {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
     }
+
+    public String getCurrentConnectionId() {
+        return null;
+    }
+
 }

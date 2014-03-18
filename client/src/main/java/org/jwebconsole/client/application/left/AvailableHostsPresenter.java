@@ -12,7 +12,6 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;
@@ -36,8 +35,7 @@ public class AvailableHostsPresenter
         HostDeletionSuccessEventHandler,
         HostDeletionStartedEventHandler,
         HostChangedEventHandler,
-        HostCreatedEventHandler
-        {
+        HostCreatedEventHandler {
 
     @ContentSlot
     public static final GwtEvent.Type<RevealContentHandler<?>> SLOT_TOOLBAR = new GwtEvent.Type<RevealContentHandler<?>>();
@@ -64,18 +62,9 @@ public class AvailableHostsPresenter
 
     }
 
-    public void onBind() {
-        super.onBind();
-    }
-
     @Override
-    public void onReset() {
-        facade.stopTimer();
-        super.onReset();
-        init();
-    }
-
-    private void init() {
+    public void onReveal() {
+        super.onReveal();
         getView().showLoadingMask();
         makeHostsListRequest();
         scheduleHostsListRequest();
@@ -101,16 +90,8 @@ public class AvailableHostsPresenter
             @Override
             public void onSuccess(HostConnectionListResponse response) {
                 processConnectionListResponse(response.getBody());
-                fireHostChangedEvent(response.getBody());
             }
         });
-    }
-
-    private void fireHostChangedEvent(List<HostConnection> body) {
-        HostConnection selection = getSelectionFromRequest(body);
-        if (selection != null) {
-            getEventBus().fireEvent(new HostSelectedEvent(selection));
-        }
     }
 
     private void processConnectionListResponse(List<HostConnection> connections) {
@@ -193,6 +174,7 @@ public class AvailableHostsPresenter
     public void onHostCreated(HostCreatedEvent event) {
         facade.rescheduleTimer();
         getView().addHost(event.getConnection());
+        getView().setSelection(event.getConnection());
     }
 
     @ProxyCodeSplit

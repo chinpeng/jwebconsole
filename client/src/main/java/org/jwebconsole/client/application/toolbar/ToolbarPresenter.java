@@ -27,11 +27,9 @@ import org.jwebconsole.client.service.AppCallback;
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
         RevealOnStartEventHandler,
-        HostSelectedEventHandler,
         HostChangedEventHandler {
 
     private final ToolbarPresenterFacade facade;
-    private HostConnection selectedConnection;
 
 
 
@@ -44,13 +42,19 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
         super(eventBus, view, proxy, AvailableHostsPresenter.SLOT_TOOLBAR);
         this.facade = facade;
         init();
-
     }
 
     private void init() {
         getView().setUiHandlers(this);
-        getEventBus().addHandler(HostSelectedEvent.TYPE, this);
         getEventBus().addHandler(HostChangedEvent.TYPE, this);
+    }
+
+    @Override
+    protected void onReset() {
+        super.onReset();
+        if (facade.getCurrentConnectionId() != null) {
+            getView().enableEditButtons();
+        }
     }
 
     @Override
@@ -72,13 +76,13 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Override
     public void onHostChanged(HostChangedEvent hostChangedEvent) {
-        selectedConnection = hostChangedEvent.getConnection();
+
     }
 
     @Override
     public void deleteConnection() {
         getEventBus().fireEvent(new HostDeletionStartedEvent());
-        facade.deleteHost(selectedConnection.getId(), new AppCallback<SimpleResponse>() {
+        facade.deleteHost(facade.getCurrentConnectionId(), new AppCallback<SimpleResponse>() {
 
             @Override
             public void onFailure(Method method, Throwable throwable) {
@@ -100,20 +104,13 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     @Override
     public void editConnection() {
-        getEventBus().fireEvent(new RevealEditConnectionPopupEvent(selectedConnection));
+        getEventBus().fireEvent(new RevealEditConnectionPopupEvent());
     }
 
     private void processSuccessfulDeletion() {
-        getEventBus().fireEvent(new HostDeletionSuccessEvent(selectedConnection));
+        getEventBus().fireEvent(new HostDeletionSuccessEvent(facade.getCurrentConnectionId()));
         getView().disableEditButtons();
         facade.redirectToHome();
     }
-
-    @Override
-    public void onHostSelected(HostSelectedEvent event) {
-        this.selectedConnection = event.getConnection();
-        getView().enableEditButtons();
-    }
-
 
 }

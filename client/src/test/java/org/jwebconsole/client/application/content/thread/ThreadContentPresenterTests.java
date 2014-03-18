@@ -37,15 +37,17 @@ public class ThreadContentPresenterTests extends Mockito {
     @SuppressWarnings("unused")
     public void shouldDisableChartWhenConnectionIsNull() {
         ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
-        eventBus.fireEvent(new HostSelectedEvent(null));
+        when(facade.getCurrentConnectionId()).thenReturn(null);
+        presenter.onReset();
         verify(facade).disableChart();
     }
 
     @Test
     public void shouldInitChartWidgetWhenConnectionIsFull() {
         ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
-        eventBus.fireEvent(new HostSelectedEvent(connection));
-        verify(facade).revealThreadCountChartPresenter(presenter, connection);
+        when(facade.getCurrentConnectionId()).thenReturn("test-id");
+        presenter.onReset();
+        verify(facade).revealThreadCountChartPresenter(presenter, connection.getId());
     }
 
 }

@@ -7,12 +7,6 @@ public class RevealEditConnectionPopupEvent extends GwtEvent<RevealEditConnectio
 
     public static Type<RevealEditConnectionPopupEventHandler> TYPE = new Type<RevealEditConnectionPopupEventHandler>();
 
-    private HostConnection connection;
-
-    public RevealEditConnectionPopupEvent(HostConnection connection) {
-        this.connection = connection;
-    }
-
     @Override
     public Type<RevealEditConnectionPopupEventHandler> getAssociatedType() {
         return TYPE;
@@ -27,7 +21,4 @@ public class RevealEditConnectionPopupEvent extends GwtEvent<RevealEditConnectio
         return TYPE;
     }
 
-    public HostConnection getConnection() {
-        return connection;
-    }
 }

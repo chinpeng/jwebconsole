@@ -7,10 +7,10 @@ public class HostDeletionSuccessEvent extends GwtEvent<HostDeletionSuccessEventH
 
     public static final Type<HostDeletionSuccessEventHandler> TYPE = new Type<HostDeletionSuccessEventHandler>();
 
-    private HostConnection deletedHost;
+    private String connectionId;
 
-    public HostDeletionSuccessEvent(HostConnection deletedHost) {
-        this.deletedHost = deletedHost;
+    public HostDeletionSuccessEvent(String connectionId) {
+        this.connectionId = connectionId;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class HostDeletionSuccessEvent extends GwtEvent<HostDeletionSuccessEventH
         handler.onSuccessDeletion(this);
     }
 
-    public HostConnection getDeletedHost() {
-        return deletedHost;
+    public String getConnectionId() {
+        return connectionId;
     }
 }
