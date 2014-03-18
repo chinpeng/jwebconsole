@@ -104,7 +104,7 @@ public class ConnectionWindowPresenterTests extends Mockito {
         Throwable error = mock(Throwable.class);
         when(error.getMessage()).thenReturn("failure");
         argumentCaptor.getValue().onFailure(null, error);
-        verify(facade).displayUnknowError();
+        verify(facade).displayUnknownError();
     }
 
     @Test

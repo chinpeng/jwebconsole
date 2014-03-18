@@ -8,11 +8,6 @@ import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.fusesource.restygwt.client.Method;
 import org.jwebconsole.client.application.left.AvailableHostsPresenter;
-import org.jwebconsole.client.application.main.ApplicationPresenter;
-import org.jwebconsole.client.application.left.event.HostSelectedEvent;
-import org.jwebconsole.client.application.left.event.HostSelectedEventHandler;
-import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
-import org.jwebconsole.client.application.popup.connection.event.HostChangedEventHandler;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
@@ -21,16 +16,13 @@ import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.model.base.SimpleResponse;
-import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.service.AppCallback;
 
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
-        RevealOnStartEventHandler,
-        HostChangedEventHandler {
+        RevealOnStartEventHandler {
 
     private final ToolbarPresenterFacade facade;
-
 
 
     @ProxyCodeSplit
@@ -46,7 +38,6 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
 
     private void init() {
         getView().setUiHandlers(this);
-        getEventBus().addHandler(HostChangedEvent.TYPE, this);
     }
 
     @Override
@@ -72,11 +63,6 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     @Override
     public void openConnectionWindow() {
         getEventBus().fireEvent(new RevealAddConnectionPopupEvent());
-    }
-
-    @Override
-    public void onHostChanged(HostChangedEvent hostChangedEvent) {
-
     }
 
     @Override

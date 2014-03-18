@@ -3,7 +3,6 @@ package org.jwebconsole.client.application.popup.connection;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
@@ -15,7 +14,7 @@ import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEventHandler;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionResponse;
-import org.jwebconsole.client.place.NameTokens;
+import org.jwebconsole.client.service.AppCallback;
 
 public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, ConnectionWindowPresenter.ConnectionWindowProxy> implements
         ConnectionWindowUiHandlers,
@@ -47,11 +46,8 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     public void onRevealAddEvent(RevealAddConnectionPopupEvent event) {
         if (!isBound()) {
             forceReveal();
-            initWithCreationState();
-        } else {
-           initWithCreationState();
         }
-
+        initWithCreationState();
     }
 
     private void initWithCreationState() {
@@ -64,10 +60,13 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
     public void onRevealEditEvent(RevealEditConnectionPopupEvent event) {
         if (!isBound()) {
             forceReveal();
-            initWithEditState(event.getConnection());
-        } else {
-            initWithEditState(event.getConnection());
         }
+        facade.makeHostRequest(new AppCallback<HostConnectionResponse>() {
+            @Override
+            public void onSuccess(HostConnectionResponse response) {
+                initWithEditState(response.getBody());
+            }
+        });
     }
 
     private void initWithEditState(HostConnection connection) {
@@ -94,7 +93,7 @@ public class ConnectionWindowPresenter extends Presenter<ConnectionWindowView, C
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 getView().hideMask();
-                facade.displayUnknowError();
+                facade.displayUnknownError();
             }
 
             @Override

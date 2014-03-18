@@ -39,7 +39,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
     @Override
     public void onReset() {
         super.onReset();
-        facade.disableThreadInfoTimer();
+        stopTimers();
         getView().clearStackTracePanel();
         prepareFromHostId();
     }
@@ -49,8 +49,6 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
         if (connectionId != null) {
             facade.revealThreadCountChartPresenter(this, connectionId);
             makeThreadInfoRequest();
-        } else {
-            stopTimers();
         }
     }
 

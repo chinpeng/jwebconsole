@@ -2,10 +2,8 @@ package org.jwebconsole.client.application.content.thread;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.mockito.Mockito;
 

@@ -26,4 +26,8 @@ public class OverviewPresenterFacade {
     public String getConnectionId() {
         return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
     }
+
+    public void stopThreadChart() {
+        threadCountChartPresenter.destroy();
+    }
 }

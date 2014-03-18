@@ -24,6 +24,7 @@ import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.service.AppCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +45,8 @@ public class AvailableHostsPresenter
 
     private AvailableHostsPresenterFacade facade;
 
+    private List<HostConnection> connections = new ArrayList<HostConnection>();
+
 
     @Inject
     public AvailableHostsPresenter(EventBus eventBus, AvailableHostsView view, AvailableHostsProxy proxy, AvailableHostsPresenterFacade facade) {
@@ -63,6 +66,17 @@ public class AvailableHostsPresenter
     }
 
     @Override
+    public void onReset() {
+        super.onReset();
+        String hostId = facade.getHostIdFromPlaceRequest();
+        getView().disableSelectionHandler();
+        HostConnection connection = new HostConnection();
+        connection.setId(hostId);
+        getView().setSelection(connection);
+        getView().enableSelectionHandler();
+    }
+
+    @Override
     public void onReveal() {
         super.onReveal();
         getView().showLoadingMask();
@@ -74,7 +88,8 @@ public class AvailableHostsPresenter
         facade.scheduleReceiveHosts(SCHEDULE_TIME, new AppCallback<HostConnectionListResponse>() {
             @Override
             public void onSuccess(HostConnectionListResponse response) {
-                processConnectionListResponse(response.getBody());
+                connections = response.getBody();
+                processConnectionListResponse();
             }
         });
     }
@@ -89,12 +104,13 @@ public class AvailableHostsPresenter
 
             @Override
             public void onSuccess(HostConnectionListResponse response) {
-                processConnectionListResponse(response.getBody());
+                connections = response.getBody();
+                processConnectionListResponse();
             }
         });
     }
 
-    private void processConnectionListResponse(List<HostConnection> connections) {
+    private void processConnectionListResponse() {
         getView().clearStore();
         for (HostConnection connection : connections) {
             getView().addConnection(connection);
@@ -107,8 +123,6 @@ public class AvailableHostsPresenter
         HostConnection selection = getSelectionFromRequest(connections);
         if (selection != null) {
             getView().setSelection(selection);
-        } else {
-            revealHomePlace();
         }
         getView().enableSelectionHandler();
     }
@@ -152,7 +166,9 @@ public class AvailableHostsPresenter
     @Override
     public void onSuccessDeletion(HostDeletionSuccessEvent event) {
         getView().hideLoadingMask();
-        getView().deleteHostConnection(event.getDeletedHost());
+        HostConnection connection = new HostConnection();
+        connection.setId(event.getConnectionId());
+        getView().deleteHostConnection(connection);
     }
 
 

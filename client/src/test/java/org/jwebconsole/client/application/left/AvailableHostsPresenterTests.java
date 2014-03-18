@@ -6,7 +6,6 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
-import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
@@ -33,6 +32,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     private HostConnection connection;
     private Method method;
     private SimpleEventBus realEventBus;
+    private String connectionId;
 
     @Before
     public void init() {
@@ -43,6 +43,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         this.connection = mock(HostConnection.class);
         this.method = mock(Method.class);
         this.realEventBus = new SimpleEventBus();
+        this.connectionId = "test-id";
     }
 
     @Test
@@ -116,15 +117,15 @@ public class AvailableHostsPresenterTests extends Mockito {
     @Test
     public void shouldHideLoadingMaskOnDeletionSuccess() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
-        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(new HostConnection()));
+        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(connectionId));
         verify(view).hideLoadingMask();
     }
 
     @Test
     public void shouldDeleteHostConnectionOnDeletingSuccess() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
-        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(connection));
-        verify(view).deleteHostConnection(connection);
+        presenter.onSuccessDeletion(new HostDeletionSuccessEvent(connectionId));
+        verify(view).deleteHostConnection(any(HostConnection.class));
     }
 
     @Test
@@ -151,7 +152,7 @@ public class AvailableHostsPresenterTests extends Mockito {
         AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
-        presenter.onReset();
+        presenter.onReveal();
         verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
         assertFalse(mockView.isSelectionFired());
@@ -166,24 +167,10 @@ public class AvailableHostsPresenterTests extends Mockito {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         presenter.onTreeItemSelected(connection);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
-        presenter.onReset();
+        presenter.onReveal();
         verify(facade).scheduleReceiveHosts(anyInt(), argumentCaptor.capture());
         argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
         assertEquals(connection, mockView.getSelectedItem());
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldNotFireSelectionEventIfHostIdIsEmpty() {
-        when(connection.getId()).thenReturn("test-id");
-        when(facade.getHostIdFromPlaceRequest()).thenReturn("non-existing--id");
-        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
-        presenter.onTreeItemSelected(connection);
-        ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
-        presenter.onReset();
-        verify(facade).getHosts(argumentCaptor.capture());
-        argumentCaptor.getValue().onSuccess(method, createConnectionsResponse());
-        verify(eventBus, times(0)).fireEvent(any(HostSelectedEvent.class));
     }
 
     @Test

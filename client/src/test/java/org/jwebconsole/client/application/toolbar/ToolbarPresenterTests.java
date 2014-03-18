@@ -4,7 +4,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import org.junit.Before;
 import org.junit.Test;
-import org.jwebconsole.client.application.left.event.HostSelectedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
@@ -69,16 +68,12 @@ public class ToolbarPresenterTests extends Mockito {
         verify(view).disableEditButtons();
     }
 
-    @Test
-    public void shouldSubscribeSelfOnHostSelectedEvent() {
-        ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        verify(eventBus).addHandler(HostSelectedEvent.TYPE, presenter);
-    }
 
     @Test
-    public void shouldEnableEditButtonsOnHostSelectedEvent() {
+    public void shouldEnableEditButtonsOnHostIdRequest() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        presenter.onHostSelected(new HostSelectedEvent(new HostConnection()));
+        when(facade.getCurrentConnectionId()).thenReturn("test-id");
+        presenter.onReset();
         verify(view).enableEditButtons();
     }
 
@@ -88,7 +83,6 @@ public class ToolbarPresenterTests extends Mockito {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
         ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
@@ -104,7 +98,6 @@ public class ToolbarPresenterTests extends Mockito {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
         ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
@@ -122,7 +115,6 @@ public class ToolbarPresenterTests extends Mockito {
         ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         when(response.isValid()).thenReturn(false);
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
@@ -139,7 +131,6 @@ public class ToolbarPresenterTests extends Mockito {
         ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         when(response.isValid()).thenReturn(true);
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
@@ -150,7 +141,6 @@ public class ToolbarPresenterTests extends Mockito {
     @Test
     public void shouldFireDeletionStartedEventBeforeDeleting() {
         ToolbarPresenter presenter = new ToolbarPresenter(eventBus, view, proxy, facade);
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         ArgumentCaptor<HostDeletionStartedEvent> eventCaptor = ArgumentCaptor.forClass(HostDeletionStartedEvent.class);
         verify(eventBus).fireEvent(eventCaptor.capture());
@@ -164,26 +154,11 @@ public class ToolbarPresenterTests extends Mockito {
         ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
         when(connection.getId()).thenReturn("test-id");
         when(response.isValid()).thenReturn(true);
-        presenter.onHostSelected(new HostSelectedEvent(connection));
         presenter.deleteConnection();
         verify(facade).deleteHost(anyString(), argumentCaptor.capture());
         AppCallback<SimpleResponse> callback = argumentCaptor.getValue();
         callback.onSuccess(null, response);
         verify(facade).redirectToHome();
-    }
-
-    @Test
-    public void shouldHandleHostChangedEvent() {
-        ToolbarPresenter presenter = new ToolbarPresenter(realBus, view, proxy, facade);
-        ArgumentCaptor<AppCallback> argumentCaptor = ArgumentCaptor.forClass(AppCallback.class);
-        ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
-        when(connection.getId()).thenReturn("test-id");
-        when(response.isValid()).thenReturn(true);
-        realBus.fireEvent(new HostChangedEvent(connection));
-        presenter.deleteConnection();
-        verify(facade).deleteHost(idCaptor.capture(), argumentCaptor.capture());
-        assertEquals("test-id", idCaptor.getValue());
-
     }
 
 }

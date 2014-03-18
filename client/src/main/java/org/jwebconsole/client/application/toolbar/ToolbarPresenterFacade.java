@@ -9,6 +9,7 @@ import org.jwebconsole.client.bundle.ValidationMessageConverter;
 import org.jwebconsole.client.common.InfoHolder;
 import org.jwebconsole.client.model.base.SimpleResponse;
 import org.jwebconsole.client.model.base.ValidationMessage;
+import org.jwebconsole.client.place.AppParams;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.ServiceFactory;
 
@@ -46,7 +47,7 @@ public class ToolbarPresenterFacade {
     }
 
     public String getCurrentConnectionId() {
-        return null;
+        return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
     }
 
 }
