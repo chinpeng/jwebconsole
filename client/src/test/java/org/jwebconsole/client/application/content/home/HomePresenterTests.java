@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
+import org.jwebconsole.client.util.TestUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -26,6 +27,13 @@ public class HomePresenterTests extends Mockito {
     }
 
     @Test
+    public void shouldSetUiHandlers() {
+        HomePresenter presenter = new HomePresenter(eventBus, view, proxy);
+        verify(view).setUiHandlers(presenter);
+    }
+
+
+    @Test
     public void shouldFireRevealConnectionPopupEventOnButtonClick() {
         HomePresenter presenter = new HomePresenter(eventBus, view, proxy);
         ArgumentCaptor<GwtEvent> captor = ArgumentCaptor.forClass(GwtEvent.class);
@@ -37,10 +45,7 @@ public class HomePresenterTests extends Mockito {
     @Test
     public void shouldBeSetInContentSlot() {
         HomePresenter presenter = new HomePresenter(eventBus, view, proxy);
-        presenter.forceReveal();
-        ArgumentCaptor<RevealContentEvent> captor = ArgumentCaptor.forClass(RevealContentEvent.class);
-        verify(eventBus).fireEventFromSource(captor.capture(), anyObject());
-        assertEquals(captor.getValue().getAssociatedType(), ApplicationPresenter.SLOT_CONTENT_PANEL);
+        TestUtils.verifyRevealedInSlot(presenter, eventBus, ApplicationPresenter.SLOT_CONTENT_PANEL);
     }
 
 }
