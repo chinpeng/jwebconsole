@@ -1,6 +1,5 @@
 package org.jwebconsole.client.application.content.main;
 
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;

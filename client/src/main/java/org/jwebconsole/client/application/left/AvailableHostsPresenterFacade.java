@@ -59,18 +59,8 @@ public class AvailableHostsPresenterFacade implements TabRevealedEventHandler, T
         placeManager.revealPlace(request);
     }
 
-    public void revealHomePlace() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
-    }
-
     public String getHostIdFromPlaceRequest() {
         return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, "");
-    }
-
-    public void stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-        }
     }
 
     public void rescheduleTimer() {
@@ -78,10 +68,6 @@ public class AvailableHostsPresenterFacade implements TabRevealedEventHandler, T
             timer.cancel();
             timer.run();
         }
-    }
-
-    public boolean isAtHomePlace() {
-        return placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.home);
     }
 
     public void revealCurrentPlaceWithHostId(String hostId) {

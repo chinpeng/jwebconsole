@@ -6,6 +6,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
+import org.jwebconsole.client.application.main.ApplicationPresenter;
 import org.jwebconsole.client.application.popup.connection.event.HostChangedEvent;
 import org.jwebconsole.client.application.popup.connection.event.HostCreatedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
@@ -13,6 +14,8 @@ import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent
 import org.jwebconsole.client.application.toolbar.event.HostDeletionSuccessEvent;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
+import org.jwebconsole.client.service.AppCallback;
+import org.jwebconsole.client.util.TestUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -33,6 +36,7 @@ public class AvailableHostsPresenterTests extends Mockito {
     private Method method;
     private SimpleEventBus realEventBus;
     private String connectionId;
+    private AvailableHostsMockView mockView;
 
     @Before
     public void init() {
@@ -44,10 +48,42 @@ public class AvailableHostsPresenterTests extends Mockito {
         this.method = mock(Method.class);
         this.realEventBus = new SimpleEventBus();
         this.connectionId = "test-id";
+        this.mockView = new AvailableHostsMockView();
+    }
+
+
+    @Test
+    public void shouldSetUiHandlers() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        verify(view).setUiHandlers(presenter);
     }
 
     @Test
-    public void shouldRevealHostPlaceWhenHostWasSelected() {
+    public void shouldBeSetInSlot() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        TestUtils.verifyRevealedInSlot(presenter, eventBus, ApplicationPresenter.SLOT_LEFT_PANEL);
+    }
+
+    @Test
+    public void shouldSetSelectionOnReset() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
+        when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
+        presenter.onReset();
+        ArgumentCaptor<HostConnection> captor = ArgumentCaptor.forClass(HostConnection.class);
+        verify(view).setSelection(captor.capture());
+        assertEquals(captor.getValue().getId(), "test-id");
+    }
+
+    @Test
+    public void shouldSelectHostSilently() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
+        when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
+        presenter.onReset();
+        assertFalse(mockView.isSelectionFired());
+    }
+
+    @Test
+    public void shouldRevealThreadPlaceWhenHostWasSelected() {
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, view, proxy, facade);
         presenter.onTreeItemSelected(new HostConnection());
         when(facade.isTabNameToken()).thenReturn(false);
@@ -130,7 +166,6 @@ public class AvailableHostsPresenterTests extends Mockito {
 
     @Test
     public void shouldDisableHandlerWhileChangingHost() {
-        AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         presenter.onHostChanged(new HostChangedEvent(new HostConnection()));
         assertFalse(mockView.isSelectionFired());
@@ -138,7 +173,6 @@ public class AvailableHostsPresenterTests extends Mockito {
 
     @Test
     public void shouldEnableHandlerAfterChangingHost() {
-        AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         presenter.onHostChanged(new HostChangedEvent(new HostConnection()));
         assertTrue(mockView.isEnabled());
@@ -149,7 +183,6 @@ public class AvailableHostsPresenterTests extends Mockito {
     public void shouldDisableHandlerWhileInsertingHosts() {
         when(connection.getId()).thenReturn("test-id");
         when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
-        AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
         presenter.onReveal();
@@ -163,7 +196,6 @@ public class AvailableHostsPresenterTests extends Mockito {
     public void shouldApplyPreviousSelectionOnAddingHosts() {
         when(connection.getId()).thenReturn("test-id");
         when(facade.getHostIdFromPlaceRequest()).thenReturn("test-id");
-        AvailableHostsMockView mockView = new AvailableHostsMockView();
         AvailableHostsPresenter presenter = new AvailableHostsPresenter(eventBus, mockView, proxy, facade);
         presenter.onTreeItemSelected(connection);
         ArgumentCaptor<MethodCallback> argumentCaptor = ArgumentCaptor.forClass(MethodCallback.class);
@@ -195,6 +227,50 @@ public class AvailableHostsPresenterTests extends Mockito {
         when(facade.isTabNameToken()).thenReturn(true);
         presenter.onTreeItemSelected(new HostConnection());
         verify(facade).revealCurrentPlaceWithHostId(anyString());
+    }
+
+    @Test
+    public void shouldShowLoadingMaskOnReveal() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        presenter.onReveal();
+        verify(view).showLoadingMask();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldHideLoadingMaskOnResponse() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        presenter.onReveal();
+        ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
+        verify(facade).getHosts(captor.capture());
+        captor.getValue().beforeResponse();
+        verify(view).hideLoadingMask();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldClearStoreOnResponse() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        when(connection.getId()).thenReturn("test-id");
+        presenter.onReveal();
+        ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
+        verify(facade).getHosts(captor.capture());
+        HostConnectionListResponse response = createConnectionsResponse();
+        captor.getValue().onSuccess(response);
+        verify(view).clearStore();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFillViewWithConnections() {
+        AvailableHostsPresenter presenter = new AvailableHostsPresenter(realEventBus, view, proxy, facade);
+        when(connection.getId()).thenReturn("test-id");
+        presenter.onReveal();
+        ArgumentCaptor<AppCallback> captor = ArgumentCaptor.forClass(AppCallback.class);
+        verify(facade).getHosts(captor.capture());
+        HostConnectionListResponse response = createConnectionsResponse();
+        captor.getValue().onSuccess(response);
+        verify(view).addConnection(response.getBody().get(0));
     }
 
     private HostConnectionListResponse createConnectionsResponse() {

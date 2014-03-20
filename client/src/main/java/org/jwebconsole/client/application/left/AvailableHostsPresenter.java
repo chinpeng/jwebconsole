@@ -24,7 +24,6 @@ import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.host.HostConnectionListResponse;
 import org.jwebconsole.client.service.AppCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,9 +43,6 @@ public class AvailableHostsPresenter
     private static final int SCHEDULE_TIME = 10000;
 
     private AvailableHostsPresenterFacade facade;
-
-    private List<HostConnection> connections = new ArrayList<HostConnection>();
-
 
     @Inject
     public AvailableHostsPresenter(EventBus eventBus, AvailableHostsView view, AvailableHostsProxy proxy, AvailableHostsPresenterFacade facade) {
@@ -88,8 +84,7 @@ public class AvailableHostsPresenter
         facade.scheduleReceiveHosts(SCHEDULE_TIME, new AppCallback<HostConnectionListResponse>() {
             @Override
             public void onSuccess(HostConnectionListResponse response) {
-                connections = response.getBody();
-                processConnectionListResponse();
+                processConnectionListResponse(response.getBody());
             }
         });
     }
@@ -104,13 +99,12 @@ public class AvailableHostsPresenter
 
             @Override
             public void onSuccess(HostConnectionListResponse response) {
-                connections = response.getBody();
-                processConnectionListResponse();
+                processConnectionListResponse(response.getBody());
             }
         });
     }
 
-    private void processConnectionListResponse() {
+    private void processConnectionListResponse(List<HostConnection> connections) {
         getView().clearStore();
         for (HostConnection connection : connections) {
             getView().addConnection(connection);
@@ -125,12 +119,6 @@ public class AvailableHostsPresenter
             getView().setSelection(selection);
         }
         getView().enableSelectionHandler();
-    }
-
-    private void revealHomePlace() {
-        if (!facade.isAtHomePlace()) {
-            facade.revealHomePlace();
-        }
     }
 
     private HostConnection getSelectionFromRequest(List<HostConnection> connections) {
