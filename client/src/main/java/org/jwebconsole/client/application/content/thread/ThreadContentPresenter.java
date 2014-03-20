@@ -13,7 +13,7 @@ import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.model.thread.details.ThreadDetailsListResponse;
 import org.jwebconsole.client.model.thread.info.ThreadInfoEntity;
 import org.jwebconsole.client.model.thread.info.ThreadInfoListResponse;
-import org.jwebconsole.client.place.ContentTabs;
+import org.jwebconsole.client.application.content.main.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.AppCallback;
 

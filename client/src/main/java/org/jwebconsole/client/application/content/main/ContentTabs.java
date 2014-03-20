@@ -1,4 +1,4 @@
-package org.jwebconsole.client.place;
+package org.jwebconsole.client.application.content.main;
 
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.TabDataBasic;

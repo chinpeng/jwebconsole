@@ -10,7 +10,7 @@ import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.bundle.messages.Messages;
-import org.jwebconsole.client.place.ContentTabs;
+import org.jwebconsole.client.application.content.main.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 
 public class MemoryPresenter extends Presenter<MemoryView, MemoryPresenter.MemoryProxy> implements MemoryUiHandlers {

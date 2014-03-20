@@ -10,6 +10,8 @@ import com.gwtplatform.mvp.client.TabPanel;
 import org.jwebconsole.client.application.content.main.ContentTabUiHandlers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ExtTabPanelWrapperWidget implements TabPanel {
@@ -52,9 +54,29 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
 
     @Override
     public Tab addTab(TabData tabData, String historyToken) {
-        ExtTabWrapper result = new ExtTabWrapper(extTabPanel, tabData.getLabel(), historyToken);
+        ExtTabWrapper result = new ExtTabWrapper(extTabPanel, tabData.getLabel(), historyToken, tabData.getPriority());
         tabs.add(result);
+        reorderTabs();
+        refreshTabs();
         return result;
+    }
+
+    private void refreshTabs() {
+        removeTabsFromView();
+        for (ExtTabWrapper tabWrapper : tabs) {
+            extTabPanel.add(tabWrapper.asWidget(), tabWrapper.getConfig());
+        }
+    }
+
+    private void reorderTabs() {
+        Collections.sort(tabs, new Comparator<ExtTabWrapper>() {
+            @Override
+            public int compare(ExtTabWrapper first, ExtTabWrapper second) {
+                if (first.getPriority() > second.getPriority()) return 1;
+                if (first.getPriority() < second.getPriority()) return -1;
+                return 0;
+            }
+        });
     }
 
     @Override
@@ -65,10 +87,14 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
 
     @Override
     public void removeTabs() {
-        for (ExtTabWrapper tab : tabs) {
-            extTabPanel.remove(tab.asWidget());
-        }
+        removeTabsFromView();
         tabs.clear();
+    }
+
+    private void removeTabsFromView() {
+        for (ExtTabWrapper wrapper : tabs) {
+            extTabPanel.remove(wrapper.asWidget());
+        }
     }
 
     @Override
@@ -81,7 +107,6 @@ public class ExtTabPanelWrapperWidget implements TabPanel {
         tab.setText(tabData.getLabel());
         tab.setTargetHistoryToken(historyToken);
     }
-
 
 
 }

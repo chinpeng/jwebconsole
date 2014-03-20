@@ -12,12 +12,13 @@ public class ExtTabWrapper implements Tab {
     private HTMLPanel widget = new HTMLPanel("");
     private String historyToken;
     private TabPanel tabPanel;
+    private float priority;
 
-    public ExtTabWrapper(TabPanel extTabPanel, String label, String historyToken) {
+    public ExtTabWrapper(TabPanel extTabPanel, String label, String historyToken, float priority) {
         this.tabPanel = extTabPanel;
+        this.priority = priority;
         this.config = new TabItemConfig(label);
         this.historyToken = historyToken;
-        tabPanel.add(widget, config);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ExtTabWrapper implements Tab {
 
     @Override
     public float getPriority() {
-        return 0;
+        return priority;
     }
 
     @Override
@@ -58,4 +59,11 @@ public class ExtTabWrapper implements Tab {
     public String getHistoryToken() {
         return historyToken;
     }
+
+    public TabItemConfig getConfig() {
+        return config;
+    }
+
+
+
 }

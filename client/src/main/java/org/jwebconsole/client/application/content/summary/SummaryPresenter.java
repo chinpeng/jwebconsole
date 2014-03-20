@@ -12,7 +12,7 @@ import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.bundle.messages.Messages;
 import org.jwebconsole.client.model.summary.SummaryEntity;
 import org.jwebconsole.client.model.summary.SummaryResponse;
-import org.jwebconsole.client.place.ContentTabs;
+import org.jwebconsole.client.application.content.main.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.AppCallback;
 
