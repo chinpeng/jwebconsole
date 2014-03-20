@@ -3,7 +3,9 @@
              xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
+             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
+             xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
     <ui:with field="messages" type="org.jwebconsole.client.bundle.messages.Messages"/>
 
@@ -13,6 +15,16 @@
 
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="gridMargins">
         <ui:attributes top="0" right="1" bottom="0" left="0"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="gridToolbarLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="threadGridPanelLayoutData">
+        <ui:attributes width="1" height="1"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
@@ -32,7 +44,7 @@
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData"
              field="threadInfoLayoutData">
-        <ui:attributes split="true" size=".7" collapsible="true" />
+        <ui:attributes split="true" size=".7" collapsible="true"/>
     </ui:with>
 
 
@@ -54,9 +66,20 @@
             <container:BorderLayoutContainer borders="true">
                 <container:west layoutData="{threadGridLayoutData}">
                     <gxt:ContentPanel>
-                        <grid:Grid ui:field="grid" store="{store}" cm="{columnModel}" view="{gridView}"
-                                   columnReordering="true"
-                                   stateful="true"/>
+                        <container:VerticalLayoutContainer>
+                            <container:child layoutData="{gridToolbarLayoutData}">
+                                <toolbar:ToolBar>
+                                    <button:TextButton text="Detect deadlock"/>
+                                </toolbar:ToolBar>
+                            </container:child >
+                            <container:child layoutData="{threadGridPanelLayoutData}">
+
+                                <grid:Grid ui:field="grid" store="{store}" cm="{columnModel}" view="{gridView}"
+                                           columnReordering="true"
+                                           stateful="true"/>
+
+                            </container:child>
+                        </container:VerticalLayoutContainer>
                     </gxt:ContentPanel>
                 </container:west>
                 <container:center layoutData="{threadInfoLayoutData}">

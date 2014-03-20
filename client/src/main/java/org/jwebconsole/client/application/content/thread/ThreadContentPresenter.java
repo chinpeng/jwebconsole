@@ -17,6 +17,8 @@ import org.jwebconsole.client.application.content.main.ContentTabs;
 import org.jwebconsole.client.place.NameTokens;
 import org.jwebconsole.client.service.AppCallback;
 
+import java.util.List;
+
 public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadContentPresenter.ThreadContentProxy>
         implements ThreadContentUiHandlers {
 
@@ -24,6 +26,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     public static final Object THREAD_CHART_WIDGET_SLOT = new Object();
     private String connectionId;
+    private ThreadInfoEntity selectedThread;
 
     @Inject
     public ThreadContentPresenter(EventBus eventBus, ThreadContentView view, ThreadContentProxy proxy, ThreadContentPresenterFacade facade) {
@@ -38,6 +41,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
 
     @Override
     public void onReset() {
+        selectedThread = null;
         super.onReset();
         stopTimers();
         getView().clearStackTracePanel();
@@ -62,8 +66,17 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
             @Override
             public void onSuccess(ThreadInfoListResponse response) {
                 getView().fillThreads(response.getBody());
+                restoreSelection(response.getBody());
             }
         });
+    }
+
+    private void restoreSelection(List<ThreadInfoEntity> body) {
+        for (ThreadInfoEntity entity : body) {
+            if (selectedThread != null && selectedThread.getThreadId().equals(entity.getThreadId())) {
+                getView().setSelection(entity);
+            }
+        }
     }
 
     @SuppressWarnings("unused")
@@ -75,6 +88,7 @@ public class ThreadContentPresenter extends Presenter<ThreadContentView, ThreadC
     @Override
     public void onThreadSelected(ThreadInfoEntity thread) {
         if (connectionId != null) {
+            this.selectedThread = thread;
             facade.makeThreadDetailsRequest(connectionId, thread.getThreadId(), new AppCallback<ThreadDetailsListResponse>() {
                 @Override
                 public void onSuccess(ThreadDetailsListResponse response) {

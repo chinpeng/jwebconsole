@@ -14,4 +14,6 @@ public interface ThreadContentView extends View, HasUiHandlers<ThreadContentUiHa
     void fillThreadDetails(List<ThreadDetailsEntity> entities);
 
     void clearStackTracePanel();
+
+    void setSelection(ThreadInfoEntity thread);
 }

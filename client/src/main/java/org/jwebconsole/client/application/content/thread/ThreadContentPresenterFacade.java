@@ -23,7 +23,7 @@ public class ThreadContentPresenterFacade {
     private ThreadCountChartPresenter threadCountChartPresenter;
     private Timer timer;
 
-    private static final Integer THREAD_INFO_TIMER_UPDATE_INTERVAL = 20000;
+    private static final Integer THREAD_INFO_TIMER_UPDATE_INTERVAL = 10000;
 
     @Inject
     public ThreadContentPresenterFacade(EventBus eventBus,

@@ -5,17 +5,20 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.CollapseEvent;
 import com.sencha.gxt.widget.core.client.event.ExpandEvent;
+import com.sencha.gxt.widget.core.client.form.StoreFilterField;
 import com.sencha.gxt.widget.core.client.grid.*;
 import org.jwebconsole.client.application.content.thread.model.ThreadInfoPropertyAccessor;
 import org.jwebconsole.client.bundle.AppResources;
@@ -25,6 +28,7 @@ import org.jwebconsole.client.util.ContainerUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHandlers> implements ThreadContentView {
@@ -59,10 +63,15 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     ThreadContentViewImpl(Binder uiBinder, AppResources appResources) {
         this.appResources = appResources;
         initGrid();
+        initThreadFilter();
         initWidget(uiBinder.createAndBindUi(this));
         initLayoutData();
         initView();
         initGridHandlers();
+    }
+
+    private void initThreadFilter() {
+
     }
 
     private void initGridHandlers() {
@@ -98,6 +107,7 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     private void initView() {
         gridView.setAutoFill(true);
         gridView.setForceFit(true);
+        grid.setHideHeaders(true);
     }
 
     private void initGrid() {
@@ -110,8 +120,10 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
 
     @Override
     public void fillThreads(List<ThreadInfoEntity> entities) {
+        int scroll = grid.getView().getScroller().getScrollTop();
         store.clear();
         store.addAll(entities);
+        grid.getView().getScroller().setScrollTop(scroll);
     }
 
     @Override
@@ -125,6 +137,12 @@ public class ThreadContentViewImpl extends ViewWithUiHandlers<ThreadContentUiHan
     @Override
     public void clearStackTracePanel() {
         threadDetailsPanel.clear();
+    }
+
+    @Override
+    public void setSelection(ThreadInfoEntity thread) {
+        grid.getSelectionModel().deselectAll();
+        grid.getSelectionModel().setSelection(Collections.singletonList(thread));
     }
 
 

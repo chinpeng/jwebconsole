@@ -1,8 +1,6 @@
 package org.jwebconsole.client.application.content.thread;
 
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ThreadContentPresenterTests extends Mockito {
@@ -121,12 +120,43 @@ public class ThreadContentPresenterTests extends Mockito {
         presenter.onReset();
         presenter.onThreadSelected(thread);
         List<ThreadDetailsEntity> body = new ArrayList<ThreadDetailsEntity>();
-        when(facade.getCurrentConnectionId()).thenReturn("test-id");
         when(threadDetailsResponse.getBody()).thenReturn(body);
         ArgumentCaptor<MethodCallback> captor = ArgumentCaptor.forClass(MethodCallback.class);
         verify(facade).makeThreadDetailsRequest(anyString(), anyLong(), captor.capture());
         captor.getValue().onSuccess(null, threadDetailsResponse);
         verify(view).fillThreadDetails(body);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldRestoreSelection() {
+        ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
+        when(facade.getCurrentConnectionId()).thenReturn("test-id");
+        presenter.onReset();
+        presenter.onThreadSelected(thread);
+        presenter.onReset();
+        List<ThreadInfoEntity> body = Collections.singletonList(thread);
+        when(threadInfoListResponse.getBody()).thenReturn(body);
+        ArgumentCaptor<MethodCallback> captor = ArgumentCaptor.forClass(MethodCallback.class);
+        verify(facade, times(2)).scheduleThreadInfoRequest(anyString(), captor.capture());
+        captor.getValue().onSuccess(null, threadInfoListResponse);
+        verify(view).setSelection(thread);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldNotRestoreSelectionIfThreadIsDead() {
+        ThreadContentPresenter presenter = new ThreadContentPresenter(eventBus, view, proxy, facade);
+        when(facade.getCurrentConnectionId()).thenReturn("test-id");
+        presenter.onReset();
+        presenter.onThreadSelected(thread);
+        presenter.onReset();
+        List<ThreadInfoEntity> body = new ArrayList<ThreadInfoEntity>();
+        when(threadInfoListResponse.getBody()).thenReturn(body);
+        ArgumentCaptor<MethodCallback> captor = ArgumentCaptor.forClass(MethodCallback.class);
+        verify(facade, times(2)).scheduleThreadInfoRequest(anyString(), captor.capture());
+        captor.getValue().onSuccess(null, threadInfoListResponse);
+        verify(view, never()).setSelection(thread);
     }
 
 }
