@@ -30,18 +30,13 @@ public class SummaryPresenter extends Presenter<SummaryView, SummaryPresenter.Su
     public SummaryPresenter(EventBus eventBus, SummaryView view, SummaryProxy proxy, SummaryFacade facade) {
         super(eventBus, view, proxy, ContentTabPresenter.TYPE_SET_TAB_CONTENT);
         this.facade = facade;
-        init();
+        getView().setUiHandlers(this);
     }
 
     @SuppressWarnings("unused")
     @TabInfo(container = ContentTabPresenter.class)
     static TabData getTabLabel(Messages messages) {
         return ContentTabs.SUMMARY_TAB.toTabData(messages.tabSummaryHeaderText());
-    }
-
-
-    private void init(){
-        getView().setUiHandlers(this);
     }
 
     @Override
