@@ -26,6 +26,24 @@
 
     <container:PortalLayoutContainer numColumns="1" ui:field="portal">
         <container:portlet>
+            <client:Portlet headingText="{messages.tabHostInfoHeaderText}" height="155" collapsible="true" animCollapse="true">
+
+            </client:Portlet>
+        </container:portlet>
+
+        <container:portlet>
+            <client:Portlet headingText="{messages.tabThreadsHeaderText}" height="155" collapsible="true" animCollapse="true">
+
+            </client:Portlet>
+        </container:portlet>
+
+        <container:portlet>
+            <client:Portlet headingText="{messages.tabJVMHeaderText}" height="155" collapsible="true" animCollapse="true">
+
+            </client:Portlet>
+        </container:portlet>
+
+        <container:portlet>
             <client:Portlet headingText="{messages.tabOperatingSystemHeaderText}" height="155" collapsible="true" animCollapse="true">
                 <g:HorizontalPanel addStyleNames="{style.leftMargin}">
                     <g:VerticalPanel addStyleNames="{style.topMargin}">
@@ -77,6 +95,12 @@
                         </g:HorizontalPanel>
                     </g:VerticalPanel>
                 </g:HorizontalPanel>
+            </client:Portlet>
+        </container:portlet>
+
+        <container:portlet>
+            <client:Portlet headingText="{messages.tabJVMParametersHeaderText}" height="155" collapsible="true" animCollapse="true">
+
             </client:Portlet>
         </container:portlet>
     </container:PortalLayoutContainer>
