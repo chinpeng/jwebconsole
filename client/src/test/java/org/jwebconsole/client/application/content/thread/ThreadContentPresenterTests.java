@@ -134,11 +134,10 @@ public class ThreadContentPresenterTests extends Mockito {
         when(facade.getCurrentConnectionId()).thenReturn("test-id");
         presenter.onReset();
         presenter.onThreadSelected(thread);
-        presenter.onReset();
         List<ThreadInfoEntity> body = Collections.singletonList(thread);
         when(threadInfoListResponse.getBody()).thenReturn(body);
         ArgumentCaptor<MethodCallback> captor = ArgumentCaptor.forClass(MethodCallback.class);
-        verify(facade, times(2)).scheduleThreadInfoRequest(anyString(), captor.capture());
+        verify(facade, times(1)).scheduleThreadInfoRequest(anyString(), captor.capture());
         captor.getValue().onSuccess(null, threadInfoListResponse);
         verify(view).setSelection(thread);
     }
