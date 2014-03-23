@@ -1,5 +1,6 @@
 package org.jwebconsole.client.service.thread;
 
+import com.google.inject.Inject;
 import org.jwebconsole.client.model.thread.count.ThreadCountListResponse;
 import org.jwebconsole.client.util.monad.future.Future;
 
@@ -7,6 +8,7 @@ public class ThreadCountFutureService {
 
     private ThreadCountService service;
 
+    @Inject
     public ThreadCountFutureService(ThreadCountService service) {
         this.service = service;
     }

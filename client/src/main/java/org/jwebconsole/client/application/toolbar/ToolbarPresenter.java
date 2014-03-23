@@ -6,7 +6,6 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import org.fusesource.restygwt.client.Method;
 import org.jwebconsole.client.application.left.AvailableHostsPresenter;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionFailedEvent;
 import org.jwebconsole.client.application.toolbar.event.HostDeletionStartedEvent;
@@ -16,7 +15,7 @@ import org.jwebconsole.client.event.RevealOnStartEventHandler;
 import org.jwebconsole.client.event.popup.RevealAddConnectionPopupEvent;
 import org.jwebconsole.client.event.popup.RevealEditConnectionPopupEvent;
 import org.jwebconsole.client.model.base.SimpleResponse;
-import org.jwebconsole.client.service.AppCallback;
+import org.jwebconsole.client.util.monad.future.Future;
 
 
 public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.ToolbarProxy> implements ToolbarUiHandlers,
@@ -68,24 +67,24 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     @Override
     public void deleteConnection() {
         getEventBus().fireEvent(new HostDeletionStartedEvent());
-        facade.deleteHost(facade.getCurrentConnectionId(), new AppCallback<SimpleResponse>() {
-
-            @Override
-            public void onFailure(Method method, Throwable throwable) {
-                super.onFailure(method, throwable);
-                getEventBus().fireEvent(new HostDeletionFailedEvent());
-            }
-
-            @Override
-            public void onSuccess(SimpleResponse response) {
-                if (response.isValid()) {
-                    processSuccessfulDeletion();
-                } else {
-                    facade.printValidationMessages(response.getMessages());
-                    getEventBus().fireEvent(new HostDeletionFailedEvent());
-                }
-            }
+        facade.getCurrentConnectionId().forEach((connectionId) -> {
+            Future<SimpleResponse> future = facade.deleteHost(connectionId);
+            future.handle(this::processFailure, this::processSuccess);
         });
+    }
+
+    public void processFailure(Throwable throwable) {
+        facade.printUnknownErrorMessage();
+        getEventBus().fireEvent(new HostDeletionFailedEvent());
+    }
+
+    public void processSuccess(SimpleResponse response) {
+        if (response.isValid()) {
+            processSuccessfulDeletion();
+        } else {
+            facade.printValidationMessages(response.getMessages());
+            getEventBus().fireEvent(new HostDeletionFailedEvent());
+        }
     }
 
     @Override
@@ -94,9 +93,12 @@ public class ToolbarPresenter extends Presenter<ToolbarView, ToolbarPresenter.To
     }
 
     private void processSuccessfulDeletion() {
-        getEventBus().fireEvent(new HostDeletionSuccessEvent(facade.getCurrentConnectionId()));
-        getView().disableEditButtons();
-        facade.redirectToHome();
+        facade.getCurrentConnectionId().forEach((connectionId) -> {
+            getEventBus().fireEvent(new HostDeletionSuccessEvent(connectionId));
+            getView().disableEditButtons();
+            facade.redirectToHome();
+        });
+
     }
 
 }

@@ -158,6 +158,12 @@
     <!-- </repositories> -->
 
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <version>2.6.2</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- GXT -->
         <!-- http://docs.sencha.com/gxt-guides/3/ -->
         <dependency>

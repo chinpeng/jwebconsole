@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Future<T> {
 
     private List<Consumer<Try<T>>> completeFunctions = new ArrayList<>();
-    private Option<Try<T>> result;
+    private Option<Try<T>> result = Option.getEmpty();
 
     public Future() {
     }
@@ -29,14 +30,21 @@ public class Future<T> {
         completeFunctions.add(consumer);
     }
 
-    private void completeWithResult(Try<T> result) {
+    public void handle(Consumer<Throwable> errorHandler, Consumer<T> successHandler) {
+        onComplete((result) -> {
+            if (result.isSuccess()) successHandler.accept(result.get());
+            else errorHandler.accept(result.getCause());
+        });
+    }
+
+    public void completeWithResult(Try<T> result) {
         this.result = Option.create(result);
         for (Consumer<Try<T>> completeFunction : completeFunctions) {
             completeFunction.accept(result);
         }
     }
 
-    private void completeWithSuccess(T result) {
+    public void completeWithSuccess(T result) {
         completeWithResult(new Success<T>(result));
     }
 

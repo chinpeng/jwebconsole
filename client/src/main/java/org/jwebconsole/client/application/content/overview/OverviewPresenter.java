@@ -48,10 +48,9 @@ public class OverviewPresenter extends Presenter<OverviewView, OverviewPresenter
     }
 
     private void initChart() {
-        String connectionId = facade.getConnectionId();
-        if (connectionId != null) {
-            facade.revealThreadCountChartPresenter(this, connectionId);
-        }
+        facade.getConnectionId().forEach((connectionId) -> facade.revealThreadCountChartPresenter(this, connectionId));
+
+
     }
 
     @Override

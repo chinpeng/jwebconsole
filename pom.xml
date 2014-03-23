@@ -25,6 +25,19 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>my</id>
+            <name>Maven Central</name>
+            <layout>default</layout>
+            <url>http://jetblack.me:8080/nexus/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+
     </repositories>
+
 
 </project>

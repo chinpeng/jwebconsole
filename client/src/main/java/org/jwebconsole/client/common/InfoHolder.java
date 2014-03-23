@@ -41,6 +41,10 @@ public class InfoHolder implements PrintInfoEventHandler {
         }
     }
 
+    public void printUnknownError() {
+        printInfo(errorMessages.unknownError());
+    }
+
     public void printError(ErrorMessage errorMessage) {
         Info.display(errorMessages.errorMessageTitle(), errorMessageConverter.getMessage(AppErrorId.fromId(errorMessage.getId())));
     }

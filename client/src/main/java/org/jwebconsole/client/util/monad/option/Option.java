@@ -38,7 +38,8 @@ public abstract class Option<T> {
     }
 
     public <R> void forEach(Consumer<T> consumer) {
-        this.map(FunctionUtils.consumerToFunction(consumer));
+        Function<T, Void> result = FunctionUtils.consumerToFunction(consumer);
+        this.map(result);
     }
 
     public static <E> Option<E> getEmpty() {

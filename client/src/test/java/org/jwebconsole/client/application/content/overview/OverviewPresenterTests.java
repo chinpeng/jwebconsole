@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jwebconsole.client.application.content.main.ContentTabPresenter;
 import org.jwebconsole.client.util.TestUtils;
+import org.jwebconsole.client.util.monad.option.Option;
 import org.mockito.Mockito;
 
 public class OverviewPresenterTests extends Mockito {
@@ -38,7 +39,7 @@ public class OverviewPresenterTests extends Mockito {
     @Test
     public void shouldInitChartOnConnectionExists() {
         OverviewPresenter presenter = new OverviewPresenter(eventBus, view, proxy, facade);
-        when(facade.getConnectionId()).thenReturn("test-id");
+        when(facade.getConnectionId()).thenReturn(Option.create("test-id"));
         presenter.onReset();
         verify(facade).revealThreadCountChartPresenter(presenter, "test-id");
     }
@@ -46,7 +47,7 @@ public class OverviewPresenterTests extends Mockito {
     @Test
     public void shouldNotInitThreadChartOnEmptyConnectionId() {
         OverviewPresenter presenter = new OverviewPresenter(eventBus, view, proxy, facade);
-        when(facade.getConnectionId()).thenReturn(null);
+        when(facade.getConnectionId()).thenReturn(Option.getEmpty());
         presenter.onReset();
         verify(facade, never()).revealThreadCountChartPresenter(any(HasSlots.class), anyString());
     }

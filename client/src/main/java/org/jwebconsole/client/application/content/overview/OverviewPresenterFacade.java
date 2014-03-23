@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.HasSlots;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import org.jwebconsole.client.application.content.thread.widget.chart.ThreadCountChartPresenter;
 import org.jwebconsole.client.place.AppParams;
+import org.jwebconsole.client.util.monad.option.Option;
 
 public class OverviewPresenterFacade {
 
@@ -23,8 +24,9 @@ public class OverviewPresenterFacade {
     }
 
 
-    public String getConnectionId() {
-        return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
+    public Option<String> getConnectionId() {
+        String result = placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
+        return Option.create(result);
     }
 
     public void stopThreadChart() {

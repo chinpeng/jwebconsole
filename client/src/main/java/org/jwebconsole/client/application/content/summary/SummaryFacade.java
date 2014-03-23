@@ -8,7 +8,10 @@ import org.jwebconsole.client.application.content.thread.ThreadContentPresenter;
 import org.jwebconsole.client.model.host.HostConnection;
 import org.jwebconsole.client.model.summary.SummaryResponse;
 import org.jwebconsole.client.place.AppParams;
+import org.jwebconsole.client.service.FutureServiceFactory;
 import org.jwebconsole.client.service.ServiceFactory;
+import org.jwebconsole.client.util.monad.future.Future;
+import org.jwebconsole.client.util.monad.option.Option;
 
 /**
  * Created by amednikov
@@ -17,20 +20,21 @@ import org.jwebconsole.client.service.ServiceFactory;
  */
 public class SummaryFacade {
 
-    ServiceFactory serviceFactory;
+    private final FutureServiceFactory serviceFactory;
     private PlaceManager placeManager;
 
     @Inject
-    public SummaryFacade(ServiceFactory serviceFactory, PlaceManager placeManager) {
+    public SummaryFacade(PlaceManager placeManager, FutureServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
         this.placeManager = placeManager;
     }
 
-    public void makeSummaryRequest(String hostId, MethodCallback<SummaryResponse> callback){
-        serviceFactory.getSummaryService().getSummary(hostId, callback);
+    public Future<SummaryResponse> getSummary(String hostId){
+        return serviceFactory.getSummaryService().getSummary(hostId);
     }
 
-    public String getCurrentConnectionId() {
-        return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
+    public Option<String> getCurrentConnectionId() {
+        String connectionId = placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
+        return Option.create(connectionId);
     }
 }

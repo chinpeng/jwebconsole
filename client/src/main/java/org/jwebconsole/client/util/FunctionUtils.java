@@ -6,9 +6,12 @@ import java.util.function.Function;
 public class FunctionUtils {
 
     public static <T> Function<T, Void> consumerToFunction(Consumer<T> consumer) {
-        return t -> {
-            consumer.accept(t);
-            return null;
+        return new Function<T, Void>() {
+            @Override
+            public Void apply(T t) {
+                consumer.accept(t);
+                return null;
+            }
         };
     }
 
