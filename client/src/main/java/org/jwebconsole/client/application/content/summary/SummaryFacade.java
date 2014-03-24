@@ -1,5 +1,6 @@
 package org.jwebconsole.client.application.content.summary;
 
+import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.HasSlots;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -17,8 +18,9 @@ import org.jwebconsole.client.service.ServiceFactory;
  */
 public class SummaryFacade {
 
-    ServiceFactory serviceFactory;
+    private ServiceFactory serviceFactory;
     private PlaceManager placeManager;
+    private Timer timer;
 
     @Inject
     public SummaryFacade(ServiceFactory serviceFactory, PlaceManager placeManager) {
@@ -32,5 +34,9 @@ public class SummaryFacade {
 
     public String getCurrentConnectionId() {
         return placeManager.getCurrentPlaceRequest().getParameter(AppParams.HOST_ID, null);
+    }
+
+    public void scheduleSummaryRequest(){
+
     }
 }

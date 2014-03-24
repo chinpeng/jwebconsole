@@ -21,8 +21,8 @@ public class SummaryViewImpl extends ViewWithUiHandlers<SummaryUiHandlers> imple
     Label versionLabel;
     @UiField
     Label architectureLabel;
-    @UiField
-    Label systemLoadAverageLabel;
+//    @UiField
+//    Label systemLoadAverageLabel;
     @UiField
     Label availableProcessorsLabel;
     @UiField
@@ -63,10 +63,10 @@ public class SummaryViewImpl extends ViewWithUiHandlers<SummaryUiHandlers> imple
         availableProcessorsLabel.setText(availableProcessors.toString());
     }
 
-    @Override
-    public void setSystemLoadAverage(Double systemLoadAverage) {
-        systemLoadAverageLabel.setText(systemLoadAverage.toString());
-    }
+//    @Override
+//    public void setSystemLoadAverage(Double systemLoadAverage) {
+//        systemLoadAverageLabel.setText(systemLoadAverage.toString());
+//    }
 
     @Override
     public void setArchitecture(String architecture) {

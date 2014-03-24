@@ -61,7 +61,7 @@ public class SummaryPresenter extends Presenter<SummaryView, SummaryPresenter.Su
         getView().setName(entity.getName());
         getView().setVersion(entity.getVersion());
         getView().setArchitecture(entity.getArchitecture());
-        getView().setSystemLoadAverage(entity.getSystemLoadAverage());
+        //getView().setSystemLoadAverage(entity.getSystemLoadAverage());
         getView().setAvailableProcessors(entity.getAvailableProcessors());
         getView().setProcessCPUTime(entity.getProcessCPUTime());
         getView().setCommittedVirtualMemorySize(entity.getCommittedVirtualMemorySize());

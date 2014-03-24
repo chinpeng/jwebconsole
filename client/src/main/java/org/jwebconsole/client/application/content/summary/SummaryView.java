@@ -12,7 +12,7 @@ public interface SummaryView extends View, HasUiHandlers<SummaryUiHandlers> {
     public void setName(String name);
     public void setVersion(String version);
     public void setArchitecture(String architecture);
-    public void setSystemLoadAverage(Double systemLoadAverage);
+//    public void setSystemLoadAverage(Double systemLoadAverage);
     public void setAvailableProcessors(Integer availableProcessors);
     public void setProcessCPUTime(Long processCPUTime);
     public void setCommittedVirtualMemorySize(Long committedVirtualMemorySize);

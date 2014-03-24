@@ -26,25 +26,102 @@
 
     <container:PortalLayoutContainer numColumns="1" ui:field="portal">
         <container:portlet>
-            <client:Portlet headingText="{messages.tabHostInfoHeaderText}" height="155" collapsible="true" animCollapse="true">
+            <client:Portlet headingText="{messages.tabHostInfoHeaderText}" height="140" collapsible="true" animCollapse="true">
+                <g:HorizontalPanel addStyleNames="{style.leftMargin}">
+                    <g:VerticalPanel addStyleNames="{style.topMargin}">
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Connection name:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Virtual Machine:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Vendor:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Name:</g:Label>
+                        </g:HorizontalPanel>
+                    </g:VerticalPanel>
 
+                    <g:VerticalPanel addStyleNames="{style.topMargin}">
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Uptime:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Process CPU Time:</g:Label>
+                            <g:Label addStyleNames="{style.value}" ui:field="processCPUTimeLabel"/>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">JIT compiler:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Total compile time:</g:Label>
+                        </g:HorizontalPanel>
+                    </g:VerticalPanel>
+                </g:HorizontalPanel>
             </client:Portlet>
         </container:portlet>
 
         <container:portlet>
-            <client:Portlet headingText="{messages.tabThreadsHeaderText}" height="155" collapsible="true" animCollapse="true">
+            <client:Portlet headingText="{messages.tabThreadsHeaderText}" height="140" collapsible="true" animCollapse="true">
+                <g:HorizontalPanel addStyleNames="{style.leftMargin}">
+                    <g:VerticalPanel addStyleNames="{style.topMargin}">
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Live threads:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Peak:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Daemon threads:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Total threads started:</g:Label>
+                        </g:HorizontalPanel>
+                    </g:VerticalPanel>
 
+                    <g:VerticalPanel addStyleNames="{style.topMargin}">
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Current classes loaded:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Total classes loaded:</g:Label>
+                        </g:HorizontalPanel>
+                        <g:HorizontalPanel>
+                            <g:Label addStyleNames="{style.labelHeader}">Total classes unloaded:</g:Label>
+                        </g:HorizontalPanel>
+                    </g:VerticalPanel>
+                </g:HorizontalPanel>
             </client:Portlet>
         </container:portlet>
 
         <container:portlet>
-            <client:Portlet headingText="{messages.tabJVMHeaderText}" height="155" collapsible="true" animCollapse="true">
+            <client:Portlet headingText="{messages.tabJVMHeaderText}" height="140" collapsible="true" animCollapse="true">
+                <!--<g:VerticalPanel>-->
+                    <g:HorizontalPanel addStyleNames="{style.leftMargin}">
+                        <g:VerticalPanel addStyleNames="{style.topMargin}">
+                            <g:Label addStyleNames="{style.labelHeader}">Current heap size:</g:Label>
+                            <g:Label addStyleNames="{style.labelHeader}">Maximum heap size:</g:Label>
+                        </g:VerticalPanel>
 
+                        <g:VerticalPanel addStyleNames="{style.topMargin}">
+                            <g:Label addStyleNames="{style.labelHeader}">Committed memory:</g:Label>
+                            <g:Label addStyleNames="{style.labelHeader}">Pending finalization:</g:Label>
+                        </g:VerticalPanel>
+                    </g:HorizontalPanel>
+
+                    <!--<g:HorizontalPanel addStyleNames="{style.leftMargin}">-->
+                        <!--<g:VerticalPanel addStyleNames="{style.topMargin}">-->
+                            <!--<g:Label addStyleNames="{style.labelHeader}">Garbage collector:</g:Label>-->
+                            <!--<g:Label addStyleNames="{style.labelHeader}">Garbage collector:</g:Label>-->
+                        <!--</g:VerticalPanel>-->
+                    <!--</g:HorizontalPanel>-->
+                <!--</g:VerticalPanel>-->
             </client:Portlet>
         </container:portlet>
 
         <container:portlet>
-            <client:Portlet headingText="{messages.tabOperatingSystemHeaderText}" height="155" collapsible="true" animCollapse="true">
+            <client:Portlet headingText="{messages.tabOperatingSystemHeaderText}" height="140" collapsible="true" animCollapse="true">
                 <g:HorizontalPanel addStyleNames="{style.leftMargin}">
                     <g:VerticalPanel addStyleNames="{style.topMargin}">
                         <g:HorizontalPanel>
@@ -63,11 +140,6 @@
                         <g:HorizontalPanel>
                             <g:Label addStyleNames="{style.labelHeader}">Committed Virtual Memory Size:</g:Label>
                             <g:Label addStyleNames="{style.value}" ui:field="committedVirtualMemorySizeLabel"/>
-                        </g:HorizontalPanel>
-
-                        <g:HorizontalPanel>
-                            <g:Label addStyleNames="{style.labelHeader}">Process CPU Time:</g:Label>
-                            <g:Label addStyleNames="{style.value}" ui:field="processCPUTimeLabel"/>
                         </g:HorizontalPanel>
                     </g:VerticalPanel>
 
@@ -88,19 +160,18 @@
                             <g:Label addStyleNames="{style.labelHeader}">Free Swap Space Size:</g:Label>
                             <g:Label addStyleNames="{style.value}" ui:field="freeSwapSpaceSizeLabel"/>
                         </g:HorizontalPanel>
-
-                        <g:HorizontalPanel>
-                            <g:Label addStyleNames="{style.labelHeader}">System Load Average:</g:Label>
-                            <g:Label addStyleNames="{style.value}" ui:field="systemLoadAverageLabel"/>
-                        </g:HorizontalPanel>
                     </g:VerticalPanel>
                 </g:HorizontalPanel>
             </client:Portlet>
         </container:portlet>
 
         <container:portlet>
-            <client:Portlet headingText="{messages.tabJVMParametersHeaderText}" height="155" collapsible="true" animCollapse="true">
+            <client:Portlet headingText="{messages.tabJVMParametersHeaderText}" height="140" collapsible="true" animCollapse="true">
+                <g:HorizontalPanel addStyleNames="{style.leftMargin}">
+                    <g:VerticalPanel addStyleNames="{style.topMargin}">
 
+                    </g:VerticalPanel>
+                </g:HorizontalPanel>
             </client:Portlet>
         </container:portlet>
     </container:PortalLayoutContainer>
